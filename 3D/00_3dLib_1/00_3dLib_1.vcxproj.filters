@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="1%29 main">
+      <UniqueIdentifier>{23ff34fb-3bca-458b-a29f-3a1863f1ce12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4%29 Camera">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="3%29 Obj">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="2%29 Function">
+      <UniqueIdentifier>{4ab2a2f1-2978-4f9a-933c-65c8548f1d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3%29 Obj\10_Shapes_DX">
+      <UniqueIdentifier>{6fd6d608-d52a-4aaa-9b8b-b920c974bdff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{cbab6a52-9919-4ca0-b8a6-5af250e1d31a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="04_timerC_DX.h">
+      <Filter>2%29 Function</Filter>
+    </ClInclude>
+    <ClInclude Include="05_writeC_DX.h">
+      <Filter>2%29 Function</Filter>
+    </ClInclude>
+    <ClInclude Include="06_inputC_DX.h">
+      <Filter>2%29 Function</Filter>
+    </ClInclude>
+    <ClInclude Include="00_header_DX.h">
+      <Filter>1%29 main</Filter>
+    </ClInclude>
+    <ClInclude Include="01_deviceC_DX.h">
+      <Filter>1%29 main</Filter>
+    </ClInclude>
+    <ClInclude Include="02_wndC_DX.h">
+      <Filter>1%29 main</Filter>
+    </ClInclude>
+    <ClInclude Include="03_coreC_DX.h">
+      <Filter>1%29 main</Filter>
+    </ClInclude>
+    <ClInclude Include="07_Obj3d_DX.h">
+      <Filter>3%29 Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="08_Obj3d_Header.h">
+      <Filter>3%29 Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="09_dxState.h">
+      <Filter>3%29 Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="10_Shape_DX.h">
+      <Filter>3%29 Obj\10_Shapes_DX</Filter>
+    </ClInclude>
+    <ClInclude Include="11_Shapes_DX.h">
+      <Filter>3%29 Obj\10_Shapes_DX</Filter>
+    </ClInclude>
+    <ClInclude Include="12_Shapes_ext.h">
+      <Filter>3%29 Obj\10_Shapes_DX</Filter>
+    </ClInclude>
+    <ClInclude Include="13_Camera_DX.h">
+      <Filter>4%29 Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="14_ArcBall_DX.h">
+      <Filter>4%29 Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="15_Flustum_DX.h">
+      <Filter>4%29 Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="16_ModelView_DX.h">
+      <Filter>4%29 Camera</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="07_Obj3d_DX.cpp">
+      <Filter>3%29 Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="04_timerC_DX.cpp">
+      <Filter>2%29 Function</Filter>
+    </ClCompile>
+    <ClCompile Include="05_writeC_DX.cpp">
+      <Filter>2%29 Function</Filter>
+    </ClCompile>
+    <ClCompile Include="06_inputC_DX.cpp">
+      <Filter>2%29 Function</Filter>
+    </ClCompile>
+    <ClCompile Include="01_deviceC_DX.cpp">
+      <Filter>1%29 main</Filter>
+    </ClCompile>
+    <ClCompile Include="02_wndC_DX.cpp">
+      <Filter>1%29 main</Filter>
+    </ClCompile>
+    <ClCompile Include="03_coreC_DX.cpp">
+      <Filter>1%29 main</Filter>
+    </ClCompile>
+    <ClCompile Include="09_dxState.cpp">
+      <Filter>3%29 Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="10_Shape_DX.cpp">
+      <Filter>3%29 Obj\10_Shapes_DX</Filter>
+    </ClCompile>
+    <ClCompile Include="11_Shapes_DX.cpp">
+      <Filter>3%29 Obj\10_Shapes_DX</Filter>
+    </ClCompile>
+    <ClCompile Include="12_Shapes_ext.cpp">
+      <Filter>3%29 Obj\10_Shapes_DX</Filter>
+    </ClCompile>
+    <ClCompile Include="13_Camera_DX.cpp">
+      <Filter>4%29 Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="14_ArcBall_DX.cpp">
+      <Filter>4%29 Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="15_Flustum_DX.cpp">
+      <Filter>4%29 Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="16_ModelView_DX.cpp">
+      <Filter>4%29 Camera</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="vs.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="ps.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="gs.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

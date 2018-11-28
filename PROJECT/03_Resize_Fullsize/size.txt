@@ -1,0 +1,59 @@
+
+//컴포넌트가 가지고 있는 인터페이스를 받아온다.
+HRESULT QueryInterface( 
+     REFIID riid,	  // 넘겨받고자 하는 인터페이스
+     void** ppvObject // 반환된 인터페이스를 받을 주소.
+);
+
+//컴포넌트의 부모 인터페이스를 받아온다.
+HRESULT GetParent( 
+     REFIID riid,    // 넘겨받고자 하는 부모 인터페이스
+     void** ppParent // 반환될 인터페이스를 받을 주소.
+);
+
+HRESULT IDXGIFactory::MakeWindowAssociation( 
+    HWND WindowHandle, // 플래그를 적용할 윈도우의 핸들값
+    UINT Flags		   // 옵션 플래그
+);
+
+DXGI_MWA_NO_WINDOW_CHANGES - DXGI가 응용 프로그램 메시지큐를 모니터링하지 않도록 한다. 이로 인해 DXGI는 모드 변경에 응답 할 수 없습니다. ??
+DXGI_MWA_NO_ALT_ENTER      - DXGI가 alt+enter키에 반응하지 않도록 한다.
+DXGI_MWA_NO_PRINT_SCREEN   - DXGI가 PrintScreen키에 반응하지 않도록 한다.
+
+
+enum DXGI_SWAP_CHAIN_FLAG {
+  DXGI_SWAP_CHAIN_FLAG_NONPREROTATED                           // 자동 이미지 회전을 끔. (전체화면 모드에서만 유효)
+  DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH                       // IDXGISwapChain::ResizeTarget을 호출하여 모드를 전환할 수 있게 함. 
+  DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE                          // GDI기능을 사용할 수 있게 함. IDXGISurface1::GetDC를 사용할 수 있음.
+  DXGI_SWAP_CHAIN_FLAG_RESTRICTED_CONTENT                      // 드라이버 및 하드웨어 보호가 사용되는 경우에만 스왑체인을 생성할 수 있게 함.
+  DXGI_SWAP_CHAIN_FLAG_RESTRICT_SHARED_RESOURCE_DRIVER         // 공유 리소스를 보호해야함을 나타낼때 사용.
+  DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY                            // 창의 내용을 다른 디스플레이로 복제하지 못하게 함.
+  DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT           // 지연 렌더링을 사용하려면 선택.
+  DXGI_SWAP_CHAIN_FLAG_FOREGROUND_LAYER                        // 다중 표면 렌더링을 위해 포어 그라운드 레이어에 스왑체인을 생성하려면 선택
+  DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO                        // 전체 화면 비디오를 위한 스왑체인을 만드려면 선택
+  DXGI_SWAP_CHAIN_FLAG_YUV_VIDEO                               // YUV 비디오의 스왑체인을 만드려면 선택
+  DXGI_SWAP_CHAIN_FLAG_HW_PROTECTED                            // 모든 리소스가 하드웨어에 의해 보호 될 수 있도록 스왑체인을 만들어야함을 표시.
+  DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING                           // 
+  DXGI_SWAP_CHAIN_FLAG_RESTRICTED_TO_ALL_HOLOGRAPHIC_DISPLAYS  //
+} ;
+
+ HRESULT IDXGISwapChain::SetFullscreenState( 
+    BOOL Fullscreen,	 // TRUE : 전체화면, FALSE : 창모드
+    IDXGIOutput *pTarget // 출력 대상 장치 지정
+);
+
+//전체화면 전환에 실패하는 경우
+- 응용 프로그램이 터미널 서버를 통해 실행되고 있다.  
+- 출력 창이 차단되어 있다.  
+- 출력 창에 키보드 포커스가 없다.  
+- 다른 응용 프로그램이 이미 전체 화면 모드로 되어있다. 
+
+
+ HRESULT IDXGISwapChain::ResizeTarget( 
+   const DXGI_MODE_DESC *pNewTargetParameters   //새롭게 설정할 스왑체인 객체의 정보를 담은 구조체.
+ );
+
+ 스레드 충돌을 막기 위해서 종료할때는 창모드로 전환한 뒤 종료할 것.
+
+
+

@@ -1,0 +1,167 @@
+
+
+UpdateWindow(g_hWnd); 
+//화면에 무효화 영역이 발생하면 WM_PAINT메시지를 보낸다. 이때 메시지 큐를 거치지 않고 바로 실행된다.
+//그런데 항상 위에 그리게 해놓았으니 무효화 영역이 발생할 수가 없어서 빼놓음.
+
+WINVER (OS버전에 따라 지원하는 것이 다름)
+
+
+//윈도우 클래스 인자값
+typedef struct tagWNDCLASSEXW {
+    UINT        cbSize;            // 구조체의 크기 (필수)
+    UINT        style;			   // 윈도우 스타일 // 아래에 정리
+    WNDPROC     lpfnWndProc;	   // 메시지 프로시저 함수 지정. (필수)
+    int         cbClsExtra;		   // 추가 클래스 지정. ?
+    int         cbWndExtra;		   // 추가 윈도우 지정. ?
+    HINSTANCE   hInstance;		   // 인스턴스 핸들 지정. (필수)
+    HICON       hIcon;			   // 만들어진 윈도우에 사용할 아이콘 지정
+    HCURSOR     hCursor;		   // 만들어진 윈도우에 사용할 커서 지정
+    HBRUSH      hbrBackground;	   // 만들어진 윈도우에 사용할 배경 화면 지정.
+    LPCWSTR     lpszMenuName;	   // 메뉴 이름 지정 (아마도 생성할 때 줄 수 있는 제목표시줄에 나타날 이름을 주는 것일듯)
+    LPCWSTR     lpszClassName;	   // 클래스 이름 지정 (필수)
+    HICON       hIconSm;		   // 작업 표시줄에 나타날 작은 아이콘 지정.
+}
+
+//윈도우 클래스 스타일
+CS_VREDRAW               // 작업영역의 폭이 변경되면 윈도우를 다시 그리도록 한다.  
+CS_HREDRAW         		 // 작업영역의 높이가 변경되면 윈도우를 다시 그리도록 한다.  
+CS_DBLCLKS         		 // 마우스 더블클릭 메시지를 사용할 수 있게 한다. 이 스타일을 지정하지 않으면 더블클릭은 무시된다.
+CS_OWNDC           		 // 이 클래스로부터 만들어진 각 윈도우마다 하나의 DC를 독점으로 사용하도록 한다.
+CS_CLASSDC         		 // 이 클래스로부터 만들어진 윈도우들이 하나의 DC를 공유하도록 한다.
+CS_PARENTDC        		 // 자식 윈도우가 부모 윈도우의 DC를 사용하도록 한다.
+CS_NOCLOSE         		 // 시스템 메뉴의 닫기 명령(X버튼, Alt+F4)을 사용하지 못하도록 한다. 이 스타일을 사용한 프로그램은 별도의 종료방법을 제공해줘야 한다.
+CS_SAVEBITS        		 // 이 윈도우가 차지하는 화면 영역을 비트맵으로 저장한다. 운영체제는 윈도우가 화면에서 제거될 때 저장한 비트맵으로 화면을 복원하고 WM_PAINT 메시지를 따로 보내지 않는다. 
+                         // 크기가 작고 화면조작이 거의 없는 메뉴나 대화상자 같은 윈도우에 이 스타일을 사용한다.
+						 // 단 이 스타일을 사용하면 최초 윈도우가 나타나는 시간이 조금 오래 걸린다.
+CS_BYTEALIGNCLIENT 		 // 작업 영역을 x축으로 바이트 정렬하도록 하여 이동이나 크기 조정의 속도를 빠르게 한다.
+CS_BYTEALIGNWINDOW 		 // 윈도우를 x축으로 바이트 정렬하도록 하여 이동이나 크기 조정의 속도를 빠르게 한다.
+CS_GLOBALCLASS     		 // 응용 프로그램을 전역 클래스로 등록한다. ?
+
+
+
+//각 창에 줄 수 있는 스타일값
+
+기본 설정값  * Window Styles
+
+WS_OVERLAPPED       // 타이틀 바와 크기 조절이 안되는 경계선을 갖는 윈도우를 만든다. (기본값)
+
+WS_POPUP            // 창은 팝업창이다. WS_CHILD 스타일과 함께 사용할 수 없다.  
+                    // 부모 윈도우를 벗어날 수 있고, 고유한 위치를 갖는다. 부모 윈도우가 파괴될 때 파괴되나?
+WS_CHILD            // 자식 윈도우로 생성한다. WS_POPUP 스타일과 함께 사용할 수 없다.
+                    // 부모 윈도우의 작업영역을 벗어날 수 없고, 부모 윈도우가 파괴될 때 함께 파괴된다.
+
+WS_CAPTION          // 타이틀을 만든다.  WS_BORDER를 포함한다.
+WS_SYSMENU          // 시스템 메뉴를 만든다. 닫기 버튼이 생긴다.
+WS_MAXIMIZEBOX      // 최대화 버튼을 갖는다. WS_SYSMENU와 함께 사용되어야 하며, WS_EX_CONTEXTHELP와 함께 쓸 수 없다.
+WS_MINIMIZEBOX      // 최소화 버튼을 갖는다. WS_SYSMENU와 함께 사용되어야 하며, WS_EX_CONTEXTHELP와 함께 쓸 수 없다.
+WS_HSCROLL          // 가로 스크롤 막대를 갖는다.
+WS_VSCROLL          // 수직 스크롤 막대가 갖는다.
+
+(경계선 두께는 적용이 안되는 모양이다.)
+//경계선 설정 (함께 쓰면 아래것이 우선시된다.)
+WS_BORDER           // 크기조정이 안되는 단선으로 된 경계선을 만든다.
+WS_DLGFRAME         // 크기조정이 안되는 두꺼운 경계선을 만드며, 타이틀바를 가질 수 없다.
+WS_THICKFRAME       // 크기 조정이 가능한 두꺼운 경계선을 만든다.
+
+
+//어떤 상태로 생성할 것인지. (함께 쓰면 아래것이 우선시 된다.)
+WS_VISIBLE          // 처음 생성될 때 보이는 상태로 생성된다. 
+WS_MAXIMIZE         // 처음 생성될 때 최대화 상태로 생성된다.
+WS_MINIMIZE         // 처음 생성될 때 최소화 상태로 생성된다.
+
+WS_DISABLED         // 창을 비활성화 상태(입력을 받을 수 없는 상태)로 만든다. EnableWindow함수로 활성화 상태로 변경해줄 수 있다.
+
+//뭔지 잘 모르겠는거
+WS_CLIPCHILDREN     // 부모 윈도우에서 드로우 할 때 차일드 윈도우가 있는 영역은 그리기 영역에서 제외된다.
+WS_CLIPSIBLINGS     // 자식 윈도우끼리 상호 겹친 영역은 그리기 영역에서 제외된다.
+
+WS_TABSTOP          //  Tab키로 키보드 포커스를 다음 컨트롤로 바꿀 수 있다. ?
+WS_GROUP            //  라디오 버튼 등 그룹을 이루는 컨트롤의 그룹 지정에 사용된다. ?
+
+ 일반적인 윈도우 스타일 Common Window Styles
+
+WS_OVERLAPPEDWINDOW (WS_OVERLAPPED     | \
+                     WS_CAPTION        | \
+                     WS_SYSMENU        | \
+                     WS_THICKFRAME     | \
+                     WS_MINIMIZEBOX    | \
+                     WS_MAXIMIZEBOX)
+
+WS_POPUPWINDOW      (WS_POPUP          | \
+                     WS_BORDER         | \
+                     WS_SYSMENU)
+
+WS_CHILDWINDOW      (WS_CHILD)
+
+
+
+확장모드 설정값 Extended Window Styles
+
+WS_EX_TOPMOST           // 항상 모든 창 위에 있게 한다. +SetWindowPos() 함수로 조절가능.
+
+WS_EX_ACCEPTFILES       // 다른 파일을 끌어서 놓는 것을 허용한다.
+
+//기본값
+WS_EX_LEFT              // 왼쪽 맞춤 속성을 가짐 
+WS_EX_LTRREADING        // 윈도우 텍스트가 왼쪽에서 오른쪽으로 표시됨.
+WS_EX_RIGHTSCROLLBAR    // 세로 스크롤 막대가 클라이언트 오른족 영역에 있음. 
+
+
+//뭔지 잘 모르겠음
+WS_EX_TOOLWINDOW        // 이 창은 부동 도구 모음으로 사용하기 위한 창이다. ?
+WS_EX_LAYERED           // 계층화된 윈도우를 생성한다. 기본 스타일이 CS_OWNDC or CS_CLASSDC 인 경우 사용할 수 없다.
+WS_EX_NOREDIRECTIONBITMAP // 방향 재 지정 화면으로 렌더링되지 않는다. 서페이스 이외의 메커니즘을 사용하는 윈도우이다. ?
+WS_EX_NOACTIVATE   // 이 스타일로 만든 최상위 창은 사용자가 클릭할 때 전경 창이 되지 않는다. ?
+
+//테두리 관련 //왜 테두리에 변화가 없는가?
+WS_EX_DLGMODALFRAME     // 윈도우가 이중 테두리를 가짐 ?
+WS_EX_CLIENTEDGE        // 창의 가장자리에 오목한 가장자리가 있습니다.  ?
+WS_EX_WINDOWEDGE        // 창의 가장자리가 튀어나와 테두리가 있습니다.  ?
+WS_EX_STATICEDGE        // 윈도우는 사용자 입력을 허용하지 않는 항목에 사용하기 위한 3차원 테두리를 갖는다. ?
+
+//(아마도)자식창을 가질 때 의미가 있는 옵션들 
+WS_EX_CONTEXTHELP       // 창의 제목표시줄에 물음표가 있습니다. 물음표를 누르면 커서가 물음표로 바뀌고 이 상태로 자식창!을 클릭하면 WM_HELP 메시지를 받습니다. ?
+WS_EX_CONTROLPARENT     // 창 자체에는 대화 상자 탐색에 참여해야하는 하위 창이 포함되어 있습니다. ?
+WS_EX_COMPOSITED        // 이중 버퍼링을 사용하여 윈도우의 모든 자식을 아래에서 위로 그리는 순서로 칠한다. ?
+WS_EX_NOINHERITLAYOUT   // 윈도우 레이아웃을 자식 창에 상속하지 않는다. ?
+WS_EX_MDICHILD          // MDI(Multi Docs Interface) 하위 창으로 만든다. ?
+WS_EX_APPWINDOW         // 창이 표시되면 작업 표시줄에 최상위 창을 표시합니다. ?
+
+//(아마도)자식 창일 때만 의미가 있는 옵션들
+WS_EX_TRANSPARENT       // 동일한 스레드에 의해 생성된 창 아래의 형제가 칠해 질 때 까지 창을 그려서는 안된다. ? + SetWinodwRgn() 함수로 투명도 조절
+WS_EX_NOPARENTNOTIFY    // (자식) 만들어지거나 소멸될 때 부모에게 WM_PARENTNOTIFY 메시지를 보내지 않음.
+
+
+//무의미
+// 기본 언어가 읽기 순서 정렬을 지정하는 경우에만 효과가 있음.
+WS_EX_RIGHT             // 오른쪽 맞춤 속성을 가짐 
+WS_EX_RTLREADING        // 윈도우 텍스트가 오른쪽에서 왼쪽으로 표시됨.
+WS_EX_LEFTSCROLLBAR     // 세로 스크롤 막대가 클라이언트 영역 왼쪽에 있음. 
+WS_EX_LAYOUTRTL         // 창의 가로 원점이 오른쪽 가장자리에 있고, 수평값이 증가하면 왼족으로 진행된다.
+
+
+일반적인 확장 윈도우 스타일 Common Extended Window Styles
+WS_EX_OVERLAPPEDWINDOW  (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE)
+WS_EX_PALETTEWINDOW     (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST)
+
+
+
+윈도우를 생성할 때 설정한 윈도우의 속성들을 바꿔주거나 얻어올 때 사용 : , 
+
+SetWindowLong(HWND hWnd, int nIndex, LONG dwNewLong); 
+GetWindowLong(HWND hWnd, int nIndex)
+
+hWnd : 속성을 변경하고자 하는 윈도우의 핸들
+
+nIndex : 변경하고자 하는 속성
+//GWL은 x86에서 계속 쓰던거, GWLP는 x64에서 바뀐거.
+GWL_STYLE        //  윈도우 스타일
+GWL_EXSTYLE      //  확장 윈도우 스타일 
+				 
+GWLP_WNDPROC     //  윈도우 프로시저의 번지 (함수 포인터)
+GWLP_HINSTANCE   //  인스턴스 핸들
+GWLP_HWNDPARENT  //  부모 윈도우의 핸들값
+GWLP_USERDATA    //  응용 프로그램에서 정의한 값으로 이 윈도우와 연관된 32비트 값
+GWLP_ID          //  윈도우 컨트롤의 ID
+

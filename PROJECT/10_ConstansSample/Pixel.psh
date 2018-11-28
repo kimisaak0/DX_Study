@@ -1,0 +1,15 @@
+struct VS_OUTPUT
+{
+	float4 Position : SV_POSITION;
+	float4 Diffuse  : COLOR0;
+};
+
+float4 PS(VS_OUTPUT input) : SV_Target
+{
+	return input.Diffuse;
+}
+
+float4 PS2(VS_OUTPUT input) : SV_Target
+{
+	return input.Diffuse.yzxw;
+}

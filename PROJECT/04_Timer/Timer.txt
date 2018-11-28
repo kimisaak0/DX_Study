@@ -1,0 +1,19 @@
+1. HRT (High Resolution Timer)
+   winAPI에서 제공하는 타이머보다 정밀도가 높은 타이머.
+
+1)LARGE_INTEGER
+typedef union _LARGE_INTEGER {
+    struct {
+        DWORD LowPart;
+        LONG HighPart;
+    } u;
+    LONGLONG QuadPart;
+} LARGE_INTEGER;
+
+전체수는 QurdPart(64bit)로 받아올 수 있고, 이를 HighPart(32bit)와 LowPart(32bit)로 잘라서 이용할 수 있다. 
+
+2)주파수와 카운터
+QueryPerformanceFrequency(LARGE_INTEGER* lpFrequency)로 1초당 발생하는 시스템 클럭 인터럽트의 주파수를 받아온다.
+QueryPerformanceCounter(LARGE_INTEGER* lpliPerformanceCount)로 현재 CPU의 클럭수를 받아온다.
+이를 이용해 시간을 측정하는 방법은 QueryPerformanceCounter()를 두번 실행해 그 차이를 주파수로 나누는 것이다.
+

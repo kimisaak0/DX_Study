@@ -1,0 +1,91 @@
+//<1> 버퍼의 속성값을 지정하는 구조체
+struct D3D11_BUFFER_DESC
+{
+  UINT ByteWidth;            // 생성할 버퍼의 크기 (바이트 단위)
+  D3D11_USAGE Usage;		 // 생성할 버퍼의 읽기쓰기 방법 지정. D3D11_USAGE 참조
+  UINT BindFlags;			 // 생성할 버퍼가 파이프라인에 바인딩할 방법을 지정. 여러개의 플래그를 조합할 수 있다. D3D11_BIND_FLAG 참조
+  UINT CPUAccessFlags;		 // CPU가 생성된 버퍼에 접근하는 유형을 지정. CPU에 접근권한을 주지 않을 경우 0을 사용함. D3D11_CPU_ACCESS_FLAG 참조
+  UINT MiscFlags;			 // 추가적인 옵션 플래그. 여러개의 플래그를 조합할 수 있다. D3D11_RESOURCE_MISC_FLAG 참조
+  UINT StructureByteStride;	 // 구조화된 버퍼를 사용할 경우. 구조체 버퍼의 크기 (바이트 단위)
+}
+
+        기본적으로 0번 사용. 상수버퍼는 2번 사용.
+        enum D3D11_USAGE
+        {	
+          D3D11_USAGE_DEFAULT	  = 0,  // GPU의 읽기쓰기 허용. CPU는 접근 불가. 가장 많이 쓰는 값.
+          D3D11_USAGE_IMMUTABLE	  = 1,	// GPU의 읽기 허용. CPU는 접근 불가. 생성시 초기화 필요. 생성후 변경불가.
+          D3D11_USAGE_DYNAMIC	  = 2,	// GPU의 읽기 허용. CPU의 쓰기 허용. MAP 메소드 사용. 
+          D3D11_USAGE_STAGING	  = 3	// GPU에서 CPU로 복사를 허용. (CopyResource 사용)
+        } 
+        
+        enum D3D11_BIND_FLAG
+        {	
+          D3D11_BIND_VERTEX_BUFFER      = 0x1L,    // 버퍼를 버텍스 버퍼로 사용. IAStage에 바인딩.
+          D3D11_BIND_INDEX_BUFFER       = 0x2L,	   // 버퍼를 인덱스 버퍼로 사용. IAStage에 바인딩.
+          D3D11_BIND_CONSTANT_BUFFER    = 0x4L,	   // 버퍼를 상수 버퍼로 사용. ShaderStage에 바인딩. 다른 플래그와 결합 불가.
+          D3D11_BIND_SHADER_RESOURCE    = 0x8L,	   // 버퍼 또는 텍스처를 ShaderStage에 바인딩.  D3D11_MAP_WRITE_NO_OVERWRITE 플래그와 함께 사용 불가.
+          D3D11_BIND_STREAM_OUTPUT      = 0x10L,   // 버퍼를 출력 버퍼로 사용. SOStage에 바인딩.
+          D3D11_BIND_RENDER_TARGET      = 0x20L,   // 텍스처를 렌더링 대상으로 OMStage에 바인딩.
+          D3D11_BIND_DEPTH_STENCIL      = 0x40L,   // 텍스처를 스텐실 대상으로 OMStage에 바인딩.
+          D3D11_BIND_UNORDERED_ACCESS   = 0x80L	   // 정렬되지 않은 액세스 리소스를 바인딩.
+        }
+        
+        enum D3D11_CPU_ACCESS_FLAG   // CPU ACCESS를 사용하지 않을거면 0으로 세팅
+        {	
+          D3D11_CPU_ACCESS_WRITE     = 0x10000L,  //CPU가 내용을 변경할 수 있도록 매핑.
+          D3D11_CPU_ACCESS_READ      = 0x20000L   //CPU가 내용을 읽을 수 있도록 매핑. 
+        }
+        
+        
+        enum D3D11_RESOURCE_MISC_FLAG
+        {	
+          D3D11_RESOURCE_MISC_GENERATE_MIPS	           = 0x1L,    // 텍스처 자원으로 밉맵 생성을 가능하게 함. <제약있음>
+          D3D11_RESOURCE_MISC_SHARED	               = 0x2L,	  // 2D 밉맵 텍스처를 둘 이상의 D3D장치간에 공유가 가능하게 함. ...SHARED_KEYEDMUTEX와 함께 쓸 수 없음
+          D3D11_RESOURCE_MISC_TEXTURECUBE	           = 0x4L,	  // 리소스를 6개의 텍스쳐가 포함된 Texture2DArray에서 만든 큐브 텍스처로 설정함.
+          D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS	       = 0x10L,	  // GPU 생성 컨텐츠의 인스턴스를 사용 가능하게 함. ?
+          D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS   = 0x20L,	  // 바이트 주소 버퍼로 리소스를 사용. ?
+          D3D11_RESOURCE_MISC_BUFFER_STRUCTURED	       = 0x40L,	  // 리소스를 구조화 된 버퍼로 사용.
+          D3D11_RESOURCE_MISC_RESOURCE_CLAMP           = 0x80L,	  // ID3D11DeviceContext :: SetResourceMinLOD와 함께 사용하기위한 밉맵 클램핑을 사용하는 리소스를 사용. ?
+          D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX        = 0x100L,  // 리소스를 동기화 할 수 있...?? ...MISC_SHARED와 함께 사용할 수 없음.
+          D3D11_RESOURCE_MISC_GDI_COMPATIBLE           = 0x200L	  // GDI와 호환되는 리소스를 사용함.
+        }
+
+//<2> 버퍼 초기화에 사용되는 구조체
+struct D3D11_SUBRESOURCE_DATA
+{
+  const void *pSysMem;     // 초기화 데이터에 대한 포인터
+  UINT SysMemPitch;		   // 텍스쳐 리소스 한줄의 크기 (바이트 단위). 텍스쳐가 아니면 무의미하다.
+  UINT SysMemSlicePitch;   // 3D텍스쳐의 깊이 간격의 크기 (바이트 단위). 3D텍스쳐가 아니면 무의미하다.
+}
+
+//<1>,<2>,생생된 버퍼를 반환받을 주소
+getDevice()->CreateBuffer(&bd, &InitData, &m_pVertexBuffer);
+
+
+
+//쉐이더 파일 컴파일
+HRESULT D3DX11CompileFromFile(   
+    LPCTSTR pSrcFile,                    //컴파일 하고자하는 쉐이더 파일명 (필수)
+    CONST D3D_SHADER_MACRO *pDefines,    //쉐이더 코드안에서 사용할 매크로 배열의 주소이며 사용하지 않을 경우는 NULL로 지정한다.   
+    LPD3D10INCLUDE pInclude,             //ID3DInclude인터페이스를 지정하며 사용하지 않을 경우는 NULL로 한다. 만약 인터페이스를 사용하게 되면 쉐이더 코드안에서 #include 가 포함되어 있으면 컴파일 오류가 발생한다.   
+    LPCSTR pFunctionName,                //쉐이더 진입점 함수이름.   
+    LPCSTR pProfile,                     //컴파일 할 쉐이더 모듈을 지정하는 문자열, 쉐이더 모델 2, 쉐이더 모델 3 또는 쉐이더 모델 4의 모든 프로필을 사용할 수 있다.   
+    UINT Flags1,                         //쉐이더 컴파일 플래그.   
+    UINT Flags2,                         //이펙트 옵션 컴파일 플래그.   
+    ID3DX11ThreadPump *pPump,            //ID3DX11ThreadPump 인터페이스 지정하며 비동기적인 리소스의 로딩에 사 용한다.( 사용하지 않을 경우는 NULL로 지정 )   
+    ID3DBlob **ppShader,                 //컴파일된 쉐이더에 포함된 디버깅 정보와 심볼 테이블 정보를 저장하는 ID3DBlob 인터페이스에 대한 포인터이다.   
+    ID3DBlob **ppErrorMsgs,              //컴파일 할 때 오류 및 경고 목록을 저장하는 ID3D10Blob 인터페이스에 대한 포인터이다. 이러한 오류와 경고는 디버거에서 디버깅 출력과 동일하다.   
+    HRESULT *pHResult                    //반환 값에 대한 주소. 필요하지 않은 경우 NULL로 지정.  pPump가 NULL이 아닌 경우 비동기적으로 실행이 완료될 때까지 pHResult으로 반환 값을 리턴 받기 위해 사용하는 포인터는 변경되지 않도록 해야 한다. 
+);
+
+
+struct D3D11_INPUT_ELEMENT_DESC
+    {
+    LPCSTR SemanticName;
+    UINT SemanticIndex;
+    DXGI_FORMAT Format;
+    UINT InputSlot;
+    UINT AlignedByteOffset;
+    D3D11_INPUT_CLASSIFICATION InputSlotClass;
+    UINT InstanceDataStepRate;
+    }

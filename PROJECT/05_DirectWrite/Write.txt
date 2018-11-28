@@ -1,0 +1,208 @@
+1. Direct2D 객체 생성.
+  D2D1CreateFactory(
+     D2D1_FACTORY_TYPE_SINGLE_THREADED, // 스레드 타입
+     &m_pD2dFactory						// 만들어진 객체를 반환받을 주소.
+  );
+
+enum D2D1_FACTORY_TYPE
+{
+     D2D1_FACTORY_TYPE_SINGLE_THREADED = 0, // 싱글 스레드 
+     D2D1_FACTORY_TYPE_MULTI_THREADED = 1,	// 멀티 스레드
+} D2D1_FACTORY_TYPE;
+
+2. DirecctWrite 객체 생성.
+  DWriteCreateFactory(
+    DWRITE_FACTORY_TYPE_SHARED,	   // 팩토리 타입
+	__uuidof(IDWriteFactory),	   // 팩토리 식별 GUID값
+	(IUnknown**)&m_pDWriteFactory  // 만들어진 객체를 반환받을 주소
+  );
+
+  enum DWRITE_FACTORY_TYPE
+{
+    DWRITE_FACTORY_TYPE_SHARED,    // 공유 팩토리 타입
+    DWRITE_FACTORY_TYPE_ISOLATED   // 독립 팩토리 타입
+};
+
+3. 텍스트 포맷 생성 (DW팩토리로부터 생성한다.)
+   m_pDWriteFactory->CreateTextFormat(
+     _T("궁서"),                  // 폰트 패밀리 이름 (문자열)
+     NULL,						  // 글꼴 컬렉션 객체에 대한 포인터 (NULL이면 시스템 글꼴 모음)
+     DWRITE_FONT_WEIGHT_REGULAR,  // 텍스트 객체의 글꼴 두께
+     DWRITE_FONT_STYLE_NORMAL,	  // 텍스트 객체의 글꼴 스타일
+     DWRITE_FONT_STRETCH_NORMAL,  // 텍스트 객체의 글꼴 늘이기
+     15.0f, 					  // 글꼴 크기 DIP("장치 독립적 픽셀") 1DIP = 1/96 인치
+     _T("ko-kr"),				  // 지역 이름 (문자열)
+     &m_pTextFormat				  // 생성된 텍스트 포맷을 반환받을 주소
+   );
+
+
+// 텍스트 객체의 글꼴 두께
+enum DWRITE_FONT_WEIGHT
+{
+    DWRITE_FONT_WEIGHT_THIN = 100,
+    DWRITE_FONT_WEIGHT_EXTRA_LIGHT = 200,
+    DWRITE_FONT_WEIGHT_ULTRA_LIGHT = 200,
+    DWRITE_FONT_WEIGHT_LIGHT = 300,
+    DWRITE_FONT_WEIGHT_NORMAL = 400,
+    DWRITE_FONT_WEIGHT_REGULAR = 400,
+    DWRITE_FONT_WEIGHT_MEDIUM = 500,
+    DWRITE_FONT_WEIGHT_DEMI_BOLD = 600,
+    DWRITE_FONT_WEIGHT_SEMI_BOLD = 600,
+    DWRITE_FONT_WEIGHT_BOLD = 700,
+    DWRITE_FONT_WEIGHT_EXTRA_BOLD = 800,
+    DWRITE_FONT_WEIGHT_ULTRA_BOLD = 800,
+    DWRITE_FONT_WEIGHT_BLACK = 900,
+    DWRITE_FONT_WEIGHT_HEAVY = 900,
+    DWRITE_FONT_WEIGHT_EXTRA_BLACK = 950,
+    DWRITE_FONT_WEIGHT_ULTRA_BLACK = 950
+};
+
+ // 텍스트 객체의 글꼴 스타일
+enum DWRITE_FONT_STYLE
+{
+    DWRITE_FONT_STYLE_NORMAL,   // 표준 글꼴 스타일
+    DWRITE_FONT_STYLE_OBLIQUE,	// 기울임 스타일 (인위적 기울임)
+    DWRITE_FONT_STYLE_ITALIC	// 이탤릭 스타일 (실제로 기울어짐)
+};
+
+// 텍스트 객체의 글꼴 늘이기
+enum DWRITE_FONT_STRETCH
+{
+    DWRITE_FONT_STRETCH_UNDEFINED = 0,
+    DWRITE_FONT_STRETCH_ULTRA_CONDENSED = 1,
+    DWRITE_FONT_STRETCH_EXTRA_CONDENSED = 2,
+    DWRITE_FONT_STRETCH_CONDENSED = 3,
+    DWRITE_FONT_STRETCH_SEMI_CONDENSED = 4,
+    DWRITE_FONT_STRETCH_NORMAL = 5,
+    DWRITE_FONT_STRETCH_MEDIUM = 5,
+    DWRITE_FONT_STRETCH_SEMI_EXPANDED = 6,
+    DWRITE_FONT_STRETCH_EXPANDED = 7,
+    DWRITE_FONT_STRETCH_EXTRA_EXPANDED = 8,
+    DWRITE_FONT_STRETCH_ULTRA_EXPANDED = 9
+};
+
+지역 이름 
+한글 : "ko-kr"
+영어 : "en-us"
+일어 : "ja-jp"
+http://msdn.microsoft.com/en-us/library/windows/desktop/dd318693(v=vs.85).aspx 
+
+//IDWriteTextFormat 객체의 메소드들
+메소드                     설명
+GetFlowDirection           텍스트 행의 방향을 얻는다.  
+GetFontCollection          현재 글꼴 컬렉션을 얻는다.  
+GetFontFamilyName          글꼴 패밀리 이름의 복사본을 얻는다.  
+GetFontFamilyNameLength    글꼴 패밀리 이름의 길이를 얻는다.  
+GetFontSize                글꼴의 높이(DIP)를 얻는다.  
+GetFontStretch             텍스트의 글꼴 확장을 얻는다.  
+GetFontStyle               텍스트의 글꼴 스타일을 얻는다.  
+GetFontWeight              텍스트의 글꼴 두께를 얻는다.  
+GetIncrementalTabStop      증분 탭 정지 위치를 얻는다.  
+GetLineSpacing             여러 줄의 텍스트 단락에 설정된 간격 조정을 얻는다.  
+GetLocaleName              텍스트에서 로케일 이름의 복사본을 얻는다.   
+GetLocaleNameLength        텍스트에서 로케일 이름의 길이를 얻는다. 
+GetParagraphAlignment      레이아웃 상자의 상단 및 하단을 기준으로 단락 맞춤 옵션을 얻는다.  
+GetReadingDirection        단락 내의 텍스트의 현재의 읽기 방향을 얻는다. 
+GetTextAlignment           레이아웃 상자의 끝과 끝을 기준으로 텍스트 배치 옵션을 얻는다. 
+GetTrimming                레이아웃 상자에서 오버 플로우 텍스트 잘라 내기 옵션을 얻는다. 
+GetWordWrapping            자동 줄 바꿈 옵션을 얻는다. 
+
+SetFlowDirection           단락의 텍스트 방향을 설정한다. 
+SetIncrementalTabStop      2개의 인접한 탭 정지 사이의 고정 거리를 설정한다.  
+SetLineSpacing             줄 간격을 설정한다.  
+SetParagraphAlignment      레이아웃 상자의 상단 및 하단을 기준으로 단락 맞춤 옵션을 설정한다.  
+SetReadingDirection        단락의 읽기 방향을 설정한다.  
+SetTextAlignment           레이아웃 상자의 끝과 끝을 기준으로 단락 내의 텍스트 배치 옵션을 설정한다.  
+SetTrimming                레이아웃 너비에서 오버 플로우 텍스트 잘라 내기 옵션을 설정한다.  
+SetWordWrapping            자동 줄 바꿈 옵션을 설정한다. 
+
+4. D2D렌더타겟 생성
+CreateDxgiSurfaceRenderTarget 메소드는 DXGI 화면에 랜더링하는 랜더 타켓을 생성하며 반드시 
+Direct3D 디바이스를 생성시에  반드시 다음과 같이 플래그를 지정해야 한다.  
+UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+
+  렌더타켓은 디바이스에 종속적인 객체로 백 버퍼 크기가 변경될 경우 소멸 후 다시 생성해줘야 한다.
+  m_pD2dFactory->CreateDxgiSurfaceRenderTarget(
+    pSurface,  // 렌더 타겟의 렌더링 대상 (즉 D3D 스왑체인으로 받아온 백버퍼) 
+    &props,    // 렌더링 옵션 구조체 (채워서 넘기거나 채우는 함수를 쓰거나한다.)
+    &m_pD2dRT  // 반환된 D2D렌더타켓을 반환받을 주소
+  );
+
+//렌더링 옵션 구조체 세부 내용
+struct D2D1_RENDER_TARGET_PROPERTIES
+{
+    D2D1_RENDER_TARGET_TYPE type;     // 하드웨어 렌더링을 사용할지 여부
+    D2D1_PIXEL_FORMAT pixelFormat;	  // 픽셀 모드 값. ()
+    FLOAT dpiX;						  // 화면 dpi값 
+    FLOAT dpiY;						  // 화면 dpi값 화면이 확대될 경우 출력된 스트링이 흐려지는 현상을 보정하기 위해 사용됨.
+    D2D1_RENDER_TARGET_USAGE usage;	  // 렌더 타겟 처리 방법 및 GDI와 호환되는 렌더링 타겟 생성 여부 지정.
+    D2D1_FEATURE_LEVEL minLevel;	  // 하드웨어 렌더링에 필요한 최소한의 D3D기능 수준 설정.
+};
+
+//첫번째 인자값에 들어갈 수 있는 상수값
+enum D2D1_RENDER_TARGET_TYPE
+{
+    D2D1_RENDER_TARGET_TYPE_DEFAULT = 0,    // 하드웨어를 사용할 수 있으면 하드웨어로 안되면 소프트웨어로 렌더링 함. WIC비트맵은 하드웨어 렌더링이 안되지만 쓸일이...
+    D2D1_RENDER_TARGET_TYPE_SOFTWARE = 1,   // CPU를 이용해서 렌더링
+    D2D1_RENDER_TARGET_TYPE_HARDWARE = 2,   // GPU를 이용해서 렌더링
+};
+
+struct D2D1_PIXEL_FORMAT
+{
+    DXGI_FORMAT format;          // 색상 형식. DXGI와 일치하는 포맷을 사용해야 하며 DXGI_FORMAT_UNKOWN을 사용하면 자동으로 dxgi포맷과 맞게 생성된다.
+    D2D1_ALPHA_MODE alphaMode;	 // 알파 모드. 알파모드는 기본값이 없으므로 현재 색상모드에 맞는 걸로 적용해야함.
+
+};
+
+현재 색상 모드 DXGI_FORMAT_B8G8R8A8_UNORM (이걸 바꾸는 것에 대해서는 더 깊게 파야지 알 수 있을듯)
+
+enum D2D1_ALPHA_MODE
+{
+    D2D1_ALPHA_MODE_UNKNOWN = 0,        // ... 사용불가
+    D2D1_ALPHA_MODE_PREMULTIPLIED = 1,  // 색을 만들때 정해진 알파값이 알파채널에 저장된다. 
+    D2D1_ALPHA_MODE_STRAIGHT = 2,       // A값으로 알파를 조절할 수 있다.  ... 사용불가
+    D2D1_ALPHA_MODE_IGNORE = 3,         // 알파값을 무시하고 불투명하게 처리한다. 인 것 같은데 A값이 적용된다.
+};
+
+dpiX,Y값은 모니터의 인치 당 도트수를 나타내는데 현재 모니터는 대부분 96.0이다.
+
+enum D2D1_RENDER_TARGET_USAGE
+{
+   D2D1_RENDER_TARGET_USAGE_NONE,                     // GDI와 호환이 없고, D3D명령 스트림 사용. 실패시 비트맵 리모팅 사용.
+   D2D1_RENDER_TARGET_USAGE_FORCE_BITMAP_REMOTING,	  // ...? 
+   D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE,			  // GDI와 호환됨.
+};
+
+//걍 DEFAULT쓰면 됨
+enum D2D1_FEATURE_LEVEL
+{
+   D2D1_FEATURE_LEVEL_DEFAULT = 0,
+   D2D1_FEATURE_LEVEL_9 = D3D10_FEATURE_LEVEL_9_1,
+   D2D1_FEATURE_LEVEL_10 = D3D10_FEATURE_LEVEL_10_0, 
+};
+
+5. 브러시 생성
+//텍스트 색상 객체 생성
+HRESULT CreateSolidColorBrush(
+  D2D1_COLOR_F &color,					   // 색상 지정
+  ID2D1SolidColorBrush **solidColorBrush   // 생성된 브러쉬 객체를 반환받을 주소.
+) 
+//가운데 인자값을 하나 더 넣을 수 있는데 일단 패스.
+
+
+//중요한 건 생성되는 객체가 DXGI에대해 독립적인가 종속적인가이다.
+
+	//DXGI에 독립적인 객체
+	ID2D1Factory* m_pD2dFactory;       //d2d 팩토리
+	IDWriteFactory* m_pDWriteFactory;  //DW 팩토리
+	IDWriteTextFormat* m_pTextFormat;  //텍스트포맷
+
+	//DXGI에 종속적인 객체
+	ID2D1RenderTarget* m_pD2dRT;       //d2d 렌더타켓뷰
+	ID2D1SolidColorBrush* m_pD2dSCB;   //d2d 브러쉬
+
+
+IDWriteTextFormat으로 출력하면 폰트나 글씨크기등을 중간에 변경할 수 없지만 내용을 바꿀 수 있고,
+IDWriteTextLayout로 출력하면 폰트나 글씨크기등도 바꿀 수 있지만 내용을 바꿀 수 없다.
+
+//IDWriteTextLayout객체를 생성해서 폰트라든가를 바꾸는 것은 다루지 않았음.

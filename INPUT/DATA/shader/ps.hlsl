@@ -13,6 +13,7 @@ cbuffer cb0
 };
 Texture2D     g_txDiffuse : register(t0);
 SamplerState  g_samLinear : register(s0);
+SamplerState  g_samPoint : register(s1);
 
 struct VS_OUTPUT
 {
@@ -35,4 +36,9 @@ float4 PSLine(VS_OUTPUT v) : SV_Target
 float4 PSColor(VS_OUTPUT v) : SV_Target
 {
 	return g_Color;
+}
+
+float4 pssky(VS_OUTPUT v) : SV_Target
+{
+	return g_txDiffuse.Sample(g_samPoint, v.t);
 }

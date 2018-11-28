@@ -141,11 +141,5 @@
     <FxCompile Include="gs.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="pssky.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="vssky.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

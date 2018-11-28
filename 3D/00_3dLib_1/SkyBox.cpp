@@ -26,7 +26,7 @@ HRESULT SkyBox::LoadTexture(T_STR szName)
 
 HRESULT SkyBox::LoadVertexShader(T_STR szName)
 {
-	m_dxObj.m_pVertexShader.Attach(D3D::LoadVertexShaderFile(szName.c_str(), m_dxObj.m_pVSBlob.GetAddressOf(), "VSsky"));
+	m_dxObj.m_pVertexShader.Attach(D3D::LoadVertexShaderFile(szName.c_str(), m_dxObj.m_pVSBlob.GetAddressOf(), "vssky"));
 
 	return S_OK;
 }
@@ -35,7 +35,7 @@ HRESULT SkyBox::LoadPixelShader(T_STR szName)
 {
 	if (szName != L"NULL") {
 		HRESULT hr = S_OK;
-		m_dxObj.m_pPixelShader.Attach(D3D::LoadPixelShaderFile(szName.c_str(), m_dxObj.m_pVSBlob.GetAddressOf(), "PSsky"));
+		m_dxObj.m_pPixelShader.Attach(D3D::LoadPixelShaderFile(szName.c_str(), m_dxObj.m_pVSBlob.GetAddressOf(), "pssky"));
 		return hr;
 	}
 	return S_OK;

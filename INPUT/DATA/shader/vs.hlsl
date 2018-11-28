@@ -42,6 +42,7 @@ VS_OUTPUT VS(VS_IN v)
 	vOut.t = v.t;
 	return vOut;
 }
+
 VS_OUTPUT VS_NoMatrix(VS_IN v)
 {
 	VS_OUTPUT vOut = (VS_OUTPUT)0;	
@@ -52,3 +53,15 @@ VS_OUTPUT VS_NoMatrix(VS_IN v)
 	return vOut;
 }
 
+VS_OUTPUT vssky(VS_IN v)
+{
+	VS_OUTPUT vOut = (VS_OUTPUT)0;
+	float4 vWorld = mul(float4(v.p, 1.0f), g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vOut.p = vProj.xyzz;
+	vOut.n = v.n;
+	vOut.c = v.c;// g_Color;
+	vOut.t = v.t;
+	return vOut;
+}

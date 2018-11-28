@@ -80,7 +80,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../INPUT/DX11/inc/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\study\DX_study\INPUT\DX11\inc;F:\study\DX_study\INPUT\DATA\inc\2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy "*.h" "../../INPUT/DATA/inc/2/"
@@ -88,6 +88,7 @@ copy "*.lib" "../../INPUT/DATA/lib/2/"</Command>
     </PostBuildEvent>
     <Lib>
       <OutputFile>lib_1.lib</OutputFile>
+      <AdditionalLibraryDirectories>F:\study\DX_study\INPUT\DX11\lib;F:\study\DX_study\INPUT\DATA\lib\2;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -127,47 +128,68 @@ copy "*.lib" "../../INPUT/DATA/lib/2/"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="00_header_DX.h" />
-    <ClInclude Include="01_deviceC_DX.h" />
-    <ClInclude Include="02_wndC_DX.h" />
-    <ClInclude Include="03_coreC_DX.h" />
-    <ClInclude Include="04_timerC_DX.h" />
-    <ClInclude Include="05_writeC_DX.h" />
-    <ClInclude Include="06_inputC_DX.h" />
-    <ClInclude Include="07_Obj3d_DX.h" />
-    <ClInclude Include="08_Obj3d_Header.h" />
-    <ClInclude Include="09_dxState.h" />
-    <ClInclude Include="10_Shape_DX.h" />
-    <ClInclude Include="11_Shapes_DX.h" />
-    <ClInclude Include="12_Shapes_ext.h" />
-    <ClInclude Include="13_Camera_DX.h" />
-    <ClInclude Include="14_ArcBall_DX.h" />
-    <ClInclude Include="15_Flustum_DX.h" />
-    <ClInclude Include="16_ModelView_DX.h" />
+    <ClInclude Include="header_DX.h" />
+    <ClInclude Include="deviceC_DX.h" />
+    <ClInclude Include="wndC_DX.h" />
+    <ClInclude Include="coreC_DX.h" />
+    <ClInclude Include="timerC_DX.h" />
+    <ClInclude Include="writeC_DX.h" />
+    <ClInclude Include="inputC_DX.h" />
+    <ClInclude Include="Obj3d_DX.h" />
+    <ClInclude Include="Obj3d_Header.h" />
+    <ClInclude Include="dxState.h" />
+    <ClInclude Include="Shape_DX.h" />
+    <ClInclude Include="Shapes_DX.h" />
+    <ClInclude Include="Shapes_ext.h" />
+    <ClInclude Include="Camera_DX.h" />
+    <ClInclude Include="ArcBall_DX.h" />
+    <ClInclude Include="Flustum_DX.h" />
+    <ClInclude Include="ModelView_DX.h" />
+    <ClInclude Include="SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="01_deviceC_DX.cpp" />
-    <ClCompile Include="02_wndC_DX.cpp" />
-    <ClCompile Include="03_coreC_DX.cpp" />
-    <ClCompile Include="04_timerC_DX.cpp" />
-    <ClCompile Include="05_writeC_DX.cpp" />
-    <ClCompile Include="06_inputC_DX.cpp" />
-    <ClCompile Include="07_Obj3d_DX.cpp" />
-    <ClCompile Include="09_dxState.cpp" />
-    <ClCompile Include="10_Shape_DX.cpp" />
-    <ClCompile Include="11_Shapes_DX.cpp" />
-    <ClCompile Include="12_Shapes_ext.cpp" />
-    <ClCompile Include="13_Camera_DX.cpp" />
-    <ClCompile Include="14_ArcBall_DX.cpp" />
-    <ClCompile Include="15_Flustum_DX.cpp" />
-    <ClCompile Include="16_ModelView_DX.cpp" />
+    <ClCompile Include="deviceC_DX.cpp" />
+    <ClCompile Include="wndC_DX.cpp" />
+    <ClCompile Include="coreC_DX.cpp" />
+    <ClCompile Include="timerC_DX.cpp" />
+    <ClCompile Include="writeC_DX.cpp" />
+    <ClCompile Include="inputC_DX.cpp" />
+    <ClCompile Include="Obj3d_DX.cpp" />
+    <ClCompile Include="dxState.cpp" />
+    <ClCompile Include="Shape_DX.cpp" />
+    <ClCompile Include="Shapes_DX.cpp" />
+    <ClCompile Include="Shapes_ext.cpp" />
+    <ClCompile Include="Camera_DX.cpp" />
+    <ClCompile Include="ArcBall_DX.cpp" />
+    <ClCompile Include="Flustum_DX.cpp" />
+    <ClCompile Include="ModelView_DX.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="pssky.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pssky</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="vssky.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vssky</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="vs.hlsl">
       <FileType>Document</FileType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,12 +198,14 @@ copy "*.lib" "../../INPUT/DATA/lib/2/"</Command>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="gs.hlsl">
       <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

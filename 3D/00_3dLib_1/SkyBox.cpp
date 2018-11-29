@@ -7,12 +7,12 @@ SkyBox::SkyBox(){ }
 HRESULT SkyBox::LoadTexture(T_STR szName)
 {
 	const TCHAR* g_szSkyTextures[] = {
-		L"../../INPUT/DATA/image/skybox_front.jpg",
-		L"../../INPUT/DATA/image/skybox_bottom.jpg",
-		L"../../INPUT/DATA/image/skybox_left.jpg",
-		L"../../INPUT/DATA/image/skybox_back.jpg",
-		L"../../INPUT/DATA/image/skybox_right.jpg",
-		L"../../INPUT/DATA/image/skybox_front.jpg",
+		L"../../INPUT/DATA/image/st00_cm_front.bmp",
+		L"../../INPUT/DATA/image/st00_cm_back.bmp",
+		L"../../INPUT/DATA/image/st00_cm_right.bmp",
+		L"../../INPUT/DATA/image/st00_cm_left.bmp",
+		L"../../INPUT/DATA/image/st00_cm_up.bmp",
+		L"../../INPUT/DATA/image/st00_cm_down.bmp"
 	};
 
 	int iNumTexture = sizeof(g_szSkyTextures) / sizeof(g_szSkyTextures[0]);
@@ -35,7 +35,7 @@ HRESULT SkyBox::LoadPixelShader(T_STR szName)
 {
 	if (szName != L"NULL") {
 		HRESULT hr = S_OK;
-		m_dxObj.m_pPixelShader.Attach(D3D::LoadPixelShaderFile(szName.c_str(), m_dxObj.m_pVSBlob.GetAddressOf(), "pssky"));
+		m_dxObj.m_pPixelShader.Attach(D3D::LoadPixelShaderFile(szName.c_str(), nullptr, "pssky"));
 		return hr;
 	}
 	return S_OK;
@@ -45,20 +45,10 @@ bool  SkyBox::Create(T_STR szVSName, T_STR szPSName, T_STR szGSName, T_STR szTex
 {
 	D3DXMatrixScaling(&m_matWorld, scale, scale, scale);
 	
-	CreateVertexData();
-	CreateIndexData();
+	Shape_DX::Create(szVSName, szPSName, szGSName, szTextureName);
 
-	CreateVertexBuffer();
-	CreateIndexBuffer();
-	CreateConstantBuffer();
-
-	LoadVertexShader(szVSName);
-	LoadPixelShader(szPSName);
-	LoadGeoShader(szGSName);
-
-	CreateInputLayout();
-
-	LoadTexture(szTextureName);
+	//LoadVertexShader(szVSName);
+	//LoadPixelShader(szPSName);
 
 	return true;
 }
@@ -79,7 +69,7 @@ bool  SkyBox::Render()
 	for (int iTex = 0; iTex < textureNum; iTex++) {
 		if (m_pTexSRV[iTex] == nullptr) { break; }
 		g_pD3dContext->PSSetShaderResources(0, 1, m_pTexSRV[iTex].GetAddressOf());
-		
+
 		g_pD3dContext->DrawIndexed(6, 6 * iTex, 0); //인덱스 버퍼 갯수, 인덱스 버퍼 시작, 버텍스 버퍼 시작.
 	}
 

@@ -13,6 +13,9 @@ bool Sample::Init()
 	m_ObjBox.   Create(L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/lightmap.bmp");
 	m_ObjSphere.Create(L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/lightmap.bmp");
 
+	m_ObjBox.ChangePSFunction(L"../../INPUT/DATA/shader/ps.hlsl", "PS");
+	m_ObjSphere.ChangePSFunction(L"../../INPUT/DATA/shader/ps.hlsl", "PS");
+
 	return true;
 }
 bool Sample::Frame()

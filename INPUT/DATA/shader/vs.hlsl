@@ -13,10 +13,11 @@ cbuffer cb0
 };
 Texture2D     g_txDiffuse : register(t0);
 SamplerState  g_samLinear : register(s0);
+SamplerState  g_samPoint : register(s0);
 
 struct VS_IN
 {
-	float3 p : POSITION;
+	float3 p : POS;
 	float3 n : NORMAL;
 	float4 c : COLOR;
 	float2 t : TEXCOORD;

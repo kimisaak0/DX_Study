@@ -1,7 +1,7 @@
 #pragma once
 #pragma comment(lib, "lib_1.lib")
 
-#include "03_coreC_DX.h"
+#include "coreC_DX.h"
 
 class Sample : public coreC_DX
 {

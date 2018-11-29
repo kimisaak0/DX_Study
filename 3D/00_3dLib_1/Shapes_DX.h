@@ -36,7 +36,10 @@ public:
 	HRESULT CreateVertexData() override;
 	HRESULT CreateIndexData() override;
 
+	HRESULT LoadPixelShader(T_STR szName) override;
 	HRESULT LoadGeoShader(T_STR szName) override;
+
+	bool ChangePSFunction(T_STR szPSName, C_STR PSPunction);
 
 public:
 	Box_Shape();

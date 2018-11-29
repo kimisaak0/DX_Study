@@ -182,10 +182,11 @@ bool  Obj3d_DX::PreRender(UINT iVertexSize)
 	UINT stride = iVertexSize;
 	UINT offset = 0;
 
-	g_pD3dContext->IASetInputLayout(m_pInputLayout.Get()); //인풋 레이아웃 세팅
 
 	g_pD3dContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset); //정점 버퍼 세팅
 	g_pD3dContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);            //인덱스 버퍼 세팅
+	
+	g_pD3dContext->IASetInputLayout(m_pInputLayout.Get()); //인풋 레이아웃 세팅
 																							   
 	g_pD3dContext->VSSetShader(m_pVertexShader.Get(), NULL, 0);                                // 정점 쉐이더 세팅
 	g_pD3dContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());			   // 정점 쉐이더에 상수 버퍼 세팅

@@ -79,16 +79,16 @@ bool coreC_DX::gameInit()
 
 	m_pMainCamera = &m_DefaultCamera; //메인 카메라를 디폴트 카메라로 설정
 
+	m_dirAxis.Create(L"../../INPUT/DATA/shader/vs.hlsl",
+		L"../../INPUT/DATA/shader/ps.hlsl", 
+		L"../../INPUT/DATA/shader/gs.hlsl", 
+		L"NULL"); //기준 선 만들기.
+
 	m_SkyBox.Create(L"../../INPUT/DATA/shader/vs.hlsl",
 		L"../../INPUT/DATA/shader/ps.hlsl",
 		L"../../INPUT/DATA/shader/gs.hlsl",
 		L"NULL",
 		100.0f);
-
-	m_dirAxis.Create(L"../../INPUT/DATA/shader/vs.hlsl",
-		L"../../INPUT/DATA/shader/ps.hlsl", 
-		L"../../INPUT/DATA/shader/gs.hlsl", 
-		L"NULL"); //기준 선 만들기.
 
 	Init();
 

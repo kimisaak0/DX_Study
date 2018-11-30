@@ -2,6 +2,7 @@
 #pragma comment(lib, "lib_1.lib")
 
 #include "coreC_DX.h"
+#include "defaultmap.h"
 
 class Sample : public coreC_DX
 {
@@ -9,6 +10,7 @@ class Sample : public coreC_DX
 	Box_Shape      m_ObjSphere;
 
 	D3DXMATRIX m_World;
+	DefaultMap m_Map;
 
 public:
 	bool Init();

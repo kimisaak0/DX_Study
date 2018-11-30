@@ -80,7 +80,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>F:\study\DX_study\INPUT\DX11\inc;F:\study\DX_study\INPUT\DATA\inc\2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../INPUT/DX11/inc/;../../INPUT/DATA/inc/2/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
       <Command>copy "*.h" "../../INPUT/DATA/inc/2/"
@@ -90,7 +90,7 @@ copy "*.hlsl" "../../INPUT/DATA/shader/"</Command>
     </PostBuildEvent>
     <Lib>
       <OutputFile>lib_1.lib</OutputFile>
-      <AdditionalLibraryDirectories>F:\study\DX_study\INPUT\DX11\lib;F:\study\DX_study\INPUT\DATA\lib\2;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../INPUT/DX11/lib/;../../INPUT/DATA/lib/2/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -1,5 +1,6 @@
 #include "sample.h"
 
+
 Sample::Sample(LPCTSTR LWndName) : coreC_DX(LWndName) { }
 
 bool Sample::Init()
@@ -9,6 +10,9 @@ bool Sample::Init()
 
 	SetMainCamera(1);
 	m_pMainCamera->SetViewMatrix({ 0.0f, 10.0f, -10.0f }, { 0.0f, 0.0f, 0.0f });
+
+	MapDesc Mdesc = { 1024, 1024, 1.0f, 1.0f, L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/map_bottom.bmp" };
+	m_Map.CreateMap(Mdesc);
 
 	m_ObjBox.Create(L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/lightmap.bmp");
 	m_ObjSphere.Create(L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/lightmap.bmp");
@@ -29,6 +33,9 @@ bool Sample::Frame()
 bool Sample::Render()
 {
 	D3DXMATRIX matWorld;
+
+	m_Map.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+	m_Map.Render();
 
 	//박스 출력
 	D3DXVECTOR3 vPos;
@@ -59,6 +66,7 @@ bool Sample::Release()
 {
 	m_ObjSphere.Release();
 	m_ObjBox.Release();
+	m_Map.Release();
 
 	return true;
 }

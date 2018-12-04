@@ -83,7 +83,7 @@ D3DXVECTOR4 DefaultMap::GetColorOfVertex(int iIndex)
 
 float DefaultMap::GetHeightOfVertex(int iIndex)
 {
-	return 0.0f;
+	return -10.f;
 }
 
 bool DefaultMap::Init()

@@ -41,5 +41,6 @@ float4 PSColor(VS_OUTPUT v) : SV_Target
 
 float4 pssky(VS_OUTPUT v) : SV_Target
 {
-	return g_txDiffuse.Sample(g_samPoint, v.t);
+	float4 vTexColor = g_txDiffuse.Sample(g_samPoint, v.t);
+	return vTexColor;
 }

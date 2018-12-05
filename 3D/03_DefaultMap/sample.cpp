@@ -11,7 +11,7 @@ bool Sample::Init()
 	SetMainCamera(1);
 	m_pMainCamera->SetViewMatrix({ 0.0f, 10.0f, -10.0f }, { 0.0f, 0.0f, 0.0f });
 
-	MapDesc Mdesc = { 1024, 1024, 1.0f, 1.0f, L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/map_bottom.bmp" };
+	MapDesc Mdesc = { 32, 32, 1.0f, 1.0f, L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"NULL", L"../../INPUT/DATA/image/defalut.bmp" };
 	m_Map.CreateMap(Mdesc);
 
 	m_ObjBox.Create(L"../../INPUT/DATA/shader/vs.hlsl", L"../../INPUT/DATA/shader/ps.hlsl", L"../../INPUT/DATA/shader/gs.hlsl", L"../../INPUT/DATA/image/lightmap.bmp");

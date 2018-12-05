@@ -150,7 +150,7 @@ float heightMap::GetHeightOfVertex(int iIndex)
 		return 0.0f;
 	}
 	else {
-		return m_fHeightList[iIndex] * m_fScaleHeight;
+		return (m_fHeightList[iIndex] * m_fScaleHeight) - 100.f;
 	}
 	
 }

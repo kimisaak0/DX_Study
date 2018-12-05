@@ -6,8 +6,6 @@ namespace D3D
 	ID3D11Buffer* CreateVertexBuffer(UINT iNumVertex, UINT iVertexSize, VOID* data);                        // 정점 버퍼 생성 (정점 갯수, 정점 크기, 하위 리소스 데이터)
 	ID3D11Buffer* CreateIndexBuffer(UINT iNumVertex, UINT iVertexSize, VOID* data);						    // 인덱스 버퍼 생성 (정점 갯수, 정점 크기, 하위 리소스 데이터)
 	ID3D11Buffer* CreateConstantBuffer(UINT iBufferSize, VOID* data = nullptr, bool bDynamic = false);		// 상수 버퍼 생성 (버퍼 크기, 하위 리소스 데이터, 동적 리소스 여부)
-	
-	
 
 	//(쉐이더 코드가 들어있는 파일 이름, 컴파일 시작 함수 이름, 쉐이더 모델, 반환인자)
 	HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);

@@ -15,11 +15,10 @@ struct float2;
 struct float3;
 struct float4;
 
-struct float4x4;
-struct float3x3;
 struct float2x2;
+struct float3x3;
+struct float4x4;
 struct stdMatrix;
-
 
 struct Vector2;
 struct Vector3;
@@ -31,7 +30,7 @@ struct Plane;
 namespace Lypi
 {
 
-#define L_Epsilon             ( 0.001f )
+#define L_Epsilon             ( 0.0005f )
 #define L_Pi			      ( XM_PI )
 #define L_e                   ( (float)M_E )
 #define DegreeToRadian(d)     ( ((float)d) * (L_Pi / 180.0f) )
@@ -45,14 +44,8 @@ namespace Lypi
 			float f[2];
 		};
 
-		float2()
-		{
-			x = 0.f; y = 0.f;
-		}
-		float2(float _x, float _y)
-		{
-			x = _x; y = _y;
-		}
+		float2();
+		float2(float _x, float _y);
 	};
 
 	struct float3
@@ -62,14 +55,8 @@ namespace Lypi
 			float f[3];
 		};
 
-		float3()
-		{
-			x = 0.f; y = 0.f; z = 0.f;
-		}
-		float3(float _x, float _y, float _z)
-		{
-			x = _x; y = _y; z = _z;
-		}
+		float3();
+		float3(float _x, float _y, float _z);
 	};
 
 	struct float4
@@ -79,27 +66,31 @@ namespace Lypi
 			float f[4];
 		};
 
-		float4()
-		{
-			x = 0.f; y = 0.f; z = 0.f; w = 0.f;
-		}
-		float4(float _x, float _y, float _z, float _w)
-		{
-			x = _x; y = _y; z = _z; w = _w;
-		}
+		float4();
+		float4(float _x, float _y, float _z, float _w);
 	};
 
-	struct float4x4
+	struct float2x2
 	{
 		union {
 			struct {
-				float _11, _12, _13, _14;
-				float _21, _22, _23, _24;
-				float _31, _32, _33, _34;
-				float _41, _42, _43, _44;
+				float _11, _12;
+				float _21, _22;
 			};
-			float m[4][4];
+			float m[2][2];
+			float2 _1, _2;
 		};
+
+		float2x2();
+		float2x2(float2 __1, float2 __2);
+
+		//복사연산자 기본값으로 정의
+		float2x2(const float2x2&) = default;
+		float2x2(float2x2&&) = default;
+
+		//대입연산자 기본값으로 정의
+		float2x2& operator= (const float2x2&) = default;
+		float2x2& operator= (float2x2&&) = default;
 	};
 
 	struct float3x3
@@ -111,19 +102,47 @@ namespace Lypi
 				float _31, _32, _33;
 			};
 			float m[3][3];
+			float3 _1, _2, _3;
 		};
+
+		float3x3();
+		float3x3(float3 __1, float3 __2, float3 __3);
+
+		//복사연산자 기본값으로 정의
+		float3x3(const float3x3&) = default;
+		float3x3(float3x3&&) = default;
+
+		//대입연산자 기본값으로 정의
+		float3x3& operator= (const float3x3&) = default;
+		float3x3& operator= (float3x3&&) = default;
 	};
-	
-	struct float2x2
+
+
+	struct float4x4
 	{
 		union {
 			struct {
-				float _11, _12;
-				float _21, _22;
+				float _11, _12, _13, _14;
+				float _21, _22, _23, _24;
+				float _31, _32, _33, _34;
+				float _41, _42, _43, _44;
 			};
-			float m[2][2];
+			float m[4][4];
+			float4 _1, _2, _3, _4;
 		};
+
+		float4x4();
+		float4x4(float4 __1, float4 __2, float4 __3, float4 __4);
+
+		//복사연산자 기본값으로 정의
+		float4x4(const float4x4&) = default;
+		float4x4(float4x4&&) = default;
+
+		//대입연산자 기본값으로 정의
+		float4x4& operator= (const float4x4&) = default;
+		float4x4& operator= (float4x4&&) = default;
 	};
+	
 
 	struct stdMatrix : float4x4
 	{
@@ -132,92 +151,28 @@ namespace Lypi
 		//생성자 
 		stdMatrix() { *this = Identity; }
 
-		stdMatrix (	float __11, float __12, float __13, float __14,
-			        float __21, float __22, float __23, float __24,
-			        float __31, float __32, float __33, float __34,
-			        float __41, float __42, float __43, float __44 )
-		{
-			_11 = __11; _12 = __12; _13 = __13; _14 = __14;
-			_21 = __21; _22 = __22; _23 = __23; _24 = __24;
-			_31 = __31; _32 = __32; _33 = __33; _34 = __34;
-			_41 = __41; _42 = __42; _43 = __43; _44 = __44;
-		}
+		//method
+		bool operator== (const stdMatrix& V) const;
+		bool operator!= (const stdMatrix& V) const;
 
-		stdMatrix(const stdMatrix& m)
-		{
-			_11 = m._11; _12 = m._12; _13 = m._13; _14 = m._14;
-			_21 = m._21; _22 = m._22; _23 = m._23; _24 = m._24;
-			_31 = m._31; _32 = m._32; _33 = m._33; _34 = m._34;
-			_41 = m._41; _42 = m._42; _43 = m._43; _44 = m._44;
-		}
+		stdMatrix operator+= (const stdMatrix& V);
+		stdMatrix operator-= (const stdMatrix& V);
 
-		//복사 생성자
-		stdMatrix(const stdMatrix&) = default; //디폴트 복사 생성자를 생성할 것.
-		stdMatrix(stdMatrix&&) = default;      //&& : 우측값 참조, 우측값을 인자로 받는 디폴트 복사 생성자를 생성할 것.
+		stdMatrix Transpose();
+		void Transpose(stdMatrix& result);
 
-		//연산자 재정의
-		stdMatrix& operator= (const stdMatrix&) = default;  //디폴트 대입 연산자를 재정의할 것.
-		stdMatrix& operator= (stdMatrix&&) = default;       //우측값을 인자로 받는 대입 연산자를 재정의할 것.
-
-		bool operator== (const stdMatrix& V) const 
-		{ 
-			if (_11 == V._11 && _12 == V._12 && _13 == V._13 && _14 == V._14 &&
-				_21 == V._21 && _22 == V._22 && _23 == V._23 && _24 == V._24 &&
-				_31 == V._31 && _32 == V._32 && _33 == V._33 && _34 == V._34 &&
-			    _41 == V._41 && _42 == V._42 && _43 == V._43 && _44 == V._44){
-				return true; 
-			} 
-			return false; 
-		}
-
-		bool operator!= (const stdMatrix& V) const
-		{
-			if (_11 == V._11 && _12 == V._12 && _13 == V._13 && _14 == V._14 &&
-				_21 == V._21 && _22 == V._22 && _23 == V._23 && _24 == V._24 &&
-				_31 == V._31 && _32 == V._32 && _33 == V._33 && _34 == V._34 &&
-				_41 == V._41 && _42 == V._42 && _43 == V._43 && _44 == V._44) {
-				return false;
-			}
-			return false;
-		}
-
-		stdMatrix operator+= (const stdMatrix& V)
-		{
-			_11 += V._11; _12 += V._12; _13 += V._13; _14 += V._14;
-			_21 += V._21; _22 += V._22; _23 += V._23; _24 += V._24;
-			_31 += V._31; _32 += V._32; _33 += V._33; _34 += V._34;
-			_41 += V._41; _42 += V._42; _43 += V._43; _44 += V._44;
-			stdMatrix rm(*this);
-			return rm;		
-		}
-
-		stdMatrix operator-= (const stdMatrix& V)
-		{
-			_11 -= V._11; _12 -= V._12; _13 -= V._13; _14 -= V._14;
-			_21 -= V._21; _22 -= V._22; _23 -= V._23; _24 -= V._24;
-			_31 -= V._31; _32 -= V._32; _33 -= V._33; _34 -= V._34;
-			_41 -= V._41; _42 -= V._42; _43 -= V._43; _44 -= V._44;
-			stdMatrix rm(*this);
-			return rm;
-		}
-
-		stdMatrix Transpose()
-		{
-			_11 = _11; _12 = _21; _13 = _31; _14 = _41;
-			_21 = _12; _22 = _22; _23 = _32; _24 = _42;
-			_31 = _13; _32 = _23; _33 = _33; _34 = _43;
-			_41 = _14; _42 = _24; _43 = _34; _44 = _44;
-		}
-
-		void Transpose(stdMatrix& result)
-		{
-			result._11 = _11; result._12 = _21; result._13 = _31; result._14 = _41;
-			result._21 = _12; result._22 = _22; result._23 = _32; result._24 = _42;
-			result._31 = _13; result._32 = _23; result._33 = _33; result._34 = _43;
-			result._41 = _14; result._42 = _24; result._43 = _34; result._44 = _44;
-		}
+		stdMatrix Inverse();
+		void Inverse(stdMatrix& result);
 
 		//static
+
+		//연산자 재정의
+		static friend stdMatrix operator+ (const stdMatrix& V1, const stdMatrix& V2);
+		static friend stdMatrix operator- (const stdMatrix& V1, const stdMatrix& V2);
+		static friend stdMatrix operator* (float S, const stdMatrix& V);
+		static friend stdMatrix operator* (const stdMatrix& V, float S);
+		static friend stdMatrix operator/ (float S, const stdMatrix& V);
+		static friend stdMatrix operator/ (const stdMatrix& V, float S);
 
 	};
 

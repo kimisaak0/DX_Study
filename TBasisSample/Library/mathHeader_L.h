@@ -166,13 +166,6 @@ namespace Lypi
 
 		//static
 
-		//연산자 재정의
-		static friend stdMatrix operator+ (const stdMatrix& V1, const stdMatrix& V2);
-		static friend stdMatrix operator- (const stdMatrix& V1, const stdMatrix& V2);
-		static friend stdMatrix operator* (float S, const stdMatrix& V);
-		static friend stdMatrix operator* (const stdMatrix& V, float S);
-		static friend stdMatrix operator/ (float S, const stdMatrix& V);
-		static friend stdMatrix operator/ (const stdMatrix& V, float S);
 
 	};
 

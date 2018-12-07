@@ -167,4 +167,34 @@ namespace Lypi
 
 	}
 
+
+	stdMatrix operator+ (const stdMatrix& V1, const stdMatrix& V2)
+	{
+
+	}
+
+	stdMatrix operator- (const stdMatrix& V1, const stdMatrix& V2)
+	{
+
+	}
+
+	stdMatrix operator* (float S, const stdMatrix& V)
+	{
+
+	}
+
+	stdMatrix operator* (const stdMatrix& V, float S)
+	{
+
+	}
+
+	stdMatrix operator/ (float S, const stdMatrix& V)
+	{
+
+	}
+
+	stdMatrix operator/ (const stdMatrix& V, float S)
+	{
+
+	}
 }

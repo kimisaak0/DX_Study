@@ -90,12 +90,15 @@ namespace Lypi
 		}
 	}
 
+	stdMatrix::stdMatrix(float4 __1, float4 __2, float4 __3, float4 __4) : float4x4(__1, __2, __3, __4)
+	{
+	}
 
-	bool stdMatrix::operator== (const stdMatrix& V) const
+	bool stdMatrix::operator== (const stdMatrix& M) const
 	{
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
-				if (abs(m[i][k] - m[i][k]) > L_Epsilon) {
+				if (abs(m[i][k] - M.m[i][k]) > L_Epsilon) {
 					return false;
 				}
 			}
@@ -104,11 +107,11 @@ namespace Lypi
 		return true;
 	}
 
-	bool stdMatrix::operator!= (const stdMatrix& V) const
+	bool stdMatrix::operator!= (const stdMatrix& M) const
 	{
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
-				if (abs(m[i][k] - m[i][k]) > L_Epsilon) {
+				if (abs(m[i][k] - M.m[i][k]) > L_Epsilon) {
 					return true;
 				}
 			}
@@ -117,22 +120,22 @@ namespace Lypi
 		return false;
 	}
 
-	stdMatrix stdMatrix::operator+= (const stdMatrix& V)
+	stdMatrix stdMatrix::operator+= (const stdMatrix& M)
 	{
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
-				m[i][k] += V.m[i][k];
+				m[i][k] += M.m[i][k];
 			}
 		}
 		stdMatrix rm(*this);
 		return rm;
 	}
 
-	stdMatrix stdMatrix::operator-= (const stdMatrix& V)
+	stdMatrix stdMatrix::operator-= (const stdMatrix& M)
 	{
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
-				m[i][k] -= V.m[i][k];
+				m[i][k] -= M.m[i][k];
 			}
 		}
 		stdMatrix rm(*this);
@@ -141,11 +144,15 @@ namespace Lypi
 
 	stdMatrix stdMatrix::Transpose()
 	{
+		stdMatrix ret = *this;
+
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
 				m[i][k] = m[k][i];
 			}
 		}
+
+		return ret;
 	}
 
 	void stdMatrix::Transpose(stdMatrix& result)
@@ -157,44 +164,187 @@ namespace Lypi
 		}
 	}
 
+	//알고리즘을 쓰지 않고 그냥 생 노가다 식을 때려넣음(..)
+	float stdMatrix::deteminant()
+	{
+		return
+			m[0][0] * m[1][1] * m[2][2] * m[3][3] +
+			m[0][0] * m[1][2] * m[2][3] * m[3][1] +
+			m[0][0] * m[1][3] * m[2][1] * m[3][2] +
+
+			m[0][1] * m[1][0] * m[2][3] * m[3][2] +
+			m[0][1] * m[1][2] * m[2][0] * m[3][3] +
+			m[0][1] * m[1][3] * m[2][2] * m[3][0] +
+
+			m[0][2] * m[1][0] * m[2][1] * m[3][3] +
+			m[0][2] * m[1][1] * m[2][3] * m[3][0] +
+			m[0][2] * m[1][3] * m[2][0] * m[3][1] +
+
+			m[0][3] * m[1][0] * m[2][2] * m[3][1] +
+			m[0][3] * m[1][1] * m[2][0] * m[3][2] +
+			m[0][3] * m[1][2] * m[2][1] * m[3][0] -
+
+			m[0][0] * m[1][1] * m[2][3] * m[3][2] -
+			m[0][0] * m[1][2] * m[2][1] * m[3][3] -
+			m[0][0] * m[1][3] * m[2][2] * m[3][1] -
+											
+			m[0][1] * m[1][0] * m[2][2] * m[3][3] -
+			m[0][1] * m[1][2] * m[2][3] * m[3][0] -
+			m[0][1] * m[1][3] * m[2][0] * m[3][2] -
+											
+			m[0][2] * m[1][0] * m[2][3] * m[3][1] -
+			m[0][2] * m[1][1] * m[2][0] * m[3][3] -
+			m[0][2] * m[1][3] * m[2][1] * m[3][0] -
+											
+			m[0][3] * m[1][0] * m[2][1] * m[3][2] -
+			m[0][3] * m[1][1] * m[2][2] * m[3][0] -
+			m[0][3] * m[1][2] * m[2][0] * m[3][1];
+	}
+
+	//알고리즘을 쓰지 않고 그냥 생 노가다 식을 때려넣음(..)
 	stdMatrix stdMatrix::Inverse()
 	{
+		stdMatrix ret = *this;
 
+		float det = this->deteminant();
+
+		assert(det != 0);
+
+		float b11 = m[1][1] * m[2][2] * m[3][3] + m[1][2] * m[2][3] * m[3][1] + m[1][3] * m[2][1] * m[3][2] - m[1][1] * m[2][3] * m[3][2] - m[1][2] * m[2][1] * m[3][3] - m[1][3] * m[2][2] * m[3][1];
+		float b12 = m[0][1] * m[2][3] * m[3][2] + m[0][2] * m[2][1] * m[3][3] + m[0][3] * m[2][2] * m[3][1] - m[0][1] * m[2][2] * m[3][3] -	m[0][2] * m[2][3] * m[3][1] - m[0][3] * m[2][1] * m[3][2];
+		float b13 =	m[0][1] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][1] + m[0][3] * m[2][1] * m[3][2] - m[0][1] * m[2][3] * m[3][2] - m[0][2] * m[2][1] * m[3][3] - m[0][3] * m[2][2] * m[3][1];
+		float b14 =	m[0][1] * m[1][3] * m[2][2] + m[0][2] * m[1][1] * m[2][3] + m[0][3] * m[1][2] * m[2][1] - m[0][1] * m[1][2] * m[2][3] -	m[0][2] * m[1][3] * m[2][1] - m[0][3] * m[1][1] * m[2][2];
+
+		float b21 =	m[1][0] * m[2][3] * m[3][2] + m[1][2] * m[2][0] * m[3][3] +	m[1][3] * m[2][2] * m[3][0] - m[1][0] * m[2][2] * m[3][3] -	m[1][2] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][2];
+		float b22 =	m[0][0] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][0] + m[0][3] * m[2][0] * m[3][2] - m[0][0] * m[2][3] * m[3][2] -	m[0][2] * m[2][0] * m[3][3] - m[0][3] * m[2][2] * m[3][0];
+		float b23 = m[0][0] * m[1][3] * m[3][2] + m[0][2] * m[1][0] * m[3][3] +	m[0][3] * m[1][2] * m[3][0] - m[0][0] * m[1][2] * m[3][3] -	m[0][2] * m[1][3] * m[3][0] - m[0][3] * m[1][0] * m[3][2];
+		float b24 =	m[0][0] * m[1][2] * m[2][3] + m[0][2] * m[1][3] * m[2][0] +	m[0][3] * m[1][0] * m[2][2] - m[0][0] * m[1][3] * m[2][2] -	m[0][2] * m[1][0] * m[2][3] - m[0][3] * m[1][2] * m[2][0];
+
+		float b31 =	m[1][0] * m[2][1] * m[3][3] + m[1][1] * m[2][3] * m[3][0] +	m[1][3] * m[2][0] * m[3][1] - m[1][0] * m[2][3] * m[3][1] -	m[1][1] * m[2][0] * m[3][3] - m[1][3] * m[2][1] * m[3][0];
+		float b32 = m[1][0] * m[2][3] * m[3][1] + m[1][1] * m[2][0] * m[3][3] +	m[1][3] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][3] -	m[1][1] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][1];
+		float b33 = m[0][0] * m[1][1] * m[3][3] + m[0][1] * m[1][3] * m[3][0] +	m[0][3] * m[1][0] * m[3][1] - m[0][0] * m[1][3] * m[3][1] -	m[0][1] * m[1][0] * m[3][3] - m[0][3] * m[1][1] * m[3][0];
+		float b34 =	m[0][0] * m[1][3] * m[2][1] + m[0][1] * m[1][0] * m[2][3] +	m[0][3] * m[1][1] * m[2][0] - m[0][0] * m[1][1] * m[2][3] -	m[0][1] * m[1][3] * m[2][0] - m[0][3] * m[1][0] * m[2][1];
+
+		float b41 = m[1][0] * m[2][2] * m[3][1] + m[1][1] * m[2][0] * m[3][2] + m[1][2] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][2] - m[1][1] * m[2][2] * m[3][0] - m[1][2] * m[2][0] * m[3][1];
+		float b42 =	m[0][0] * m[2][1] * m[3][2] + m[0][1] * m[2][2] * m[3][0] +	m[0][2] * m[2][0] * m[3][1] - m[0][0] * m[2][2] * m[3][1] -	m[0][1] * m[2][0] * m[3][2] - m[0][2] * m[2][1] * m[3][0];
+		float b43 =	m[0][0] * m[1][2] * m[3][1] + m[0][1] * m[1][0] * m[3][2] + m[0][2] * m[1][1] * m[3][0] - m[0][0] * m[1][1] * m[3][2] - m[0][1] * m[1][2] * m[3][0] - m[0][2] * m[1][0] * m[3][1];
+		float b44 = m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] +	m[0][2] * m[1][0] * m[2][1] - m[0][0] * m[1][2] * m[2][1] -	m[0][1] * m[1][0] * m[2][2] - m[0][2] * m[1][1] * m[2][0];
+
+		float4 b1 = { b11, b12, b13, b14 };
+		float4 b2 = { b21, b22, b23, b24 };
+		float4 b3 = { b31, b32, b33, b34 };
+		float4 b4 = { b41, b42, b43, b44 };
+
+		stdMatrix subMat = { b1, b2, b3, b4 };
+		*this = 1/det * subMat;
+
+		return ret;
 	}
 
 	void stdMatrix::Inverse(stdMatrix& result)
 	{
+		float det = this->deteminant();
 
+		assert(det != 0);
+
+		float b11 = m[1][1] * m[2][2] * m[3][3] + m[1][2] * m[2][3] * m[3][1] + m[1][3] * m[2][1] * m[3][2] - m[1][1] * m[2][3] * m[3][2] - m[1][2] * m[2][1] * m[3][3] - m[1][3] * m[2][2] * m[3][1];
+		float b12 = m[0][1] * m[2][3] * m[3][2] + m[0][2] * m[2][1] * m[3][3] + m[0][3] * m[2][2] * m[3][1] - m[0][1] * m[2][2] * m[3][3] - m[0][2] * m[2][3] * m[3][1] - m[0][3] * m[2][1] * m[3][2];
+		float b13 = m[0][1] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][1] + m[0][3] * m[2][1] * m[3][2] - m[0][1] * m[2][3] * m[3][2] - m[0][2] * m[2][1] * m[3][3] - m[0][3] * m[2][2] * m[3][1];
+		float b14 = m[0][1] * m[1][3] * m[2][2] + m[0][2] * m[1][1] * m[2][3] + m[0][3] * m[1][2] * m[2][1] - m[0][1] * m[1][2] * m[2][3] - m[0][2] * m[1][3] * m[2][1] - m[0][3] * m[1][1] * m[2][2];
+
+		float b21 = m[1][0] * m[2][3] * m[3][2] + m[1][2] * m[2][0] * m[3][3] + m[1][3] * m[2][2] * m[3][0] - m[1][0] * m[2][2] * m[3][3] - m[1][2] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][2];
+		float b22 = m[0][0] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][0] + m[0][3] * m[2][0] * m[3][2] - m[0][0] * m[2][3] * m[3][2] - m[0][2] * m[2][0] * m[3][3] - m[0][3] * m[2][2] * m[3][0];
+		float b23 = m[0][0] * m[1][3] * m[3][2] + m[0][2] * m[1][0] * m[3][3] + m[0][3] * m[1][2] * m[3][0] - m[0][0] * m[1][2] * m[3][3] - m[0][2] * m[1][3] * m[3][0] - m[0][3] * m[1][0] * m[3][2];
+		float b24 = m[0][0] * m[1][2] * m[2][3] + m[0][2] * m[1][3] * m[2][0] + m[0][3] * m[1][0] * m[2][2] - m[0][0] * m[1][3] * m[2][2] - m[0][2] * m[1][0] * m[2][3] - m[0][3] * m[1][2] * m[2][0];
+
+		float b31 = m[1][0] * m[2][1] * m[3][3] + m[1][1] * m[2][3] * m[3][0] + m[1][3] * m[2][0] * m[3][1] - m[1][0] * m[2][3] * m[3][1] - m[1][1] * m[2][0] * m[3][3] - m[1][3] * m[2][1] * m[3][0];
+		float b32 = m[1][0] * m[2][3] * m[3][1] + m[1][1] * m[2][0] * m[3][3] + m[1][3] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][3] - m[1][1] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][1];
+		float b33 = m[0][0] * m[1][1] * m[3][3] + m[0][1] * m[1][3] * m[3][0] + m[0][3] * m[1][0] * m[3][1] - m[0][0] * m[1][3] * m[3][1] - m[0][1] * m[1][0] * m[3][3] - m[0][3] * m[1][1] * m[3][0];
+		float b34 = m[0][0] * m[1][3] * m[2][1] + m[0][1] * m[1][0] * m[2][3] + m[0][3] * m[1][1] * m[2][0] - m[0][0] * m[1][1] * m[2][3] - m[0][1] * m[1][3] * m[2][0] - m[0][3] * m[1][0] * m[2][1];
+
+		float b41 = m[1][0] * m[2][2] * m[3][1] + m[1][1] * m[2][0] * m[3][2] + m[1][2] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][2] - m[1][1] * m[2][2] * m[3][0] - m[1][2] * m[2][0] * m[3][1];
+		float b42 = m[0][0] * m[2][1] * m[3][2] + m[0][1] * m[2][2] * m[3][0] + m[0][2] * m[2][0] * m[3][1] - m[0][0] * m[2][2] * m[3][1] - m[0][1] * m[2][0] * m[3][2] - m[0][2] * m[2][1] * m[3][0];
+		float b43 = m[0][0] * m[1][2] * m[3][1] + m[0][1] * m[1][0] * m[3][2] + m[0][2] * m[1][1] * m[3][0] - m[0][0] * m[1][1] * m[3][2] - m[0][1] * m[1][2] * m[3][0] - m[0][2] * m[1][0] * m[3][1];
+		float b44 = m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] + m[0][2] * m[1][0] * m[2][1] - m[0][0] * m[1][2] * m[2][1] - m[0][1] * m[1][0] * m[2][2] - m[0][2] * m[1][1] * m[2][0];
+
+		float4 b1 = { b11, b12, b13, b14 };
+		float4 b2 = { b21, b22, b23, b24 };
+		float4 b3 = { b31, b32, b33, b34 };
+		float4 b4 = { b41, b42, b43, b44 };
+
+		stdMatrix subMat = { b1, b2, b3, b4 };
+		result = 1 / det * subMat;
 	}
 
-
-	stdMatrix operator+ (const stdMatrix& V1, const stdMatrix& V2)
+	//전역 함수
+	stdMatrix stdMatrix::operator+ (const stdMatrix& M)
 	{
+		stdMatrix ret;
 
+		for (int i = 0; i < 4; i++) {
+			for (int k = 0; k < 4; k++) {
+				ret.m[i][k] = m[i][k] + M.m[i][k];
+			}
+		}
+
+		return ret;
 	}
 
-	stdMatrix operator- (const stdMatrix& V1, const stdMatrix& V2)
+	stdMatrix stdMatrix::operator- (const stdMatrix& M)
 	{
+		stdMatrix ret;
 
+		for (int i = 0; i < 4; i++) {
+			for (int k = 0; k < 4; k++) {
+				ret.m[i][k] = m[i][k] - M.m[i][k];
+			}
+		}
+
+		return ret;
 	}
 
-	stdMatrix operator* (float S, const stdMatrix& V)
+	stdMatrix stdMatrix::operator* (const stdMatrix& M)
 	{
+		stdMatrix ret;
 
+		for (int i = 0; i < 4; i++) {
+			for (int k = 0; k < 4; k++) {
+				ret.m[i][k] = 
+					m[i][0] * M.m[0][k] +
+					m[i][1] * M.m[1][k] +
+					m[i][2] * M.m[2][k] +
+					m[i][3] * M.m[3][k];
+			}
+		}
+
+		return ret;
+		
 	}
 
-	stdMatrix operator* (const stdMatrix& V, float S)
+	stdMatrix operator* (float S, const stdMatrix& M)
 	{
+		stdMatrix ret;
 
+		for (int i = 0; i < 4; i++) {
+			for (int k = 0; k < 4; k++) {
+				ret.m[i][k] = S * M.m[i][k];
+			}
+		}
+
+		return ret;
 	}
 
-	stdMatrix operator/ (float S, const stdMatrix& V)
+	stdMatrix operator* (const stdMatrix& M, float S)
 	{
+		stdMatrix ret;
 
+		for (int i = 0; i < 4; i++) {
+			for (int k = 0; k < 4; k++) {
+				ret.m[i][k] = S * M.m[i][k];
+			}
+		}
+
+		return ret;
 	}
 
-	stdMatrix operator/ (const stdMatrix& V, float S)
-	{
-
-	}
 }

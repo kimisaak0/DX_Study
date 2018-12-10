@@ -150,22 +150,31 @@ namespace Lypi
 
 		//»ý¼ºÀÚ 
 		stdMatrix() { *this = Identity; }
+		stdMatrix(float4 __1, float4 __2, float4 __3, float4 __4);
 
 		//method
-		bool operator== (const stdMatrix& V) const;
-		bool operator!= (const stdMatrix& V) const;
+		bool operator== (const stdMatrix& M) const;
+		bool operator!= (const stdMatrix& M) const;
 
-		stdMatrix operator+= (const stdMatrix& V);
-		stdMatrix operator-= (const stdMatrix& V);
+		stdMatrix operator+= (const stdMatrix& M);
+		stdMatrix operator-= (const stdMatrix& M);
+
+		stdMatrix operator+ (const stdMatrix& M);
+		stdMatrix operator- (const stdMatrix& M);
+		stdMatrix operator* (const stdMatrix& M);
+
+		Vector3 operator* (const Vector3& M);
 
 		stdMatrix Transpose();
 		void Transpose(stdMatrix& result);
 
+		float deteminant();
 		stdMatrix Inverse();
 		void Inverse(stdMatrix& result);
 
 		//static
-
+		static friend stdMatrix operator* (float S, const stdMatrix& M);
+		static friend stdMatrix operator* (const stdMatrix& M, float S);	
 
 	};
 

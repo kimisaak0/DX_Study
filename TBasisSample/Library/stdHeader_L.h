@@ -5,6 +5,8 @@
 
 //#define _DISABLE_EXTENDED_ALIGNED_STORAGE //메모리 자동 정렬 사용 안함?
 
+#pragma region //헤더 파일 및 라이브러리 파일 추가
+
 #include <Windows.h>
 
 #include <wrl.h> //Windows Runtime C++ Template Library //ComPtr사용
@@ -23,6 +25,7 @@
 #include <algorithm>
 #include <functional>
 #include <unordered_map>
+#include <iterator>
 
 //dx (순서 주의)
 #include "D3D11_4.h" // 
@@ -32,6 +35,7 @@
 #include "D2D1.h"
 #include "D2D1Helper.h"
 #include "DWrite.h"
+
 
 //라이브러리 포함
 #pragma comment (lib, "D3D11.lib")
@@ -49,18 +53,24 @@
 #pragma comment (lib, "D2D1.lib")
 #pragma comment (lib, "DWrite.lib")
 
+#pragma endregion
 
+#pragma region //namespace 사용
 using namespace std;
 using namespace Microsoft::WRL;
 using namespace D2D1;
+#pragma endregion
 
-//문자열 타입정의
-typedef basic_string<TCHAR>     T_STR;
-typedef basic_string<wchar_t>   W_STR;
-typedef basic_string<char>      C_STR;
-typedef vector<T_STR>		    T_STR_VECTOR;
+namespace Lypi
+{
+#pragma region	//문자열 타입정의
+	typedef basic_string<TCHAR>     T_STR;
+	typedef basic_string<wchar_t>   W_STR;
+	typedef basic_string<char>      C_STR;
+	typedef vector<T_STR>		    T_STR_VECTOR;
+#pragma endregion
 
-//매크로
+#pragma region	//매크로
 #define randf(x) (((float)x)*rand()/(float)RAND_MAX) //0~x사이의 랜덤한 실수값을 반환
 #define randstep(fMin,fMax) (fMin+randf(fMax-fmin))  //min에서 max까지의 랜덤할 실수값을 반환
 #define clamp(x,MinX,MaxX) if (x>MaxX) x=MaxX; else if (x<MinX) x=MinX;  //x값이 min보다 작으면 min으로, max보다 크면 max로 고정시킴.
@@ -104,3 +114,20 @@ typedef vector<T_STR>		    T_STR_VECTOR;
 #define H(x) (x)
 #endif
 
+#pragma endregion
+
+#pragma region //외부변수 정의
+	//device_DX
+	extern ID3D11Device*              g_pD3dDevice;
+	extern ID3D11DeviceContext*       g_pD3dContext;
+	extern IDXGISwapChain*            g_pSwapChain;
+
+	//WndC_DX
+	extern HINSTANCE g_hInst;
+	extern HWND      g_hWnd;
+	extern RECT      g_rtWindow;
+	extern RECT      g_rtClient;
+
+#pragma endregion 
+
+}

@@ -30,7 +30,7 @@ LRESULT wndC_DX::MsgProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
 	assert(g_pWindow);
 
-	MsgProcA(hWnd, iMsg, wParam, lParam);
+	//MsgProcA(hWnd, iMsg, wParam, lParam);
 
 	switch (iMsg) {
 		//윈도우를 생성할 때 발생하는 메시지
@@ -49,10 +49,10 @@ LRESULT wndC_DX::MsgProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	return 1;
 }
 
-LRESULT	 wndC_DX::MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	return 1;
-}
+//LRESULT	 wndC_DX::MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+//{
+//	return 1;
+//}
 
 wndC_DX::wndC_DX(LPCTSTR LWndName)
 {

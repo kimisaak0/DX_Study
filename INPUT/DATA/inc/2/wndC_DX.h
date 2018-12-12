@@ -10,9 +10,9 @@ protected:
 public:
 	void CenterWindow();       //윈도우를 중앙으로 옮기는 함수
 
-							   //윈도우 프로시저
+	//윈도우 프로시저
 	LRESULT MsgProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT	MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT	MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 
 	bool registWnd(LPCTSTR LWndName);   //윈도우 등록.
 

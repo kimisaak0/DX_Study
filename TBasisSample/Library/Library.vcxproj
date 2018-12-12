@@ -85,6 +85,11 @@
     <Lib>
       <AdditionalLibraryDirectories>../../INPUT/DX11/lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.h" "../../INPUT/DATA/inc/sample/"
+copy "*.lib" "../../INPUT/DATA/lib/sample/" 
+copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -127,13 +132,35 @@
     <ClInclude Include="mathHeader_L.h" />
     <ClInclude Include="DxState.h" />
     <ClInclude Include="DxDevice.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="WinL.h" />
+    <ClInclude Include="zCore.h" />
+    <ClInclude Include="DxWrite.h" />
+    <ClInclude Include="DxTimer.h" />
+    <ClInclude Include="DxInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mathHeader_L.cpp" />
     <ClCompile Include="DxState.cpp" />
-    <ClCompile Include="DxDeviece.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="DxDevice.cpp" />
+    <ClCompile Include="WinL.cpp" />
+    <ClCompile Include="zCore.cpp" />
+    <ClCompile Include="DxWrite.cpp" />
+    <ClCompile Include="DxTimer.cpp" />
+    <ClCompile Include="DxInput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Hull</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Hull</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Hull</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

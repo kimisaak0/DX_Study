@@ -1,25 +1,16 @@
 #pragma once
-#include "stdHeader_L.h"
+#include "DxDevice.h"
 
 namespace Lypi
 {
 	//전역 함수
-	void ApplyRS(ID3D11RasterizerState* pState);
-	void ApplyDSS(ID3D11DepthStencilState* pDepthStencilState, UINT iRef = 0x01);
-	void ApplyBS(ID3D11BlendState* pBlendState, const FLOAT fBlendFactor[] = 0, UINT iMask = 0xffffffff);
-	void ApplySS(ID3D11SamplerState* pSamplerState, UINT iSlot = 0, UINT iArray = 1);
+	void SetDSS(ID3D11DepthStencilState* pDepthStencilState, UINT iRef = 0x01);
+	void SetRS(ID3D11RasterizerState* pState);
+	void SetBS(ID3D11BlendState* pBlendState, const FLOAT fBlendFactor[] = 0, UINT iMask = 0xffffffff);
+	void SetSS(ID3D11SamplerState* pSamplerState, UINT iSlot = 0, UINT iArray = 1);
 
 	struct DxState
 	{
-		static ID3D11RasterizerState* g_pRSBackWireFrame;
-		static ID3D11RasterizerState* g_pRSBackSolid;
-		static ID3D11RasterizerState* g_pRSFrontWireFrame;
-		static ID3D11RasterizerState* g_pRSFrontSolid;
-		static ID3D11RasterizerState* g_pRSNoneWireFrame;
-		static ID3D11RasterizerState* g_pRSNoneSolid;
-		static ID3D11RasterizerState* g_pRSSlopeScaledDepthBias;
-		static ID3D11RasterizerState* g_pRS[7];
-
 		static ID3D11BlendState*	  g_pBSAlphaBlend;
 		static ID3D11BlendState*	  g_pBSNoAlphaBlend;
 		static ID3D11BlendState*	  g_pBSColorOne;
@@ -38,6 +29,15 @@ namespace Lypi
 		static ID3D11DepthStencilState*	  g_pDSSDepthStencilAdd;
 		static ID3D11DepthStencilState*	  g_pDSSDepthAlways;
 		static ID3D11DepthStencilState*	  g_pDSS[8];
+
+		static ID3D11RasterizerState* g_pRSBackWireFrame;
+		static ID3D11RasterizerState* g_pRSBackSolid;
+		static ID3D11RasterizerState* g_pRSFrontWireFrame;
+		static ID3D11RasterizerState* g_pRSFrontSolid;
+		static ID3D11RasterizerState* g_pRSNoneWireFrame;
+		static ID3D11RasterizerState* g_pRSNoneSolid;
+		static ID3D11RasterizerState* g_pRSSlopeScaledDepthBias;
+		static ID3D11RasterizerState* g_pRS[7];
 
 		static ID3D11SamplerState*	g_pSSTex;
 		static ID3D11SamplerState*	g_pSSWrapLinear;

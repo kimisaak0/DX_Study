@@ -9,22 +9,84 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="02_Math">
+    <Filter Include="01_Base\02_Math">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="01_Base\01_stdHeader">
+      <UniqueIdentifier>{46de09c2-c184-4963-80c0-7589dd9c92ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Base\03_Function">
+      <UniqueIdentifier>{5305a253-5e73-4258-a8d1-47d8f4e5a4f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Base\04_Main">
+      <UniqueIdentifier>{51c0508a-e01f-46c2-a5fc-0232032f8e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Base\05_Dx">
+      <UniqueIdentifier>{e9536e1a-ea0e-4431-b0a8-72b7f3e61525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Base\06_shader">
+      <UniqueIdentifier>{d6cd4480-604e-4447-b822-d00c6572ce6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdHeader_L.h">
-      <Filter>01_Base</Filter>
-    </ClInclude>
     <ClInclude Include="mathHeader_L.h">
-      <Filter>02_Math</Filter>
+      <Filter>01_Base\02_Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DxDevice.h">
+      <Filter>01_Base\04_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="stdHeader_L.h">
+      <Filter>01_Base\01_stdHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="DxState.h">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClInclude>
+    <ClInclude Include="zCore.h">
+      <Filter>01_Base\04_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="WinL.h">
+      <Filter>01_Base\04_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="DxWrite.h">
+      <Filter>01_Base\03_Function</Filter>
+    </ClInclude>
+    <ClInclude Include="DxTimer.h">
+      <Filter>01_Base\03_Function</Filter>
+    </ClInclude>
+    <ClInclude Include="DxInput.h">
+      <Filter>01_Base\03_Function</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mathHeader_L.cpp">
-      <Filter>02_Math</Filter>
+      <Filter>01_Base\02_Math</Filter>
     </ClCompile>
+    <ClCompile Include="DxDevice.cpp">
+      <Filter>01_Base\04_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DxState.cpp">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClCompile>
+    <ClCompile Include="zCore.cpp">
+      <Filter>01_Base\04_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="WinL.cpp">
+      <Filter>01_Base\04_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DxWrite.cpp">
+      <Filter>01_Base\03_Function</Filter>
+    </ClCompile>
+    <ClCompile Include="DxTimer.cpp">
+      <Filter>01_Base\03_Function</Filter>
+    </ClCompile>
+    <ClCompile Include="DxInput.cpp">
+      <Filter>01_Base\03_Function</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VS.hlsl">
+      <Filter>01_Base\06_shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

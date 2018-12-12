@@ -29,12 +29,6 @@ namespace Lypi
 		y = F.y; 
 	}
 
-	Vector2::Vector2(Vector2& V)
-	{
-		x = V.x; 
-		y = V.y; 
-	}
-
 	//연산자 재정의
 	bool Vector2::operator== (Vector2& V)
 	{
@@ -236,6 +230,9 @@ namespace Lypi
 			float s = rI * t + sqrt(r);
 			rv = { rI*iV.x - s * nV.x, rI*iV.y - s * nV.y };
 		}
+
+		return rv;
+
 	}
 
 	const Vector2 Vector2::Zero2 = { 0.f, 0.f };
@@ -270,13 +267,6 @@ namespace Lypi
 		x = F.x; 
 		y = F.y; 
 		z = F.z; 
-	}
-
-	Vector3::Vector3(Vector3& V)
-	{ 
-		x = V.x; 
-		y = V.y; 
-		z = V.z; 
 	}
 
 	//연산자 재정의
@@ -430,9 +420,9 @@ namespace Lypi
 		return Vector3(v1.y*v2.x - v1.z*v2.y, v1.z*v2.x - v1.x*v2.z, v1.x*v2.y - v1.y*v2.x);
 	}
 
-	Vector3 Vector3::Angle(Vector3 V1, Vector3 V2)
+	float Vector3::Angle(Vector3 V1, Vector3 V2)
 	{
-		return RadianToDegree(acos(Dot(V1, V2) / (V1.Length*V2.Length)));
+		return RadianToDegree(acos(Dot(V1, V2) / ( (V1.Length())*(V2.Length()) ) ) );
 	}
 	
 	float Vector3::Distance(Vector3 v1, Vector3 v2) 
@@ -502,6 +492,8 @@ namespace Lypi
 			float s = rI * t + sqrt(r);
 			rv = { rI*iV.x - s * nV.x, rI*iV.y - s * nV.y, rI*iV.z - s * nV.z };
 		}
+
+		return rv;
 	}
 
 	const Vector3 Vector3::Zero3 = { 0.f, 0.f, 0.f };
@@ -1199,6 +1191,8 @@ namespace Lypi
 
 	stdMatrix stdMatrix::AxisAngle(const Vector3& vAxis, const float& Radian)
 	{
+		stdMatrix bf = *this;
+
 		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
 
 		_11 = vAxis.x * vAxis.x * (1 - Cos) + Cos;
@@ -1217,6 +1211,8 @@ namespace Lypi
 		_34 = 0.f;
 
 		_41 = _42 = _43 = 0.f; _44 = 1.f;
+
+		return bf;
 	}
 
 	void stdMatrix::AxisAngle(const Vector3& vAxis, const float& Radian, stdMatrix& result)

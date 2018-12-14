@@ -502,17 +502,127 @@ namespace Lypi
 	const Vector3 Vector3::UnitZ3 = { 0.f, 0.f, 1.f };
 #pragma endregion
 
-#pragma region float4
+#pragma region float4, Vector4
 
 	float4::float4()
 	{
-		x = 0.f; y = 0.f; z = 0.f; w = 0.f;
+		x = 0.f; y = 0.f; z = 0.f; w = 1.f;
 	}
 
 	float4::float4(float _x, float _y, float _z, float _w)
 	{
 		x = _x; y = _y; z = _z; w = _w;
 	}
+	
+	//생성자
+	Vector4::Vector4()
+		: float4() {}
+
+	Vector4::Vector4(float x)
+		: float4(x, x, x, 1.f) {}
+
+	Vector4::Vector4(float x, float y, float z, float w)
+		: float4(x, y, z, w) {}
+
+	Vector4::Vector4(float4& F)
+	{
+		x = F.x;
+		y = F.y;
+		z = F.z;
+		w = F.w;
+	}
+
+	bool Vector4::operator== (Vector4 V)
+	{
+		if (abs(x - V.x) < L_Epsilon && abs(y - V.y) < L_Epsilon && abs(z - V.z) < L_Epsilon && abs(w - V.w) < L_Epsilon) {
+			return true;
+		}
+		return false;
+	}
+
+	bool Vector4::operator!= (Vector4 V)
+	{
+		if (abs(x - V.x) < L_Epsilon && abs(y - V.y) < L_Epsilon && abs(z - V.z) < L_Epsilon && abs(w - V.w) < L_Epsilon) {
+			return false;
+		}
+		return true;
+	}
+
+	Vector4 Vector4::operator+= (Vector4 V)
+	{
+		Vector4 rv = { x += V.x, y += V.y, z += V.z , w};
+		return rv;
+	}
+
+	Vector4 Vector4::operator-= (Vector4 V)
+	{
+		Vector4 rv = { x -= V.x, y -= V.y, z -= V.z , w };
+		return rv;
+	}
+
+	Vector4 Vector4::operator*= (float S)
+	{
+		Vector4 rv = { x *= S, y *= S, z *= S, w };
+		return rv;
+	}
+
+	Vector4 Vector4::operator/= (float S)
+	{
+		Vector4 rv = { x /= S, y /= S, z /= S, w };
+		return rv;
+	}
+
+
+	Vector4 Vector4::operator+ (Vector4 V)
+	{
+		Vector4 rv = { x + V.x, y + V.y, z + V.z, w };
+		return rv;
+	}
+
+	Vector4 Vector4::operator- (Vector4 V)
+	{
+		Vector4 rv = { x - V.x, y - V.y, z - V.z, w };
+		return rv;
+	}
+
+	Vector4 Vector4::operator* (float S)
+	{
+		Vector4 rv = { x * S, y * S, z * S, z };
+		return rv;
+	}
+
+	Vector4 Vector4::operator/ (float S)
+	{
+		Vector4 rv = { x / S, y / S, z / S, z };
+		return rv;
+	}
+
+	Vector4 Vector4::operator+ ()
+	{
+		return *this;
+	}
+
+	Vector4 Vector4::operator- ()
+	{
+		return Vector4(-x, -y, -z, w);
+	}
+
+	Vector4 operator* (float S, Vector4 V)
+	{
+		Vector4 rv = { V.x * S, V.y * S, V.z * S, V.w };
+		return rv;
+	}
+
+	Vector4 operator/ (float S, Vector4 V)
+	{
+		Vector4 rv = { V.x / S, V.y / S, V.z / S, V.w };
+		return rv;
+	}
+
+	const Vector4 Vector4::Zero4 = { 0.f, 0.f, 0.f, 1.f };
+	const Vector4 Vector4::UnitX4 = { 1.f, 0.f, 0.f, 1.f };
+	const Vector4 Vector4::UnitY4 = { 0.f, 1.f, 0.f, 1.f };
+	const Vector4 Vector4::UnitZ4 = { 0.f, 0.f, 1.f, 1.f };
 
 #pragma endregion
 
@@ -697,191 +807,83 @@ namespace Lypi
 		return ret;
 	}
 
-	stdMatrix stdMatrix::Transpose()
+	stdMatrix Transpose(stdMatrix& M)
 	{
-		stdMatrix ret = *this;
+		stdMatrix result;
 
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
-				m[i][k] = m[k][i];
+				result.m[i][k] = M.m[k][i];
 			}
 		}
 
-		return ret;
-	}
-
-	void stdMatrix::Transpose(stdMatrix& result)
-	{
-		for (int i = 0; i < 4; i++) {
-			for (int k = 0; k < 4; k++) {
-				result.m[i][k] = m[k][i];
-			}
-		}
+		return result;
 	}
 
 	//알고리즘을 쓰지 않고 그냥 생 노가다 식을 때려넣음(..)
-	float stdMatrix::deteminant()
+	float deteminant(stdMatrix& M)
 	{
 		return
-			m[0][0] * m[1][1] * m[2][2] * m[3][3] +
-			m[0][0] * m[1][2] * m[2][3] * m[3][1] +
-			m[0][0] * m[1][3] * m[2][1] * m[3][2] +
+			M.m[0][0] * M.m[1][1] * M.m[2][2] * M.m[3][3] +
+			M.m[0][0] * M.m[1][2] * M.m[2][3] * M.m[3][1] +
+			M.m[0][0] * M.m[1][3] * M.m[2][1] * M.m[3][2] +
 
-			m[0][1] * m[1][0] * m[2][3] * m[3][2] +
-			m[0][1] * m[1][2] * m[2][0] * m[3][3] +
-			m[0][1] * m[1][3] * m[2][2] * m[3][0] +
-
-			m[0][2] * m[1][0] * m[2][1] * m[3][3] +
-			m[0][2] * m[1][1] * m[2][3] * m[3][0] +
-			m[0][2] * m[1][3] * m[2][0] * m[3][1] +
-
-			m[0][3] * m[1][0] * m[2][2] * m[3][1] +
-			m[0][3] * m[1][1] * m[2][0] * m[3][2] +
-			m[0][3] * m[1][2] * m[2][1] * m[3][0] -
-
-			m[0][0] * m[1][1] * m[2][3] * m[3][2] -
-			m[0][0] * m[1][2] * m[2][1] * m[3][3] -
-			m[0][0] * m[1][3] * m[2][2] * m[3][1] -
-											
-			m[0][1] * m[1][0] * m[2][2] * m[3][3] -
-			m[0][1] * m[1][2] * m[2][3] * m[3][0] -
-			m[0][1] * m[1][3] * m[2][0] * m[3][2] -
-											
-			m[0][2] * m[1][0] * m[2][3] * m[3][1] -
-			m[0][2] * m[1][1] * m[2][0] * m[3][3] -
-			m[0][2] * m[1][3] * m[2][1] * m[3][0] -
-											
-			m[0][3] * m[1][0] * m[2][1] * m[3][2] -
-			m[0][3] * m[1][1] * m[2][2] * m[3][0] -
-			m[0][3] * m[1][2] * m[2][0] * m[3][1];
+			M.m[0][1] * M.m[1][0] * M.m[2][3] * M.m[3][2] +
+			M.m[0][1] * M.m[1][2] * M.m[2][0] * M.m[3][3] +
+			M.m[0][1] * M.m[1][3] * M.m[2][2] * M.m[3][0] +
+			
+			M.m[0][2] * M.m[1][0] * M.m[2][1] * M.m[3][3] +
+			M.m[0][2] * M.m[1][1] * M.m[2][3] * M.m[3][0] +
+			M.m[0][2] * M.m[1][3] * M.m[2][0] * M.m[3][1] +
+			
+			M.m[0][3] * M.m[1][0] * M.m[2][2] * M.m[3][1] +
+			M.m[0][3] * M.m[1][1] * M.m[2][0] * M.m[3][2] +
+			M.m[0][3] * M.m[1][2] * M.m[2][1] * M.m[3][0] -
+			
+			M.m[0][0] * M.m[1][1] * M.m[2][3] * M.m[3][2] -
+			M.m[0][0] * M.m[1][2] * M.m[2][1] * M.m[3][3] -
+			M.m[0][0] * M.m[1][3] * M.m[2][2] * M.m[3][1] -
+			
+			M.m[0][1] * M.m[1][0] * M.m[2][2] * M.m[3][3] -
+			M.m[0][1] * M.m[1][2] * M.m[2][3] * M.m[3][0] -
+			M.m[0][1] * M.m[1][3] * M.m[2][0] * M.m[3][2] -
+			
+			M.m[0][2] * M.m[1][0] * M.m[2][3] * M.m[3][1] -
+			M.m[0][2] * M.m[1][1] * M.m[2][0] * M.m[3][3] -
+			M.m[0][2] * M.m[1][3] * M.m[2][1] * M.m[3][0] -
+			
+			M.m[0][3] * M.m[1][0] * M.m[2][1] * M.m[3][2] -
+			M.m[0][3] * M.m[1][1] * M.m[2][2] * M.m[3][0] -
+			M.m[0][3] * M.m[1][2] * M.m[2][0] * M.m[3][1];
 	}
 
-	stdMatrix stdMatrix::Inverse()
+	stdMatrix Inverse(stdMatrix& M)
 	{
-		stdMatrix ret = *this;
+		stdMatrix result;
 
-		float det = this->deteminant();
+		float det = deteminant(M);
 
 		assert(det != 0);
 
-		float b11 = m[1][1] * m[2][2] * m[3][3] + m[1][2] * m[2][3] * m[3][1] + m[1][3] * m[2][1] * m[3][2] - m[1][1] * m[2][3] * m[3][2] - m[1][2] * m[2][1] * m[3][3] - m[1][3] * m[2][2] * m[3][1];
-		float b12 = m[0][1] * m[2][3] * m[3][2] + m[0][2] * m[2][1] * m[3][3] + m[0][3] * m[2][2] * m[3][1] - m[0][1] * m[2][2] * m[3][3] -	m[0][2] * m[2][3] * m[3][1] - m[0][3] * m[2][1] * m[3][2];
-		float b13 =	m[0][1] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][1] + m[0][3] * m[2][1] * m[3][2] - m[0][1] * m[2][3] * m[3][2] - m[0][2] * m[2][1] * m[3][3] - m[0][3] * m[2][2] * m[3][1];
-		float b14 =	m[0][1] * m[1][3] * m[2][2] + m[0][2] * m[1][1] * m[2][3] + m[0][3] * m[1][2] * m[2][1] - m[0][1] * m[1][2] * m[2][3] -	m[0][2] * m[1][3] * m[2][1] - m[0][3] * m[1][1] * m[2][2];
+		float b11 = M.m[1][1] * M.m[2][2] * M.m[3][3] + M.m[1][2] * M.m[2][3] * M.m[3][1] + M.m[1][3] * M.m[2][1] * M.m[3][2] - M.m[1][1] * M.m[2][3] * M.m[3][2] - M.m[1][2] * M.m[2][1] * M.m[3][3] - M.m[1][3] * M.m[2][2] * M.m[3][1];
+		float b12 = M.m[0][1] * M.m[2][3] * M.m[3][2] + M.m[0][2] * M.m[2][1] * M.m[3][3] + M.m[0][3] * M.m[2][2] * M.m[3][1] - M.m[0][1] * M.m[2][2] * M.m[3][3] - M.m[0][2] * M.m[2][3] * M.m[3][1] - M.m[0][3] * M.m[2][1] * M.m[3][2];
+		float b13 = M.m[0][1] * M.m[2][2] * M.m[3][3] + M.m[0][2] * M.m[2][3] * M.m[3][1] + M.m[0][3] * M.m[2][1] * M.m[3][2] - M.m[0][1] * M.m[2][3] * M.m[3][2] - M.m[0][2] * M.m[2][1] * M.m[3][3] - M.m[0][3] * M.m[2][2] * M.m[3][1];
+		float b14 = M.m[0][1] * M.m[1][3] * M.m[2][2] + M.m[0][2] * M.m[1][1] * M.m[2][3] + M.m[0][3] * M.m[1][2] * M.m[2][1] - M.m[0][1] * M.m[1][2] * M.m[2][3] - M.m[0][2] * M.m[1][3] * M.m[2][1] - M.m[0][3] * M.m[1][1] * M.m[2][2];
+								
+		float b21 = M.m[1][0] * M.m[2][3] * M.m[3][2] + M.m[1][2] * M.m[2][0] * M.m[3][3] + M.m[1][3] * M.m[2][2] * M.m[3][0] - M.m[1][0] * M.m[2][2] * M.m[3][3] - M.m[1][2] * M.m[2][3] * M.m[3][0] - M.m[1][3] * M.m[2][0] * M.m[3][2];
+		float b22 = M.m[0][0] * M.m[2][2] * M.m[3][3] + M.m[0][2] * M.m[2][3] * M.m[3][0] + M.m[0][3] * M.m[2][0] * M.m[3][2] - M.m[0][0] * M.m[2][3] * M.m[3][2] - M.m[0][2] * M.m[2][0] * M.m[3][3] - M.m[0][3] * M.m[2][2] * M.m[3][0];
+		float b23 = M.m[0][0] * M.m[1][3] * M.m[3][2] + M.m[0][2] * M.m[1][0] * M.m[3][3] + M.m[0][3] * M.m[1][2] * M.m[3][0] - M.m[0][0] * M.m[1][2] * M.m[3][3] - M.m[0][2] * M.m[1][3] * M.m[3][0] - M.m[0][3] * M.m[1][0] * M.m[3][2];
+		float b24 = M.m[0][0] * M.m[1][2] * M.m[2][3] + M.m[0][2] * M.m[1][3] * M.m[2][0] + M.m[0][3] * M.m[1][0] * M.m[2][2] - M.m[0][0] * M.m[1][3] * M.m[2][2] - M.m[0][2] * M.m[1][0] * M.m[2][3] - M.m[0][3] * M.m[1][2] * M.m[2][0];
 
-		float b21 =	m[1][0] * m[2][3] * m[3][2] + m[1][2] * m[2][0] * m[3][3] +	m[1][3] * m[2][2] * m[3][0] - m[1][0] * m[2][2] * m[3][3] -	m[1][2] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][2];
-		float b22 =	m[0][0] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][0] + m[0][3] * m[2][0] * m[3][2] - m[0][0] * m[2][3] * m[3][2] -	m[0][2] * m[2][0] * m[3][3] - m[0][3] * m[2][2] * m[3][0];
-		float b23 = m[0][0] * m[1][3] * m[3][2] + m[0][2] * m[1][0] * m[3][3] +	m[0][3] * m[1][2] * m[3][0] - m[0][0] * m[1][2] * m[3][3] -	m[0][2] * m[1][3] * m[3][0] - m[0][3] * m[1][0] * m[3][2];
-		float b24 =	m[0][0] * m[1][2] * m[2][3] + m[0][2] * m[1][3] * m[2][0] +	m[0][3] * m[1][0] * m[2][2] - m[0][0] * m[1][3] * m[2][2] -	m[0][2] * m[1][0] * m[2][3] - m[0][3] * m[1][2] * m[2][0];
-
-		float b31 =	m[1][0] * m[2][1] * m[3][3] + m[1][1] * m[2][3] * m[3][0] +	m[1][3] * m[2][0] * m[3][1] - m[1][0] * m[2][3] * m[3][1] -	m[1][1] * m[2][0] * m[3][3] - m[1][3] * m[2][1] * m[3][0];
-		float b32 = m[1][0] * m[2][3] * m[3][1] + m[1][1] * m[2][0] * m[3][3] +	m[1][3] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][3] -	m[1][1] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][1];
-		float b33 = m[0][0] * m[1][1] * m[3][3] + m[0][1] * m[1][3] * m[3][0] +	m[0][3] * m[1][0] * m[3][1] - m[0][0] * m[1][3] * m[3][1] -	m[0][1] * m[1][0] * m[3][3] - m[0][3] * m[1][1] * m[3][0];
-		float b34 =	m[0][0] * m[1][3] * m[2][1] + m[0][1] * m[1][0] * m[2][3] +	m[0][3] * m[1][1] * m[2][0] - m[0][0] * m[1][1] * m[2][3] -	m[0][1] * m[1][3] * m[2][0] - m[0][3] * m[1][0] * m[2][1];
-
-		float b41 = m[1][0] * m[2][2] * m[3][1] + m[1][1] * m[2][0] * m[3][2] + m[1][2] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][2] - m[1][1] * m[2][2] * m[3][0] - m[1][2] * m[2][0] * m[3][1];
-		float b42 =	m[0][0] * m[2][1] * m[3][2] + m[0][1] * m[2][2] * m[3][0] +	m[0][2] * m[2][0] * m[3][1] - m[0][0] * m[2][2] * m[3][1] -	m[0][1] * m[2][0] * m[3][2] - m[0][2] * m[2][1] * m[3][0];
-		float b43 =	m[0][0] * m[1][2] * m[3][1] + m[0][1] * m[1][0] * m[3][2] + m[0][2] * m[1][1] * m[3][0] - m[0][0] * m[1][1] * m[3][2] - m[0][1] * m[1][2] * m[3][0] - m[0][2] * m[1][0] * m[3][1];
-		float b44 = m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] +	m[0][2] * m[1][0] * m[2][1] - m[0][0] * m[1][2] * m[2][1] -	m[0][1] * m[1][0] * m[2][2] - m[0][2] * m[1][1] * m[2][0];
-
-		stdMatrix subMat = {
-			{ b11, b12, b13, b14 },
-			{ b21, b22, b23, b24 },
-			{ b31, b32, b33, b34 },
-			{ b41, b42, b43, b44 }
-		};
-
-		*this = 1/det * subMat;
-
-		return ret;
-	}
-
-	//이런 방법도 있다고 한다(..)
-	stdMatrix stdMatrix::InverseG()
-	{
-		stdMatrix ret = *this;
-
-		float d12 = (_31*_42 - _41 * _32);
-		float d13 = (_31*_43 - _41 * _33);
-		float d23 = (_32*_43 - _42 * _33);
-		float d24 = (_32*_44 - _42 * _34);
-		float d34 = (_33*_44 - _43 * _34);
-		float d41 = (_34*_41 - _44 * _31);
-
-		float tmp[16];
-		tmp[0] = (_22 * d34 - _23 * d24 + _24 * d23);
-		tmp[1] = -(_21 * d34 + _23 * d41 + _24 * d13);
-		tmp[2] = (_21 * d24 + _22 * d41 + _24 * d12);
-		tmp[3] = -(_21 * d23 - _22 * d13 + _23 * d12);
-
-		float det = _11 * tmp[0] + _12 * tmp[1] + _13 * tmp[2] + _14 * tmp[3];
-
-		assert(det != 0);
-	
-		float invDet = 1.0f / det;
-		tmp[0] *= invDet;
-		tmp[1] *= invDet;
-		tmp[2] *= invDet;
-		tmp[3] *= invDet;
-
-		tmp[4] = -(_12 * d34 - _13 * d24 + _14 * d23) * invDet;
-		tmp[5] = (_11 * d34 + _13 * d41 + _14 * d13) * invDet;
-		tmp[6] = -(_11 * d24 + _12 * d41 + _14 * d12) * invDet;
-		tmp[7] = (_11 * d23 - _12 * d13 + _13 * d12) * invDet;
-
-		d12 = _11 * _22 - _21 * _12;
-		d13 = _11 * _23 - _21 * _13;
-		d23 = _12 * _23 - _22 * _13;
-		d24 = _12 * _24 - _22 * _14;
-		d34 = _13 * _24 - _23 * _14;
-		d41 = _14 * _21 - _24 * _11;
-
-		tmp[8] = (_42 * d34 - _43 * d24 + _44 * d23) * invDet;
-		tmp[9] = -(_41 * d34 + _43 * d41 + _44 * d13) * invDet;
-		tmp[10] = (_41 * d24 + _42 * d41 + _44 * d12) * invDet;
-		tmp[11] = -(_41 * d23 - _42 * d13 + _43 * d12) * invDet;
-		tmp[12] = -(_32 * d34 - _33 * d24 + _34 * d23) * invDet;
-		tmp[13] = (_31 * d34 + _33 * d41 + _34 * d13) * invDet;
-		tmp[14] = -(_31 * d24 + _32 * d41 + _34 * d12) * invDet;
-		tmp[15] = (_31 * d23 - _32 * d13 + _33 * d12) * invDet;
-
-		stdMatrix matInverse = {
-			{ tmp[ 0], tmp[ 1], tmp[ 2], tmp[ 3] },
-			{ tmp[ 4], tmp[ 5], tmp[ 6], tmp[ 7] },
-			{ tmp[ 8], tmp[ 9], tmp[10], tmp[11] },
-			{ tmp[12], tmp[13], tmp[14], tmp[15] },
-		};
-
-		*this = matInverse.Transpose();
-				
-		return ret;
-	}
-
-	void stdMatrix::Inverse(stdMatrix& result)
-	{
-		float det = this->deteminant();
-
-		assert(det != 0);
-
-		float b11 = m[1][1] * m[2][2] * m[3][3] + m[1][2] * m[2][3] * m[3][1] + m[1][3] * m[2][1] * m[3][2] - m[1][1] * m[2][3] * m[3][2] - m[1][2] * m[2][1] * m[3][3] - m[1][3] * m[2][2] * m[3][1];
-		float b12 = m[0][1] * m[2][3] * m[3][2] + m[0][2] * m[2][1] * m[3][3] + m[0][3] * m[2][2] * m[3][1] - m[0][1] * m[2][2] * m[3][3] - m[0][2] * m[2][3] * m[3][1] - m[0][3] * m[2][1] * m[3][2];
-		float b13 = m[0][1] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][1] + m[0][3] * m[2][1] * m[3][2] - m[0][1] * m[2][3] * m[3][2] - m[0][2] * m[2][1] * m[3][3] - m[0][3] * m[2][2] * m[3][1];
-		float b14 = m[0][1] * m[1][3] * m[2][2] + m[0][2] * m[1][1] * m[2][3] + m[0][3] * m[1][2] * m[2][1] - m[0][1] * m[1][2] * m[2][3] - m[0][2] * m[1][3] * m[2][1] - m[0][3] * m[1][1] * m[2][2];
-
-		float b21 = m[1][0] * m[2][3] * m[3][2] + m[1][2] * m[2][0] * m[3][3] + m[1][3] * m[2][2] * m[3][0] - m[1][0] * m[2][2] * m[3][3] - m[1][2] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][2];
-		float b22 = m[0][0] * m[2][2] * m[3][3] + m[0][2] * m[2][3] * m[3][0] + m[0][3] * m[2][0] * m[3][2] - m[0][0] * m[2][3] * m[3][2] - m[0][2] * m[2][0] * m[3][3] - m[0][3] * m[2][2] * m[3][0];
-		float b23 = m[0][0] * m[1][3] * m[3][2] + m[0][2] * m[1][0] * m[3][3] + m[0][3] * m[1][2] * m[3][0] - m[0][0] * m[1][2] * m[3][3] - m[0][2] * m[1][3] * m[3][0] - m[0][3] * m[1][0] * m[3][2];
-		float b24 = m[0][0] * m[1][2] * m[2][3] + m[0][2] * m[1][3] * m[2][0] + m[0][3] * m[1][0] * m[2][2] - m[0][0] * m[1][3] * m[2][2] - m[0][2] * m[1][0] * m[2][3] - m[0][3] * m[1][2] * m[2][0];
-
-		float b31 = m[1][0] * m[2][1] * m[3][3] + m[1][1] * m[2][3] * m[3][0] + m[1][3] * m[2][0] * m[3][1] - m[1][0] * m[2][3] * m[3][1] - m[1][1] * m[2][0] * m[3][3] - m[1][3] * m[2][1] * m[3][0];
-		float b32 = m[1][0] * m[2][3] * m[3][1] + m[1][1] * m[2][0] * m[3][3] + m[1][3] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][3] - m[1][1] * m[2][3] * m[3][0] - m[1][3] * m[2][0] * m[3][1];
-		float b33 = m[0][0] * m[1][1] * m[3][3] + m[0][1] * m[1][3] * m[3][0] + m[0][3] * m[1][0] * m[3][1] - m[0][0] * m[1][3] * m[3][1] - m[0][1] * m[1][0] * m[3][3] - m[0][3] * m[1][1] * m[3][0];
-		float b34 = m[0][0] * m[1][3] * m[2][1] + m[0][1] * m[1][0] * m[2][3] + m[0][3] * m[1][1] * m[2][0] - m[0][0] * m[1][1] * m[2][3] - m[0][1] * m[1][3] * m[2][0] - m[0][3] * m[1][0] * m[2][1];
-
-		float b41 = m[1][0] * m[2][2] * m[3][1] + m[1][1] * m[2][0] * m[3][2] + m[1][2] * m[2][1] * m[3][0] - m[1][0] * m[2][1] * m[3][2] - m[1][1] * m[2][2] * m[3][0] - m[1][2] * m[2][0] * m[3][1];
-		float b42 = m[0][0] * m[2][1] * m[3][2] + m[0][1] * m[2][2] * m[3][0] + m[0][2] * m[2][0] * m[3][1] - m[0][0] * m[2][2] * m[3][1] - m[0][1] * m[2][0] * m[3][2] - m[0][2] * m[2][1] * m[3][0];
-		float b43 = m[0][0] * m[1][2] * m[3][1] + m[0][1] * m[1][0] * m[3][2] + m[0][2] * m[1][1] * m[3][0] - m[0][0] * m[1][1] * m[3][2] - m[0][1] * m[1][2] * m[3][0] - m[0][2] * m[1][0] * m[3][1];
-		float b44 = m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] + m[0][2] * m[1][0] * m[2][1] - m[0][0] * m[1][2] * m[2][1] - m[0][1] * m[1][0] * m[2][2] - m[0][2] * m[1][1] * m[2][0];
+		float b31 = M.m[1][0] * M.m[2][1] * M.m[3][3] + M.m[1][1] * M.m[2][3] * M.m[3][0] + M.m[1][3] * M.m[2][0] * M.m[3][1] - M.m[1][0] * M.m[2][3] * M.m[3][1] - M.m[1][1] * M.m[2][0] * M.m[3][3] - M.m[1][3] * M.m[2][1] * M.m[3][0];
+		float b32 = M.m[1][0] * M.m[2][3] * M.m[3][1] + M.m[1][1] * M.m[2][0] * M.m[3][3] + M.m[1][3] * M.m[2][1] * M.m[3][0] - M.m[1][0] * M.m[2][1] * M.m[3][3] - M.m[1][1] * M.m[2][3] * M.m[3][0] - M.m[1][3] * M.m[2][0] * M.m[3][1];
+		float b33 = M.m[0][0] * M.m[1][1] * M.m[3][3] + M.m[0][1] * M.m[1][3] * M.m[3][0] + M.m[0][3] * M.m[1][0] * M.m[3][1] - M.m[0][0] * M.m[1][3] * M.m[3][1] - M.m[0][1] * M.m[1][0] * M.m[3][3] - M.m[0][3] * M.m[1][1] * M.m[3][0];
+		float b34 = M.m[0][0] * M.m[1][3] * M.m[2][1] + M.m[0][1] * M.m[1][0] * M.m[2][3] + M.m[0][3] * M.m[1][1] * M.m[2][0] - M.m[0][0] * M.m[1][1] * M.m[2][3] - M.m[0][1] * M.m[1][3] * M.m[2][0] - M.m[0][3] * M.m[1][0] * M.m[2][1];
+					
+		float b41 = M.m[1][0] * M.m[2][2] * M.m[3][1] + M.m[1][1] * M.m[2][0] * M.m[3][2] + M.m[1][2] * M.m[2][1] * M.m[3][0] - M.m[1][0] * M.m[2][1] * M.m[3][2] - M.m[1][1] * M.m[2][2] * M.m[3][0] - M.m[1][2] * M.m[2][0] * M.m[3][1];
+		float b42 = M.m[0][0] * M.m[2][1] * M.m[3][2] + M.m[0][1] * M.m[2][2] * M.m[3][0] + M.m[0][2] * M.m[2][0] * M.m[3][1] - M.m[0][0] * M.m[2][2] * M.m[3][1] - M.m[0][1] * M.m[2][0] * M.m[3][2] - M.m[0][2] * M.m[2][1] * M.m[3][0];
+		float b43 = M.m[0][0] * M.m[1][2] * M.m[3][1] + M.m[0][1] * M.m[1][0] * M.m[3][2] + M.m[0][2] * M.m[1][1] * M.m[3][0] - M.m[0][0] * M.m[1][1] * M.m[3][2] - M.m[0][1] * M.m[1][2] * M.m[3][0] - M.m[0][2] * M.m[1][0] * M.m[3][1];
+		float b44 = M.m[0][0] * M.m[1][1] * M.m[2][2] + M.m[0][1] * M.m[1][2] * M.m[2][0] + M.m[0][2] * M.m[1][0] * M.m[2][1] - M.m[0][0] * M.m[1][2] * M.m[2][1] - M.m[0][1] * M.m[1][0] * M.m[2][2] - M.m[0][2] * M.m[1][1] * M.m[2][0];
 
 		stdMatrix subMat = { 
 			{ b11, b12, b13, b14 },
@@ -890,187 +892,129 @@ namespace Lypi
 			{ b41, b42, b43, b44 } 
 		};
 
-		result = 1 / det * subMat;
+		return result = 1 / det * subMat;
 	}
 
-	void stdMatrix::InverseG(stdMatrix& result)
+	stdMatrix InverseG(stdMatrix& M)
 	{
-		float d12 = (_31*_42 - _41 * _32);
-		float d13 = (_31*_43 - _41 * _33);
-		float d23 = (_32*_43 - _42 * _33);
-		float d24 = (_32*_44 - _42 * _34);
-		float d34 = (_33*_44 - _43 * _34);
-		float d41 = (_34*_41 - _44 * _31);
+		stdMatrix result;
+
+		float d12 = (M._31*M._42 - M._41 * M._32);
+		float d13 = (M._31*M._43 - M._41 * M._33);
+		float d23 = (M._32*M._43 - M._42 * M._33);
+		float d24 = (M._32*M._44 - M._42 * M._34);
+		float d34 = (M._33*M._44 - M._43 * M._34);
+		float d41 = (M._34*M._41 - M._44 * M._31);
 
 		float tmp[16];
-		tmp[0] = (_22 * d34 - _23 * d24 + _24 * d23);
-		tmp[1] = -(_21 * d34 + _23 * d41 + _24 * d13);
-		tmp[2] = (_21 * d24 + _22 * d41 + _24 * d12);
-		tmp[3] = -(_21 * d23 - _22 * d13 + _23 * d12);
-
-		float det = _11 * tmp[0] + _12 * tmp[1] + _13 * tmp[2] + _14 * tmp[3];
-
-		assert(det != 0);
-
-		float invDet = 1.0f / det;
-		tmp[0] *= invDet;
+		tmp[0] = +(M._22 * d34 - M._23 * d24 + M._24 * d23);
+		tmp[1] = -(M._21 * d34 + M._23 * d41 + M._24 * d13);
+		tmp[2] = +(M._21 * d24 + M._22 * d41 + M._24 * d12);
+		tmp[3] = -(M._21 * d23 - M._22 * d13 + M._23 * d12);
+	
+		float det = M._11 * tmp[0] + M._12 * tmp[1] + M._13 * tmp[2] + M._14 * tmp[3];
+									 
+		assert(det != 0);			 
+									 
+		float invDet = 1.0f / det;	 
+		tmp[0] *= invDet;			 
 		tmp[1] *= invDet;
 		tmp[2] *= invDet;
 		tmp[3] *= invDet;
 
-		tmp[4] = -(_12 * d34 - _13 * d24 + _14 * d23) * invDet;
-		tmp[5] = (_11 * d34 + _13 * d41 + _14 * d13) * invDet;
-		tmp[6] = -(_11 * d24 + _12 * d41 + _14 * d12) * invDet;
-		tmp[7] = (_11 * d23 - _12 * d13 + _13 * d12) * invDet;
+		tmp[4] = -(M._12 * d34 - M._13 * d24 + M._14 * d23) * invDet;
+		tmp[5] = +(M._11 * d34 + M._13 * d41 + M._14 * d13) * invDet;
+		tmp[6] = -(M._11 * d24 + M._12 * d41 + M._14 * d12) * invDet;
+		tmp[7] = +(M._11 * d23 - M._12 * d13 + M._13 * d12) * invDet;
 
-		d12 = _11 * _22 - _21 * _12;
-		d13 = _11 * _23 - _21 * _13;
-		d23 = _12 * _23 - _22 * _13;
-		d24 = _12 * _24 - _22 * _14;
-		d34 = _13 * _24 - _23 * _14;
-		d41 = _14 * _21 - _24 * _11;
+		d12 = M._11 * M._22 - M._21 * M._12;
+		d13 = M._11 * M._23 - M._21 * M._13;
+		d23 = M._12 * M._23 - M._22 * M._13;
+		d24 = M._12 * M._24 - M._22 * M._14;
+		d34 = M._13 * M._24 - M._23 * M._14;
+		d41 = M._14 * M._21 - M._24 * M._11;
 
-		tmp[8] = (_42 * d34 - _43 * d24 + _44 * d23) * invDet;
-		tmp[9] = -(_41 * d34 + _43 * d41 + _44 * d13) * invDet;
-		tmp[10] = (_41 * d24 + _42 * d41 + _44 * d12) * invDet;
-		tmp[11] = -(_41 * d23 - _42 * d13 + _43 * d12) * invDet;
-		tmp[12] = -(_32 * d34 - _33 * d24 + _34 * d23) * invDet;
-		tmp[13] = (_31 * d34 + _33 * d41 + _34 * d13) * invDet;
-		tmp[14] = -(_31 * d24 + _32 * d41 + _34 * d12) * invDet;
-		tmp[15] = (_31 * d23 - _32 * d13 + _33 * d12) * invDet;
+		tmp[+8] = +(M._42 * d34 - M._43 * d24 + M._44 * d23) * invDet;
+		tmp[+9] = -(M._41 * d34 + M._43 * d41 + M._44 * d13) * invDet;
+		tmp[10] = +(M._41 * d24 + M._42 * d41 + M._44 * d12) * invDet;
+		tmp[11] = -(M._41 * d23 - M._42 * d13 + M._43 * d12) * invDet;
+		tmp[12] = -(M._32 * d34 - M._33 * d24 + M._34 * d23) * invDet;
+		tmp[13] = +(M._31 * d34 + M._33 * d41 + M._34 * d13) * invDet;
+		tmp[14] = -(M._31 * d24 + M._32 * d41 + M._34 * d12) * invDet;
+		tmp[15] = +(M._31 * d23 - M._32 * d13 + M._33 * d12) * invDet;
 
 		stdMatrix matInverse = {
-			{ tmp[0], tmp[1], tmp[2], tmp[3] },
-		{ tmp[4], tmp[5], tmp[6], tmp[7] },
-		{ tmp[8], tmp[9], tmp[10], tmp[11] },
-		{ tmp[12], tmp[13], tmp[14], tmp[15] },
+			{ tmp[+0], tmp[+1], tmp[+2], tmp[+3] },
+			{ tmp[+4], tmp[+5], tmp[+6], tmp[+7] },
+			{ tmp[+8], tmp[+9], tmp[10], tmp[11] },
+			{ tmp[12], tmp[13], tmp[14], tmp[15] },
 		};
 
-		result = matInverse.Transpose();
+		return result = Transpose(matInverse);
 	}
 
-	stdMatrix stdMatrix::Translation(const Vector3& V)
+	stdMatrix Translation(const Vector3& V)
 	{
-		stdMatrix bf = *this;
-
-
-
-
-		_41 = V.x; _42 = V.y; _43 = V.z;
-		
-		return bf;
-	}
-
-	void stdMatrix::Translation(const Vector3& V, stdMatrix& result)
-	{
-
-
+		stdMatrix result;
 
 		result._41 = V.x; result._42 = V.y; result._43 = V.z;
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::Scale(const Vector3& V)
+	stdMatrix Scale(const Vector3& V)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		_11 = V.x;
-					_22 = V.y;
-								_33 = V.z;
-
-		return bf;
-	}
-
-	void stdMatrix::Scale(const Vector3& V, stdMatrix& result)
-	{
 		result._11 = V.x;
 							result._22 = V.y;
 												result._33 = V.z;
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::XRotate(const float& Radian)
+
+	stdMatrix XRotate(const float& Radian)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
-
-
-				_22 =  Cos; _23 = Sin;
-				_32 = -Sin; _33 = Cos;
-
-
-		return bf;
-	}
-
-	void stdMatrix::XRotate(const float& Radian, stdMatrix& result)
-	{
 		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
 
 				result._22 =  Cos; result._23 = Sin;
 				result._32 = -Sin; result._33 = Cos;
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::YRotate(const float& Radian)
+	stdMatrix YRotate(const float& Radian)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		float Sin = (float)sin(Radian); float Cos = (float)cos(Radian);
-
-		_11 =  Cos;		 _13 = Sin;
-
-		_31 = -Sin;		 _33 = Cos;
-
-		return bf;
-	}
-
-	void stdMatrix::YRotate(const float& Radian, stdMatrix& result)
-	{
 		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
 
 		result._11 =  Cos;		 result._13 = Sin;
 
 		result._31 = -Sin;		 result._33 = Cos;
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::ZRotate(const float& Radian)
+	stdMatrix ZRotate(const float& Radian)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		float Sin = (float)sin(Radian); float Cos = (float)cos(Radian);
-
-		_11 =  Cos; _12 = Sin;
-		_21 = -Sin; _22 = Cos;
-
-		return bf;
-	}
-
-	void stdMatrix::ZRotate(const float& Radian, stdMatrix& result)
-	{
 		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
 
 		result._11 =  Cos; result._12 = Sin;
 		result._21 = -Sin; result._22 = Cos;
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::ObjectLookAt(Vector3& Pos, Vector3& Target, Vector3& Up)
+	stdMatrix ObjectLookAt(Vector3& Pos, Vector3& Target, Vector3& Up)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		Vector3 vDir = Target - Pos; vDir.Normalize();
-		float fDot = Vector3::Dot(Up, vDir);
-		Vector3 vC = vDir * fDot;
-		Vector3 vUV = Up - (vDir * fDot); vUV.Normalize();
-		Vector3 vRV = Vector3::Cross(vUV, vDir);
-
-		_11 =  vRV.x; _12 =  vRV.y; _13 =  vRV.z;
-		_21 =  vUV.x; _22 =  vUV.y; _23 =  vUV.z;
-		_31 = vDir.x; _32 = vDir.y; _33 = vDir.z;
-		_41 =  Pos.x; _42 =  Pos.y; _43 =  Pos.z;
-
-		return bf;
-	}
-
-	void stdMatrix::ObjectLookAt(Vector3& Pos, Vector3& Target, Vector3& Up, stdMatrix& result)
-	{
 		Vector3 vDir = Target - Pos; vDir.Normalize();
 		float fDot = Vector3::Dot(Up, vDir);
 		Vector3 vC = vDir * fDot;
@@ -1081,31 +1025,14 @@ namespace Lypi
 		result._21 =  vUV.x;  result._22 =  vUV.y; result._23 =  vUV.z;
 		result._31 = vDir.x;  result._32 = vDir.y; result._33 = vDir.z;
 		result._41 =  Pos.x;  result._42 =  Pos.y; result._43 =  Pos.z;
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::ViewLookAt(Vector3& Pos, Vector3& Target, Vector3& Up)
+	stdMatrix ViewLookAt(Vector3& Pos, Vector3& Target, Vector3& Up)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		Vector3 vDir = Target - Pos; vDir.Normalize();
-		float fDot = Vector3::Dot(Up, vDir);
-		Vector3 vC = vDir * fDot;
-		Vector3 vUV = Up - (vDir * fDot); vUV.Normalize();
-		Vector3 vRV = Vector3::Cross(vUV, vDir);
-
-		_11 = vRV.x; _12 = vUV.x; _13 = vDir.x;
-		_21 = vRV.y; _22 = vUV.y; _23 = vDir.y;
-		_31 = vRV.z; _32 = vUV.z; _33 = vDir.z;
-
-		_41 = -(Pos.x* vRV.x + Pos.y* vRV.y + Pos.x* vRV.y);
-		_42 = -(Pos.x* vUV.x + Pos.y* vUV.y + Pos.x* vUV.y);
-		_43 = -(Pos.x*vDir.x + Pos.y*vDir.y + Pos.x*vDir.y);
-
-		return bf;
-	}
-
-	void stdMatrix::ViewLookAt(Vector3& Pos, Vector3& Target, Vector3& Up, stdMatrix& result)
-	{
 		Vector3 vDir = Target - Pos; vDir.Normalize();
 		float fDot = Vector3::Dot(Up, vDir);
 		Vector3 vC = vDir * fDot;
@@ -1119,42 +1046,23 @@ namespace Lypi
 		result._41 = -(Pos.x* vRV.x + Pos.y* vRV.y + Pos.x* vRV.y);
 		result._42 = -(Pos.x* vUV.x + Pos.y* vUV.y + Pos.x* vUV.y);
 		result._43 = -(Pos.x*vDir.x + Pos.y*vDir.y + Pos.x*vDir.y);
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::CompViewMat(Vector3& Pos, Vector3& Target, Vector3& Up)
+	stdMatrix CompViewMat(Vector3& Pos, Vector3& Target, Vector3& Up)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		ObjectLookAt(Pos, Target, Up);
-		Inverse();
+		result = ObjectLookAt(Pos, Target, Up);
+		result = Inverse(result);
 
-		return bf;
+		return result;
 	}
 
-	void stdMatrix::CompViewMat(Vector3& Pos, Vector3& Target, Vector3& Up, stdMatrix& result)
+	stdMatrix PerspectiveLH(const float& NearPlane, const float& FarPlane, const float& Width, const float& Height)
 	{
-		ObjectLookAt(Pos, Target, Up, result);
-		Inverse(result);
-	}
-
-	stdMatrix stdMatrix::PerspectiveLH(const float& NearPlane, const float& FarPlane, const float& Width, const float& Height)
-	{
-		stdMatrix bf = *this;
-
-		*this = ZeroMat;
-
-		_11 = (2.f * NearPlane) / (Width);
-		_22 = (2.f * NearPlane) / (Height);
-		_33 = FarPlane / (FarPlane - NearPlane);
-		_34 = 1.f;
-		_43 = NearPlane * FarPlane / (NearPlane - FarPlane);
-		
-		return bf;
-	}
-
-	void stdMatrix::PerspectiveLH(const float& NearPlane, const float& FarPlane, const float& Width, const float& Height, stdMatrix& result)
-	{
-		result = ZeroMat;
+		stdMatrix result = ZeroMat;
 
 		result._11 = (2.f * NearPlane) / (Width);
 		result._22 = (2.f * NearPlane) / (Height);
@@ -1163,60 +1071,24 @@ namespace Lypi
 		result._43 = NearPlane * FarPlane / (NearPlane - FarPlane);
 	}
 
-	stdMatrix stdMatrix::PerspectiveFovLH(const float& NearPlane, const float& FarPlane, const float& fovy, const float& Aspect)
+
+	stdMatrix PerspectiveFovLH(const float& fovy, const float& Aspect, const float& NearPlane, const float& FarPlane)
 	{
-		stdMatrix bf = *this;
-
-		*this = ZeroMat;
-
-		_11 = 1 / tan(fovy*0.5f) / (Aspect);
-		_22 = 1 / tan(fovy*0.5f);
-		_33 = FarPlane / (FarPlane - NearPlane);
-		_34 = 1.f;
-		_43 = NearPlane * FarPlane / (NearPlane - FarPlane);
-
-		return bf;
-	}
-
-	void stdMatrix::PerspectiveFovLH(const float& NearPlane, const float& FarPlane, const float& fovy, const float& Aspect, stdMatrix& result)
-	{
-		result = ZeroMat;
+		stdMatrix result = ZeroMat;
 
 		result._11 = 1 / tan(fovy*0.5f) / (Aspect);
 		result._22 = 1 / tan(fovy*0.5f);
 		result._33 = FarPlane / (FarPlane - NearPlane);
 		result._34 = 1.f;
 		result._43 = NearPlane * FarPlane / (NearPlane - FarPlane);
+
+		return result;
 	}
 
-	stdMatrix stdMatrix::AxisAngle(const Vector3& vAxis, const float& Radian)
+	stdMatrix AxisAngle(const Vector3& vAxis, const float& Radian)
 	{
-		stdMatrix bf = *this;
+		stdMatrix result;
 
-		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
-
-		_11 = vAxis.x * vAxis.x * (1 - Cos) + Cos;
-		_12 = vAxis.y * vAxis.x * (1 - Cos) - (vAxis.z*Sin);
-		_13 = vAxis.z * vAxis.x * (1 - Cos) + (vAxis.y*Sin);
-		_14 = 0.f;
-
-		_21 = vAxis.x * vAxis.y * (1 - Cos) - (vAxis.z*Sin);
-		_22 = vAxis.y * vAxis.y * (1 - Cos) + Cos;
-		_23 = vAxis.z * vAxis.y * (1 - Cos) + (vAxis.x*Sin);
-		_24 = 0.f;
-
-		_31 = vAxis.x * vAxis.z * (1 - Cos) + (vAxis.y*Sin);
-		_32 = vAxis.y * vAxis.z * (1 - Cos) - (vAxis.x*Sin);
-		_33 = vAxis.z * vAxis.z * (1 - Cos) + Cos;
-		_34 = 0.f;
-
-		_41 = _42 = _43 = 0.f; _44 = 1.f;
-
-		return bf;
-	}
-
-	void stdMatrix::AxisAngle(const Vector3& vAxis, const float& Radian, stdMatrix& result)
-	{
 		float Sin = (float)sin(Radian);	float Cos = (float)cos(Radian);
 
 		result._11 = vAxis.x * vAxis.x * (1 - Cos) + Cos;
@@ -1235,9 +1107,11 @@ namespace Lypi
 		result._34 = 0.f;
 
 		result._41 = result._42 = result._43 = 0.f; result._44 = 1.f;
+
+		return result;
 	}
 
-	const stdMatrix stdMatrix::Identity = 
+	const stdMatrix Identity = 
 	{ 
 		{1.f, 0.f, 0.f, 0.f},
 	    {0.f, 1.f, 0.f, 0.f},
@@ -1245,7 +1119,7 @@ namespace Lypi
 	    {0.f, 0.f, 0.f, 1.f} 
 	};
 
-	const stdMatrix stdMatrix::ZeroMat =
+	const stdMatrix ZeroMat =
 	{
 		{ 0.f, 0.f, 0.f, 0.f },
 		{ 0.f, 0.f, 0.f, 0.f },

@@ -177,12 +177,12 @@ namespace Lypi
 	{
 	public:
 		typedef unordered_map <int, Child*>     TMap;
-		typedef typename TemplateMap::iterator  TMapIter;
+		typedef typename TMap::iterator  TMapIter;
 
 		TMap       TM;
 		TMapIter   TI;
 
-		int               m_iCurIndex;
+		int        m_iCurIndex;
 
 	public:													
 		virtual bool Init();								// 전체 객체 리스트 초기화

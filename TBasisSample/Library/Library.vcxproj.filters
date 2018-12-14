@@ -57,6 +57,15 @@
     <ClInclude Include="DxInput.h">
       <Filter>01_Base\03_Function</Filter>
     </ClInclude>
+    <ClInclude Include="DxTextureMgr.h">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClInclude>
+    <ClInclude Include="DxRTV.h">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClInclude>
+    <ClInclude Include="DxObj.h">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mathHeader_L.cpp">
@@ -82,6 +91,15 @@
     </ClCompile>
     <ClCompile Include="DxInput.cpp">
       <Filter>01_Base\03_Function</Filter>
+    </ClCompile>
+    <ClCompile Include="DxTextureMgr.cpp">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClCompile>
+    <ClCompile Include="DxRTV.cpp">
+      <Filter>01_Base\05_Dx</Filter>
+    </ClCompile>
+    <ClCompile Include="DxObj.cpp">
+      <Filter>01_Base\05_Dx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

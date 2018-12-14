@@ -3,6 +3,8 @@
 
 #define _USE_MATH_DEFINES
 
+#include "D3DX10math.h"
+
 #include "DirectXMath.h" //<math.h> 포함
 #include "DirectXPackedVector.h"
 #include "DirectXCollision.h"
@@ -10,26 +12,26 @@
 
 using namespace DirectX;
 
-//전방 선언
-struct float2;
-struct Vector2;
-
-struct float3;
-struct Vector3;
-
-struct float4;
-struct Vector4;
-
-struct float2x2;
-struct float3x3;
-struct float4x4;
-struct stdMatrix;
-
-struct Quaternion;
-struct Plane;
-
 namespace Lypi
 {
+	//전방 선언
+	struct float2;
+	struct Vector2;
+
+	struct float3;
+	struct Vector3;
+
+	struct float4;
+	struct Vector4;
+
+	struct float2x2;
+	struct float3x3;
+	struct float4x4;
+	struct stdMatrix;
+
+	struct Quaternion;
+	struct Plane;
+
 
 #define L_Epsilon             ( 0.0005f )
 #define L_Pi			      ( XM_PI )
@@ -210,6 +212,48 @@ namespace Lypi
 		float4(float _x, float _y, float _z, float _w);
 	};
 
+	struct Vector4 : float4
+	{
+		static const Vector4 Zero4;
+		static const Vector4 UnitX4;
+		static const Vector4 UnitY4;
+		static const Vector4 UnitZ4;
+
+		//생성자
+		Vector4();
+		explicit Vector4(float x);
+		Vector4(float x, float y, float z, float w);
+		Vector4(float4& F);
+
+		//복사 생성자
+		Vector4(const Vector4&) = default;
+		//Vector3(Vector3&&) = default;     
+
+		//연산자재정의
+		Vector4& operator=(const Vector4&) = default;
+		//Vector3& operator=(Vector3&&) = default;
+
+		bool operator== (Vector4 V);
+		bool operator!= (Vector4 V);
+
+		Vector4 operator+= (Vector4 V);
+		Vector4 operator-= (Vector4 V);
+		Vector4 operator*= (float S);
+		Vector4 operator/= (float S);
+
+		Vector4 operator+ (Vector4 V);
+		Vector4 operator- (Vector4 V);
+		Vector4 operator* (float S);
+		Vector4 operator/ (float S);
+
+		Vector4 operator+ ();
+		Vector4 operator- ();
+
+		//static function
+		//static Vector3 operator* (float S, Vector3 V);
+		//static Vector3 operator/ (float S, Vector3 V);
+	};
+
 	struct float2x2
 	{
 		union {
@@ -284,10 +328,6 @@ namespace Lypi
 
 	struct stdMatrix : float4x4
 	{
-		static const stdMatrix Identity;
-		static const stdMatrix ZeroMat;
-
-
 		//생성자 
 		stdMatrix() { *this = Identity; }
 		stdMatrix(float4 __1, float4 __2, float4 __3, float4 __4);
@@ -303,52 +343,41 @@ namespace Lypi
 		stdMatrix operator- (const stdMatrix& M);
 		stdMatrix operator* (const stdMatrix& M);
 		stdMatrix operator* (const float S);
-
-		//static
-		//static stdMatrix operator* (const float S, stdMatrix M);
-
-		stdMatrix Transpose();
-		void Transpose(stdMatrix& result);
-
-		float deteminant();
-		stdMatrix Inverse();
-		void Inverse(stdMatrix& result);
-
-		stdMatrix InverseG();
-		void InverseG(stdMatrix& result);
-
-		stdMatrix Translation(const Vector3& V);
-		void Translation(const Vector3& V, stdMatrix& result);
-
-		stdMatrix Scale(const Vector3& V);
-		void Scale(const Vector3& V, stdMatrix& result);
-
-		stdMatrix XRotate(const float& Radian);
-		void XRotate(const float& Radian, stdMatrix& result);
-
-		stdMatrix YRotate(const float& Radian);
-		void YRotate(const float& Radian, stdMatrix& result);
-
-		stdMatrix ZRotate(const float& Radian);
-		void ZRotate(const float& Radian, stdMatrix& result);
-
-		stdMatrix ObjectLookAt(Vector3& Pos, Vector3& Target, Vector3& Up);
-		void ObjectLookAt(Vector3& Pos, Vector3& Target, Vector3& Up, stdMatrix& result);
-
-		stdMatrix ViewLookAt(Vector3& Pos, Vector3& Target, Vector3& Up);
-		void ViewLookAt(Vector3& Pos, Vector3& Target, Vector3& Up, stdMatrix& result);
-
-		stdMatrix CompViewMat(Vector3& Pos, Vector3& Target, Vector3& Up);
-		void CompViewMat(Vector3& Pos, Vector3& Target, Vector3& Up, stdMatrix& result);
-
-		stdMatrix PerspectiveLH(const float& NearPlane, const float& FarPlane, const float& Width, const float& Height);
-		void PerspectiveLH(const float& NearPlane, const float& FarPlane, const float& Width, const float& Height, stdMatrix& result);
-
-		stdMatrix PerspectiveFovLH(const float& NearPlane, const float& FarPlane, const float& fovy, const float& Aspect);
-		void PerspectiveFovLH(const float& NearPlane, const float& FarPlane, const float& fovy, const float& Aspect, stdMatrix& result);
-
-		stdMatrix AxisAngle(const Vector3& vAxis, const float& Radian);
-		void AxisAngle(const Vector3& vAxis, const float& Radian, stdMatrix& result);
 	};
+
+	//static
+	//static stdMatrix operator* (const float S, stdMatrix M);
+
+	const stdMatrix Identity;
+	const stdMatrix ZeroMat;
+
+	stdMatrix Transpose(stdMatrix& M);
+
+	float deteminant(stdMatrix& M);
+	stdMatrix Inverse(stdMatrix& M);
+
+	stdMatrix InverseG(stdMatrix& M);
+
+	stdMatrix Translation(const Vector3& V);
+
+	stdMatrix Scale(const Vector3& V);
+
+	stdMatrix XRotate(const float& Radian);
+
+	stdMatrix YRotate(const float& Radian);
+
+	stdMatrix ZRotate(const float& Radian);
+
+	stdMatrix ObjectLookAt(Vector3& Pos, Vector3& Target, Vector3& Up);
+
+	stdMatrix ViewLookAt(Vector3& Pos, Vector3& Target, Vector3& Up);
+
+	stdMatrix CompViewMat(Vector3& Pos, Vector3& Target, Vector3& Up);
+
+	stdMatrix PerspectiveLH(const float& NearPlane, const float& FarPlane, const float& Width, const float& Height);
+
+	stdMatrix PerspectiveFovLH(const float& fovy, const float& Aspect, const float& NearPlane, const float& FarPlane);
+
+	stdMatrix AxisAngle(const Vector3& vAxis, const float& Radian);
 
 }

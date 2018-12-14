@@ -25,7 +25,7 @@ namespace Lypi
 		D3D11_VIEWPORT                     m_vpOld[D3D11_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
 		UINT                               m_nViewPorts;
 		ComPtr<ID3D11RenderTargetView>     m_pOldRTV;
-		ComPtr<ID3D11DepthStencilView>     m_pOldDSV;
+		ID3D11DepthStencilView*            m_pOldDSV;
 
 	public:
 		void Set(float fLTx, float fLTy, float fWidth, float fHeight, float fMinDepth = 0.f, float fMaxDepth = 1.f);
@@ -37,8 +37,8 @@ namespace Lypi
 		HRESULT SaveFile(T_STR szName);
 		HRESULT SaveBackBuffer(T_STR szName);
 
-		bool Begin(Vector4 vColor, bool bTargetClear = true, bool bDepthClear = true, bool bStencilClear = true);
-		bool Clear(Vector4 vColor, bool bTargetClear = true, bool bDepthClear = true, bool bStencilClear = true);
+		bool Begin(D3DXVECTOR4 vColor, bool bTargetClear = true, bool bDepthClear = true, bool bStencilClear = true);
+		bool Clear(D3DXVECTOR4 vColor, bool bTargetClear = true, bool bDepthClear = true, bool bStencilClear = true);
 		bool End();
 
 	public:

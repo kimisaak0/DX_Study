@@ -74,6 +74,7 @@ namespace Lypi
 #pragma endregion
 
 #pragma region	//매크로
+#define str(x) L#x
 #define randf(x) (((float)x)*rand()/(float)RAND_MAX) //0~x사이의 랜덤한 실수값을 반환
 #define randstep(fMin,fMax) (fMin+randf(fMax-fmin))  //min에서 max까지의 랜덤할 실수값을 반환
 #define clamp(x,MinX,MaxX) if (x>MaxX) x=MaxX; else if (x<MinX) x=MinX;  //x값이 min보다 작으면 min으로, max보다 크면 max로 고정시킴.
@@ -103,7 +104,7 @@ namespace Lypi
 		WCHAR buffer[256]={0,};\
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_IGNORE_INSERTS |FORMAT_MESSAGE_ALLOCATE_BUFFER,\
 		NULL,x,MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),(LPTSTR)&output,0,NULL);\
-		wsprintf(buffer,L"File=%s\nLine=%s", xstr(__FILE__),xstr(__LINE__));\
+		wsprintf(buffer,L"File=%s\nLine=%s", str(__FILE__),str(__LINE__));\
 		MessageBox(NULL, buffer,output,MB_OK); return hr;}\
 	}
 
@@ -112,7 +113,7 @@ namespace Lypi
 		WCHAR buffer[256]={0,};\
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_IGNORE_INSERTS |FORMAT_MESSAGE_ALLOCATE_BUFFER,\
 		NULL,x,MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),(LPTSTR)&output,0,NULL);\
-		wsprintf(buffer,L"File=%s\nLine=%s", xstr(__FILE__),xstr(__LINE__));\
+		wsprintf(buffer,L"File=%s\nLine=%s", str(__FILE__),str(__LINE__));\
 		MessageBox(NULL, buffer,output,MB_OK);}\
 	}
 

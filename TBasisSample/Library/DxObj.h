@@ -9,7 +9,7 @@ namespace Lypi
 	//D3D11 WARNING : ID3D11DeviceContext::SOSetTargets : Forcing Vertex Buffer slot 0 to NULL.[STATE_SETTING WARNING #1: DEVICE_IASETVERTEXBUFFERS_HAZARD]
 	void		       ClearD3D11DeviceContext();
 
-	ID3D11InputLayout* CreateInputlayout(DWORD dwSize, LPCVOID lpData, D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);
+	ID3D11InputLayout* CreateInputlayout(D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements, LPCVOID lpData, DWORD dwSize);
 
 	ID3D11Buffer* CreateVertexBuffer(UINT iNumVertex, UINT iVertexSize, VOID* data);                        // 정점 버퍼 생성 (정점 갯수, 정점 크기, 하위 리소스 데이터)
 	ID3D11Buffer* CreateIndexBuffer(UINT iNumVertex, UINT iVertexSize, VOID* data);						    // 인덱스 버퍼 생성 (정점 갯수, 정점 크기, 하위 리소스 데이터)
@@ -22,12 +22,12 @@ namespace Lypi
 	HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 
 	// (쉐이더 파일 이름, 진입 함수 이름, 반환인자)
-	ID3D11VertexShader*    LoadVertexShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "VS");
-	ID3D11PixelShader*     LoadPixelShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "PS");
-	ID3D11GeometryShader*  LoadGeoShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "GS");
-	ID3D11HullShader*      LoadHullShaderFile(const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "HS");
-	ID3D11DomainShader*    LoadDomainShaderFile(const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "DS");
-	ID3D11ComputeShader*   LoadComputeShaderFile(const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "CS");
+	ID3D11VertexShader*    LoadVertexShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "VS", bool bBinary = false);
+	ID3D11PixelShader*     LoadPixelShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "PS", bool bBinary = false);
+	ID3D11GeometryShader*  LoadGeoShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "GS", bool bBinary = false);
+	ID3D11HullShader*      LoadHullShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "HS", bool bBinary = false);
+	ID3D11DomainShader*    LoadDomainShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "DS", bool bBinary = false);
+	ID3D11ComputeShader*   LoadComputeShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "CS", bool bBinary = false);
 
 	class Obj3d_DX
 	{

@@ -24,7 +24,7 @@ namespace Lypi
 		m_matProj = PerspectiveFovLH((float)L_Pi * 0.25f, fWidth / fHeight, 0.1f, 1000.f);
 	}
 
-	void DxRTV::Apply(ID3D11RenderTargetView* pRTV, ID3D11DepthStencilView* pDSV, bool bDepthClear = true, bool bStencilClear = true)
+	void DxRTV::Apply(ID3D11RenderTargetView* pRTV, ID3D11DepthStencilView* pDSV, bool bDepthClear, bool bStencilClear)
 	{
 		assert(pRTV);
 
@@ -143,8 +143,8 @@ namespace Lypi
 
 		//렌더타켓용 텍스쳐 생성
 		D3D11_TEXTURE2D_DESC TexDesc;
-		TexDesc.Width = fWidth;
-		TexDesc.Height = fHeight;
+		TexDesc.Width = (UINT)fWidth;
+		TexDesc.Height = (UINT)fHeight;
 		TexDesc.MipLevels = 1;
 		TexDesc.ArraySize = 6;
 		TexDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -175,8 +175,8 @@ namespace Lypi
 		// 깊이 스텐실 뷰 텍스처 생성
 		ComPtr<ID3D11Texture2D> pDSTexture = nullptr;
 		D3D11_TEXTURE2D_DESC DSDesc;
-		DSDesc.Width = fWidth;
-		DSDesc.Height = fHeight;
+		DSDesc.Width = (UINT)fWidth;
+		DSDesc.Height = (UINT)fHeight;
 		DSDesc.MipLevels = 1;
 		DSDesc.ArraySize = 6;
 		DSDesc.Format = DXGI_FORMAT_D32_FLOAT;

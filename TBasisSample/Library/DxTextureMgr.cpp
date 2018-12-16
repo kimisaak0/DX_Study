@@ -63,6 +63,8 @@ namespace Lypi
 	{
 		m_pTextureRV = nullptr;
 		m_pSamplerState = nullptr;
+
+		return true;
 	}
 
 	DxTexture::~DxTexture()

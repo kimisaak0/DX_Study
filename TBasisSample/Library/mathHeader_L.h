@@ -326,10 +326,11 @@ namespace Lypi
 		float4x4& operator= (float4x4&&) = default;
 	};
 
+
 	struct stdMatrix : float4x4
 	{
 		//»ý¼ºÀÚ 
-		stdMatrix() { *this = Identity; }
+		stdMatrix();
 		stdMatrix(float4 __1, float4 __2, float4 __3, float4 __4);
 
 		//method
@@ -347,9 +348,21 @@ namespace Lypi
 
 	//static
 	//static stdMatrix operator* (const float S, stdMatrix M);
+	const stdMatrix Identity =
+	{
+		{ 1.f, 0.f, 0.f, 0.f },
+		{ 0.f, 1.f, 0.f, 0.f },
+		{ 0.f, 0.f, 1.f, 0.f },
+		{ 0.f, 0.f, 0.f, 1.f }
+	};
 
-	const stdMatrix Identity;
-	const stdMatrix ZeroMat;
+	const stdMatrix ZeroMat =
+	{
+		{ 0.f, 0.f, 0.f, 0.f },
+		{ 0.f, 0.f, 0.f, 0.f },
+		{ 0.f, 0.f, 0.f, 0.f },
+		{ 0.f, 0.f, 0.f, 0.f }
+	};
 
 	stdMatrix Transpose(stdMatrix& M);
 

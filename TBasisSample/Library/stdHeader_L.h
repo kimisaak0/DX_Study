@@ -186,9 +186,9 @@ namespace Lypi
 		int        m_iCurIndex;
 
 	public:													
-		virtual bool Init();								// 전체 객체 리스트 초기화
-		virtual bool Frame();								// 전체 객체 리스트 프레임 계산
-		virtual bool Render();								// 전체 객체 리스트 그리기
+		//virtual bool Init();								// 전체 객체 리스트 초기화
+		//virtual bool Frame();								// 전체 객체 리스트 프레임 계산
+		//virtual bool Render();								// 전체 객체 리스트 그리기
 		virtual bool Release();								// 전체 객체 리스트 삭제(릴리즈)
 
 		virtual int  Count();								// 전체 객체 갯수 리턴
@@ -213,37 +213,37 @@ namespace Lypi
 		TM.clear();
 	}
 
-	template <class Child>
-	bool TemplateMap<Child>::Init()
-	{
-		m_iCurIndex = 0;
-		TM.clear();
-		return true;
-	}
+	//template <class Child>
+	//bool TemplateMap<Child>::Init()
+	//{
+	//	m_iCurIndex = 0;
+	//	TM.clear();
+	//	return true;
+	//}
 
-	template <class Child>
-	bool TemplateMap<Child>::Frame()
-	{
-		for (TMapIter iter = TM.begin(); iter != TM.end(); iter++) {
-			Child *pPoint = (Child*)(*iter).second;
-			if (pPoint) {
-				pPoint->Frame();
-			}
-		}
-		return true;
-	}
+	//template <class Child>
+	//bool TemplateMap<Child>::Frame()
+	//{
+	//	for (TMapIter iter = TM.begin(); iter != TM.end(); iter++) {
+	//		Child *pPoint = (Child*)(*iter).second;
+	//		if (pPoint) {
+	//			pPoint->Frame();
+	//		}
+	//	}
+	//	return true;
+	//}
 
-	template <class Child>
-	bool TemplateMap<Child>::Render()
-	{
-		for (TMapIter iter = TM.begin(); iter != TM.end(); iter++) {
-			Child *pPoint = (Child*)(*iter).second;
-			if (pPoint) {
-				pPoint->Render();
-			}
-		}
-		return true;
-	}
+	//template <class Child>
+	//bool TemplateMap<Child>::Render()
+	//{
+	//	for (TMapIter iter = TM.begin(); iter != TM.end(); iter++) {
+	//		Child *pPoint = (Child*)(*iter).second;
+	//		if (pPoint) {
+	//			pPoint->Render();
+	//		}
+	//	}
+	//	return true;
+	//}
 
 	template <class Child>
 	bool TemplateMap<Child>::Release()
@@ -318,6 +318,7 @@ namespace Lypi
 				return pPoint;
 			}
 		}
+		return nullptr;
 	}
 
 	template <class Child>
@@ -336,7 +337,7 @@ namespace Lypi
 	{
 		if (pChild) {
 			pChild->Release();
-			TM.erase(iIndex);
+			TM.erase(GetID(pChild));
 		}
 		return true;
 	}

@@ -687,6 +687,11 @@ namespace Lypi
 
 #pragma region stdMatrix
 
+	stdMatrix::stdMatrix() 
+	{
+		*this = Identity; 
+	}
+
 	stdMatrix::stdMatrix(float4 __1, float4 __2, float4 __3, float4 __4)
 		: float4x4(__1, __2, __3, __4)	{ }
 
@@ -1069,6 +1074,8 @@ namespace Lypi
 		result._33 = FarPlane / (FarPlane - NearPlane);
 		result._34 = 1.f;
 		result._43 = NearPlane * FarPlane / (NearPlane - FarPlane);
+
+		return result;
 	}
 
 
@@ -1111,20 +1118,6 @@ namespace Lypi
 		return result;
 	}
 
-	const stdMatrix Identity = 
-	{ 
-		{1.f, 0.f, 0.f, 0.f},
-	    {0.f, 1.f, 0.f, 0.f},
-	    {0.f, 0.f, 1.f, 0.f},
-	    {0.f, 0.f, 0.f, 1.f} 
-	};
 
-	const stdMatrix ZeroMat =
-	{
-		{ 0.f, 0.f, 0.f, 0.f },
-		{ 0.f, 0.f, 0.f, 0.f },
-		{ 0.f, 0.f, 0.f, 0.f },
-		{ 0.f, 0.f, 0.f, 0.f }
-	};
 #pragma endregion
 }

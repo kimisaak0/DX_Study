@@ -247,7 +247,7 @@ namespace Lypi
 			if (FAILED(hr)) { return nullptr; }
 		}
 
-		dwSize = pBlob->GetBufferSize();
+		dwSize = (DWORD)pBlob->GetBufferSize();
 		lpData = pBlob->GetBufferPointer();
 
 		hr = g_pD3dDevice->CreateVertexShader(lpData, dwSize, NULL, &pVertexShader);
@@ -278,7 +278,7 @@ namespace Lypi
 		else {
 			hr = CompileShaderFromFile((TCHAR*)pShaderFile, pFuntionName, "ps_5_0", &pBlob);
 			if (FAILED(hr)) { return nullptr; }
-			dwSize = pBlob->GetBufferSize();
+			dwSize = (DWORD)pBlob->GetBufferSize();
 			lpData = pBlob->GetBufferPointer();
 		}
 
@@ -309,7 +309,7 @@ namespace Lypi
 		else {
 			hr = CompileShaderFromFile((TCHAR*)pShaderFile, pFuntionName, "gs_5_0", &pBlob);
 			if (FAILED(hr)) { return nullptr; }
-			dwSize = pBlob->GetBufferSize();
+			dwSize = (DWORD)pBlob->GetBufferSize();
 			lpData = pBlob->GetBufferPointer();
 		}
 
@@ -343,7 +343,7 @@ namespace Lypi
 		else {
 			hr = CompileShaderFromFile((TCHAR*)pShaderFile, pFuntionName, "hs_5_0", &pBlob);
 			if (FAILED(hr)) { return nullptr; }
-			dwSize = pBlob->GetBufferSize();
+			dwSize = (DWORD)pBlob->GetBufferSize();
 			lpData = pBlob->GetBufferPointer();
 		}	
 
@@ -377,7 +377,7 @@ namespace Lypi
 		else {
 			hr = CompileShaderFromFile((TCHAR*)pShaderFile, pFuntionName, "ds_5_0", &pBlob);
 			if (FAILED(hr)) { return nullptr; }
-			dwSize = pBlob->GetBufferSize();
+			dwSize = (DWORD)pBlob->GetBufferSize();
 			lpData = pBlob->GetBufferPointer();
 		}
 
@@ -411,7 +411,7 @@ namespace Lypi
 		else {
 			hr = CompileShaderFromFile((TCHAR*)pShaderFile, pFuntionName, "cs_5_0", &pBlob);
 			if (FAILED(hr)) { return nullptr; }
-			dwSize = pBlob->GetBufferSize();
+			dwSize = (DWORD)pBlob->GetBufferSize();
 			lpData = pBlob->GetBufferPointer();
 		}
 

@@ -128,9 +128,12 @@ namespace Lypi
 	class winL;
 
 	//device_DX
-	extern ID3D11Device*           g_pD3dDevice;
-	extern ID3D11DeviceContext*    g_pD3dContext;
-	extern IDXGISwapChain*         g_pSwapChain;
+	extern ID3D11Device*             g_pD3dDevice;
+	extern ID3D11DeviceContext*      g_pD3dContext;
+	extern IDXGISwapChain*           g_pSwapChain;
+	extern ID3D11RenderTargetView*   g_pRenderTagetView;	
+	extern ID3D11DepthStencilView*   g_pDepthStencilView;  
+	extern D3D11_VIEWPORT            g_d3dViewPort;		   
 
 	//WndC_DX
 	extern HINSTANCE    g_hInst;      //윈도우의 인스턴스 핸들값

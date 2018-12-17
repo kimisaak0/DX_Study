@@ -5,6 +5,9 @@ namespace Lypi
 	ID3D11Device*              g_pD3dDevice;           // 디바이스 객체
 	ID3D11DeviceContext*       g_pD3dContext;	       // 디바이스 컨텍스트
 	IDXGISwapChain*            g_pSwapChain;		   // 스왑체인 객체
+	ID3D11RenderTargetView*    g_pRenderTagetView;     // 메인 렌더타켓뷰 정보 얻기
+	ID3D11DepthStencilView*    g_pDepthStencilView;    // 깊이 스텐실 정보 얻기
+	D3D11_VIEWPORT             g_d3dViewPort;          // 뷰포트 정보 얻기
 
 	DxDevice::DxDevice()
 	{
@@ -20,8 +23,8 @@ namespace Lypi
 		m_pGIFactory = nullptr;
 		m_pSwapChain = nullptr;
 
-		m_pDepthStencilView = nullptr;
 		m_pRenderTagetView = nullptr;
+		m_pDepthStencilView = nullptr;
 	}
 
 #pragma region //디바이스 생성
@@ -191,9 +194,11 @@ namespace Lypi
 		dsvd.Texture2D.MipSlice = 0; //밉맵의 첫번째 인덱스.
 		dsvd.Flags = 0;              //옵션값
 
-									 //깊이스텐실뷰 생성 (생성에 사용할 리소스, 생성 정보, 반환인자)
+		//깊이스텐실뷰 생성 (생성에 사용할 리소스, 생성 정보, 반환인자)
 		hr = g_pD3dDevice->CreateDepthStencilView(m_pTex2D, &dsvd, &m_pDepthStencilView);
 		if (FAILED(hr)) { return hr; }
+
+		g_pDepthStencilView = m_pDepthStencilView;
 
 		return hr;
 	}
@@ -208,6 +213,7 @@ namespace Lypi
 		hr = m_pD3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTagetView);  	//렌더 타겟 뷰 생성
 		pBackBuffer->Release();
 
+		g_pRenderTagetView = m_pRenderTagetView;
 
 		return S_OK;
 	}
@@ -233,6 +239,8 @@ namespace Lypi
 
 		//렌더타켓뷰 세팅
 		m_pD3dContext->RSSetViewports(1, &m_d3dViewPort);
+
+		g_d3dViewPort = m_d3dViewPort;
 
 		return S_OK;
 	}
@@ -263,19 +271,19 @@ namespace Lypi
 		//세팅값을 복원시켜주고 삭제한다.
 		if (m_pD3dContext) { m_pD3dContext->ClearState(); }
 		if (m_pD3dContext) { m_pD3dContext->Release(); }
-		m_pD3dContext = nullptr;
+		m_pD3dContext = g_pD3dContext = nullptr;
 
 		if (m_pDepthStencilView) { m_pDepthStencilView->Release(); }
-		m_pDepthStencilView = nullptr;
+		m_pDepthStencilView = g_pDepthStencilView = nullptr;
 
 		if (m_pRenderTagetView) { m_pRenderTagetView->Release(); }
-		m_pRenderTagetView = nullptr;
+		m_pRenderTagetView = g_pRenderTagetView = nullptr;
 
 		if (m_pSwapChain) { m_pSwapChain->Release(); }
-		m_pSwapChain = nullptr;
+		m_pSwapChain = g_pSwapChain = nullptr;
 
 		if (m_pD3dDevice) { m_pD3dDevice->Release(); }
-		m_pD3dDevice = nullptr;
+		m_pD3dDevice = g_pD3dDevice = nullptr;
 
 		if (m_pGIFactory) { m_pGIFactory->Release(); }
 		m_pGIFactory = nullptr;

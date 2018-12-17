@@ -426,4 +426,95 @@ namespace Lypi
 
 		return pCompShader;
 	}
+
+	DxObj3d::DxObj3d()
+	{
+		m_pVertexBuffer = nullptr;
+		m_pIndexBuffer = nullptr;
+		m_pConstantBuffer = nullptr;
+
+		m_pVSBlob = nullptr;
+		m_pGSBlob = nullptr;
+		m_pPSBlob = nullptr;
+		m_pHSBlob = nullptr;
+		m_pDSBlob = nullptr;
+		m_pCSBlob = nullptr;
+
+		m_pInputLayout = nullptr;
+		m_pTextureSRV = nullptr;
+
+		m_pVertexShader = nullptr;
+		m_pPixelShader = nullptr;
+		m_pGeoShader = nullptr;
+		m_pHullShader = nullptr;
+		m_pDomainShader = nullptr;
+		m_pComputeShader = nullptr;
+
+		m_pTextureRV = nullptr;
+
+		m_iPrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+		m_iCullMode = 1;
+		m_iSamplerMode = 0;
+		m_iNumVertex = 0;
+		m_iNumIndex = 0;
+		m_iVertexSize = 0;
+		m_iIndexSize = sizeof(DWORD);
+
+		m_iBeginVB = 0;
+		m_iBeginIB = 0;
+	}
+
+	bool  DxObj3d::PreRender(UINT iVertexSize)
+	{
+		g_pD3dContext->IASetInputLayout(m_pInputLayout.Get());                           //인풋 레이아웃 세팅
+
+		UINT stride = iVertexSize;
+		UINT offset = 0;
+		if (iVertexSize == 0) {
+			stride = m_iVertexSize;
+		}
+
+		g_pD3dContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);      //정점 버퍼 세팅
+		g_pD3dContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);   //인덱스 버퍼 세팅
+		
+		g_pD3dContext->VSSetShader(m_pVertexShader.Get(), NULL, 0);                       // 정점 쉐이더 세팅
+		g_pD3dContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);			          // 정점 쉐이더에 상수 버퍼 세팅
+		
+		g_pD3dContext->GSSetShader(m_pGeoShader.Get(), NULL, 0);						  // 기하 쉐이더 세팅
+		g_pD3dContext->GSSetConstantBuffers(0, 1, &m_pConstantBuffer);			          // 기하 쉐이더에 상수 버퍼 세팅
+
+		g_pD3dContext->PSSetShader(m_pPixelShader.Get(), NULL, 0);						  // 픽셀 쉐이더 세팅
+		g_pD3dContext->PSSetShaderResources(0, 1, &m_pTextureRV);					      // 픽셀 쉐이더에 텍스쳐 리소스 세팅
+
+		g_pD3dContext->HSSetShader(m_pHullShader.Get(), NULL, 0);                         // 헐 쉐이더 세팅 
+		g_pD3dContext->DSSetShader(m_pDomainShader.Get(), NULL, 0);                       // 도메인 쉐이더 세팅
+
+		return true;
+	}
+
+	bool  DxObj3d::Render(UINT iVertexSize, UINT iNumVertex, UINT iNumIndex)
+	{
+		PreRender(iVertexSize);
+		PostRender(iNumVertex, iNumIndex);
+		return true;
+	}
+
+	bool  DxObj3d::PostRender(UINT iNumVertex, UINT iNumIndex)
+	{
+		// 인덱스 버퍼를 이용해서 그리기
+		if (m_pIndexBuffer != nullptr) { 
+			g_pD3dContext->DrawIndexed(iNumIndex, 0, 0); 
+		}
+		// 정점 버퍼를 이용해서 직접 그리기
+		else { 
+			g_pD3dContext->Draw(iNumVertex, 0); 
+		}
+
+		return true;
+	}
+
+	DxObj3d::~DxObj3d()
+	{
+	}
 }

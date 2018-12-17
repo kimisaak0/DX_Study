@@ -23,13 +23,13 @@ namespace Lypi
 
 	// (쉐이더 파일 이름, 진입 함수 이름, 반환인자)
 	ID3D11VertexShader*    LoadVertexShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "VS", bool bBinary = false);
-	ID3D11PixelShader*     LoadPixelShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "PS", bool bBinary = false);
+	ID3D11PixelShader*     LoadPixelShaderFile(const void* pShaderFile, const char*  pFuntionName = "PS", bool bBinary = false);
 	ID3D11GeometryShader*  LoadGeoShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char*  pFuntionName = "GS", bool bBinary = false);
 	ID3D11HullShader*      LoadHullShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "HS", bool bBinary = false);
 	ID3D11DomainShader*    LoadDomainShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "DS", bool bBinary = false);
 	ID3D11ComputeShader*   LoadComputeShaderFile(const void* pShaderFile, ID3DBlob** ppBlobOut = nullptr, const char *pFuntionName = "CS", bool bBinary = false);
 
-	class Obj3d_DX
+	class DxObj3d
 	{
 	public:
 		ComPtr<ID3D11Buffer>                m_pVertexBuffer;
@@ -73,9 +73,9 @@ namespace Lypi
 		bool  PreRender(UINT iVertexSize);
 		bool  Render(UINT iVertexSize, UINT iNumVertex, UINT iNumIndex);
 		bool  PostRender(UINT iNumVertex, UINT iNumIndex);
-		bool  Release();
+
 	public:
-		Obj3d_DX();
-		virtual ~Obj3d_DX();
+		DxObj3d();
+		virtual ~DxObj3d();
 	};
 }

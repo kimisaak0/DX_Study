@@ -167,6 +167,24 @@ namespace Lypi
 		cnt.clear();
 	};
 
+	template<typename TContainer>
+	void stl_wipe(TContainer& container)
+	{
+		typename TContainer::iterator iter;
+		for (iter = container.begin(); iter != container.end(); ++iter)
+		{
+			delete *iter;
+		}
+		container.clear();
+	}
+
+	template<typename T>
+	void stl_wipe_vector(vector<T>& rVector)
+	{
+		vector<T> emptyData;
+		rVector.swap(emptyData);
+	}
+
 	template <typename TCnt>
 	void stl_clear_vector(vector<TCnt>& vTCnt)
 	{
@@ -191,7 +209,7 @@ namespace Lypi
 	public:													
 		//virtual bool Init();								// 전체 객체 리스트 초기화
 		//virtual bool Frame();								// 전체 객체 리스트 프레임 계산
-		//virtual bool Render();								// 전체 객체 리스트 그리기
+		//virtual bool Render();							// 전체 객체 리스트 그리기
 		virtual bool Release();								// 전체 객체 리스트 삭제(릴리즈)
 
 		virtual int  Count();								// 전체 객체 갯수 리턴

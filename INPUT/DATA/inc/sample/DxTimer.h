@@ -17,7 +17,7 @@ namespace Lypi
 
 		int   m_iFPSGether;   //초당 프레임 누적용
 
-							  //개별 타이머는 타이머 클래스를 상속받아서 만드는걸로...
+							  
 		LARGE_INTEGER m_BefTickTime;
 		LARGE_INTEGER m_curTickTime;
 

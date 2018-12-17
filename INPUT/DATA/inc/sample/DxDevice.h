@@ -28,8 +28,8 @@ namespace Lypi
 		HRESULT	CreateSwapChain();	            // IDXGIFactory를 이용하여 스왑체인 생성
 		HRESULT CreateDpethStencilView();       // 깊이 스텐실 뷰 생성
 		
-		virtual HRESULT	SetRenderTargetView();	// 타겟 뷰 설정
-		virtual HRESULT	SetViewPort();     		// 뷰 포트 설정
+		HRESULT	SetRenderTargetView();	// 타겟 뷰 설정
+		HRESULT	SetViewPort();     		// 뷰 포트 설정
 
 	protected:
 		bool CreanupDevice();      // 생성한 것을 역순으로 삭제한다.

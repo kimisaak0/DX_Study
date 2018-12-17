@@ -8,6 +8,7 @@ namespace Lypi
 	{
 		return true;
 	}
+
 	bool Sample::Frame()
 	{
 		return true;

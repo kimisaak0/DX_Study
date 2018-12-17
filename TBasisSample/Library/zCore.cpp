@@ -5,6 +5,8 @@ namespace Lypi
 
 	zCore::zCore(LPCTSTR LWndName) : winL(LWndName)
 	{
+		m_swTimerRender = true;
+		m_swKeyRender = true;
 	}
 
 	LRESULT	zCore::MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

@@ -128,9 +128,12 @@ namespace Lypi
 	class winL;
 
 	//device_DX
-	extern ID3D11Device*           g_pD3dDevice;
-	extern ID3D11DeviceContext*    g_pD3dContext;
-	extern IDXGISwapChain*         g_pSwapChain;
+	extern ID3D11Device*             g_pD3dDevice;
+	extern ID3D11DeviceContext*      g_pD3dContext;
+	extern IDXGISwapChain*           g_pSwapChain;
+	extern ID3D11RenderTargetView*   g_pRenderTagetView;	
+	extern ID3D11DepthStencilView*   g_pDepthStencilView;  
+	extern D3D11_VIEWPORT            g_d3dViewPort;		   
 
 	//WndC_DX
 	extern HINSTANCE    g_hInst;      //윈도우의 인스턴스 핸들값
@@ -188,7 +191,7 @@ namespace Lypi
 	public:													
 		//virtual bool Init();								// 전체 객체 리스트 초기화
 		//virtual bool Frame();								// 전체 객체 리스트 프레임 계산
-		//virtual bool Render();								// 전체 객체 리스트 그리기
+		//virtual bool Render();							// 전체 객체 리스트 그리기
 		virtual bool Release();								// 전체 객체 리스트 삭제(릴리즈)
 
 		virtual int  Count();								// 전체 객체 갯수 리턴

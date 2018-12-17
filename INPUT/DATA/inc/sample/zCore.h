@@ -12,7 +12,6 @@ namespace Lypi
 		DxTimer    m_GameTimer;
 		DxWrite    m_Font;
 
-
 		bool m_swTimerRender;
 		bool m_swKeyRender;
 	public:

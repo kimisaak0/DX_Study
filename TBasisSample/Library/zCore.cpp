@@ -159,7 +159,7 @@ namespace Lypi
 
 		if (m_swTimerRender) {
 			m_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-			m_Font.SetTextColor(ColorF(1, 1, 1, 1));
+			m_Font.SetTextColor(ColorF(0, 0, 1, 1));
 
 			_stprintf_s(pBuffer, _T("FPS:%d, SPF:%10.5f, GameTime:%10.2f"),
 				m_GameTimer.getFPS(), m_GameTimer.getSPF(), m_GameTimer.getGameTime());

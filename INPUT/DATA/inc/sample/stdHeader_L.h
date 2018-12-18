@@ -167,6 +167,24 @@ namespace Lypi
 		cnt.clear();
 	};
 
+	template<typename TContainer>
+	void stl_wipe(TContainer& container)
+	{
+		typename TContainer::iterator iter;
+		for (iter = container.begin(); iter != container.end(); ++iter)
+		{
+			delete *iter;
+		}
+		container.clear();
+	}
+
+	template<typename T>
+	void stl_wipe_vector(vector<T>& rVector)
+	{
+		vector<T> emptyData;
+		rVector.swap(emptyData);
+	}
+
 	template <typename TCnt>
 	void stl_clear_vector(vector<TCnt>& vTCnt)
 	{

@@ -90,8 +90,11 @@ HRESULT VertexSample::LoadShaderAndInputLayout()
 		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	//레이아웃을 생성.
-	V_FRETURN(g_pD3dDevice->CreateInputLayout(layout, 1, pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(),
-		&m_pVertexLayout));
+
+	LPVOID vsPoint = pVSBuf->GetBufferPointer();
+	SIZE_T vsSize = pVSBuf->GetBufferSize();
+
+	V_FRETURN(g_pD3dDevice->CreateInputLayout(layout, 1, vsPoint, vsSize,	&m_pVertexLayout));
 
 	SAFE_RELEASE(pVSBuf);
 	SAFE_RELEASE(pPSBuf);

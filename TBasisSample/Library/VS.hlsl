@@ -1,5 +1,11 @@
-
-float4 VS(in float4 p : POSITION) : SV_POSITION
+struct VS_OUTPUT
 {
-	return p;
+	float4 p : SV_POSITION;
+};
+
+VS_OUTPUT VS(float4 p : POSITION)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+	output.p = p;
+	return output;
 }

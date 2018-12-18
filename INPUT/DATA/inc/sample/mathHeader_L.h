@@ -71,19 +71,18 @@ namespace Lypi
 		Vector2& operator=(const Vector2&) = default;
 		Vector2& operator=(Vector2&&) = default;
 
-		bool operator== (Vector2& V);
-		bool operator!= (Vector2& V);
+		bool operator== (const Vector2& V);
+		bool operator!= (const Vector2& V);
 
-		Vector2 operator+= (Vector2 V);
-		Vector2 operator-= (Vector2 V);
-		Vector2 operator*= (float S);
-		Vector2 operator/= (float S);
+		Vector2 operator+= (const Vector2 V);
+		Vector2 operator-= (const Vector2 V);
+		Vector2 operator*= (const float S);
+		Vector2 operator/= (const float S);
 
-		Vector2 operator+ (Vector2 V);
-		Vector2 operator- (Vector2 V);
-
-		Vector2 operator* (float S);
-		Vector2 operator/ (float S);
+		Vector2 operator+ (const Vector2 V);
+		Vector2 operator- (const Vector2 V);
+		Vector2 operator* (const float S);
+		Vector2 operator/ (const float S);
 		
 		Vector2 operator+ ();
 		Vector2 operator- ();
@@ -150,18 +149,18 @@ namespace Lypi
 		Vector3& operator=(const Vector3&) = default;
 		//Vector3& operator=(Vector3&&) = default;
 
-		bool operator== (Vector3 V);
-		bool operator!= (Vector3 V);
+		bool operator== (const Vector3 V);
+		bool operator!= (const Vector3 V);
 
-		Vector3 operator+= (Vector3 V);
-		Vector3 operator-= (Vector3 V);
-		Vector3 operator*= (float S);
-		Vector3 operator/= (float S);
+		Vector3 operator+= (const Vector3 V);
+		Vector3 operator-= (const Vector3 V);
+		Vector3 operator*= (const float S);
+		Vector3 operator/= (const float S);
 
-		Vector3 operator+ (Vector3 V);
-		Vector3 operator- (Vector3 V);
-		Vector3 operator* (float S);
-		Vector3 operator/ (float S);
+		Vector3 operator+ (const Vector3 V);
+		Vector3 operator- (const Vector3 V);
+		Vector3 operator* (const float S);
+		Vector3 operator/ (const float S);
 		
 		Vector3 operator+ ();
 		Vector3 operator- ();
@@ -233,18 +232,18 @@ namespace Lypi
 		Vector4& operator=(const Vector4&) = default;
 		//Vector3& operator=(Vector3&&) = default;
 
-		bool operator== (Vector4 V);
-		bool operator!= (Vector4 V);
+		bool operator== (const Vector4 V);
+		bool operator!= (const Vector4 V);
 
-		Vector4 operator+= (Vector4 V);
-		Vector4 operator-= (Vector4 V);
-		Vector4 operator*= (float S);
-		Vector4 operator/= (float S);
+		Vector4 operator+= (const Vector4 V);
+		Vector4 operator-= (const Vector4 V);
+		Vector4 operator*= (const float S);
+		Vector4 operator/= (const float S);
 
-		Vector4 operator+ (Vector4 V);
-		Vector4 operator- (Vector4 V);
-		Vector4 operator* (float S);
-		Vector4 operator/ (float S);
+		Vector4 operator+ (const Vector4 V);
+		Vector4 operator- (const Vector4 V);
+		Vector4 operator* (const float S);
+		Vector4 operator/ (const float S);
 
 		Vector4 operator+ ();
 		Vector4 operator- ();

@@ -30,7 +30,7 @@ namespace Lypi
 	}
 
 	//연산자 재정의
-	bool Vector2::operator== (Vector2& V)
+	bool Vector2::operator== (const Vector2& V)
 	{
 		if (abs(x - V.x) < L_Epsilon  && abs(y - V.y) <  L_Epsilon) {
 			return true; 
@@ -38,7 +38,7 @@ namespace Lypi
 		return false; 
 	}
 
-	bool Vector2::operator!= (Vector2& V)
+	bool Vector2::operator!= (const Vector2& V)
 	{
 		if ( abs(x - V.x) < L_Epsilon && abs(y == V.y) < L_Epsilon) {
 			return false; 
@@ -46,49 +46,49 @@ namespace Lypi
 		return true; 
 	}
 
-	Vector2 Vector2::operator+= (Vector2 V) 
+	Vector2 Vector2::operator+= (const Vector2 V) 
 	{
 		Vector2 rv = { x += V.x, y += V.y };
 		return rv;
 	}
 
-	Vector2 Vector2::operator-= (Vector2 V) 
+	Vector2 Vector2::operator-= (const Vector2 V)
 	{
 		Vector2 rv = { x -= V.x, y -= V.y};
 		return rv; 
 	}
 
-	Vector2 Vector2::operator*= (float S)
+	Vector2 Vector2::operator*= (const float S)
 	{
 		Vector2 rv = { x *= S, y *= S };
 		return rv; 
 	}
 
-	Vector2 Vector2::operator/= (float S) 
+	Vector2 Vector2::operator/= (const float S)
 	{
 		Vector2 rv = { x /= S, y /= S };
 		return rv; 
 	}
 
-	Vector2 Vector2::operator+ (Vector2 V)
+	Vector2 Vector2::operator+ (const Vector2 V)
 	{
 		Vector2 rv = { x + V.x, y + V.y };
 		return rv;
 	}
 
-	Vector2 Vector2::operator- (Vector2 V)
+	Vector2 Vector2::operator- (const Vector2 V)
 	{
 		Vector2 rv = { x - V.x, y - V.y };
 		return rv;
 	}
 
-	Vector2 Vector2::operator* (float S)
+	Vector2 Vector2::operator* (const float S)
 	{
 		Vector2 rv = { x * S, y * S };
 		return rv;
 	}
 
-	Vector2 Vector2::operator/ (float S)
+	Vector2 Vector2::operator/ (const float S)
 	{
 		Vector2 rv = { x / S, y / S };
 		return rv;
@@ -270,7 +270,7 @@ namespace Lypi
 	}
 
 	//연산자 재정의
-	bool Vector3::operator== (Vector3 V)
+	bool Vector3::operator== (const Vector3 V)
 	{ 
 		if (abs(x - V.x) < L_Epsilon && abs(y - V.y) < L_Epsilon && abs(z - V.z) < L_Epsilon) {
 			return true; 
@@ -278,7 +278,7 @@ namespace Lypi
 		return false; 
 	}
 
-	bool Vector3::operator!= (Vector3 V)
+	bool Vector3::operator!= (const Vector3 V)
 	{ 
 		if (abs(x - V.x) < L_Epsilon && abs(y - V.y) < L_Epsilon && abs(z - V.z) < L_Epsilon) {
 			return false; 
@@ -286,7 +286,7 @@ namespace Lypi
 		return true; 
 	}
 
-	Vector3 Vector3::operator+= (Vector3 V) 
+	Vector3 Vector3::operator+= (const Vector3 V)
 	{
 		Vector3 rv = { x += V.x, y += V.y, z += V.z };
 		return rv; 
@@ -298,37 +298,37 @@ namespace Lypi
 		return rv;
 	}
 
-	Vector3 Vector3::operator*= (float S)
+	Vector3 Vector3::operator*= (const float S)
 	{
 		Vector3 rv = { x *= S, y *= S, z *= S };
 		return rv;
 	}
 
-	Vector3 Vector3::operator/= (float S) 
+	Vector3 Vector3::operator/= (const float S)
 	{
 		Vector3 rv = { x /= S, y /= S, z /= S };
 		return rv;
 	}
 
-	Vector3 Vector3::operator+ (Vector3 V)
+	Vector3 Vector3::operator+ (const Vector3 V)
 	{
 		Vector3 rv = { x + V.x, y + V.y, z + V.z };
 		return rv;
 	}
 
-	Vector3 Vector3::operator- (Vector3 V) 
+	Vector3 Vector3::operator- (const Vector3 V)
 	{ 
 		Vector3 rv = { x + V.x, y + V.y, z - V.z };
 		return rv;
 	}
 
-	Vector3 Vector3::operator* (float S)
+	Vector3 Vector3::operator* (const float S)
 	{
 		Vector3 rv = { x * S, y * S, z * S };
 		return rv;
 	}
 
-	Vector3 Vector3::operator/ (float S)
+	Vector3 Vector3::operator/ (const float S)
 	{
 		Vector3 rv = { x / S, y / S, z / S };
 		return rv;
@@ -532,7 +532,7 @@ namespace Lypi
 		w = F.w;
 	}
 
-	bool Vector4::operator== (Vector4 V)
+	bool Vector4::operator== (const Vector4 V)
 	{
 		if (abs(x - V.x) < L_Epsilon && abs(y - V.y) < L_Epsilon && abs(z - V.z) < L_Epsilon && abs(w - V.w) < L_Epsilon) {
 			return true;
@@ -540,7 +540,7 @@ namespace Lypi
 		return false;
 	}
 
-	bool Vector4::operator!= (Vector4 V)
+	bool Vector4::operator!= (const Vector4 V)
 	{
 		if (abs(x - V.x) < L_Epsilon && abs(y - V.y) < L_Epsilon && abs(z - V.z) < L_Epsilon && abs(w - V.w) < L_Epsilon) {
 			return false;
@@ -548,50 +548,49 @@ namespace Lypi
 		return true;
 	}
 
-	Vector4 Vector4::operator+= (Vector4 V)
+	Vector4 Vector4::operator+= (const Vector4 V)
 	{
 		Vector4 rv = { x += V.x, y += V.y, z += V.z , w};
 		return rv;
 	}
 
-	Vector4 Vector4::operator-= (Vector4 V)
+	Vector4 Vector4::operator-= (const Vector4 V)
 	{
 		Vector4 rv = { x -= V.x, y -= V.y, z -= V.z , w };
 		return rv;
 	}
 
-	Vector4 Vector4::operator*= (float S)
+	Vector4 Vector4::operator*= (const float S)
 	{
 		Vector4 rv = { x *= S, y *= S, z *= S, w };
 		return rv;
 	}
 
-	Vector4 Vector4::operator/= (float S)
+	Vector4 Vector4::operator/= (const float S)
 	{
 		Vector4 rv = { x /= S, y /= S, z /= S, w };
 		return rv;
 	}
 
-
-	Vector4 Vector4::operator+ (Vector4 V)
+	Vector4 Vector4::operator+ (const Vector4 V)
 	{
 		Vector4 rv = { x + V.x, y + V.y, z + V.z, w };
 		return rv;
 	}
 
-	Vector4 Vector4::operator- (Vector4 V)
+	Vector4 Vector4::operator- (const Vector4 V)
 	{
 		Vector4 rv = { x - V.x, y - V.y, z - V.z, w };
 		return rv;
 	}
 
-	Vector4 Vector4::operator* (float S)
+	Vector4 Vector4::operator* (const float S)
 	{
 		Vector4 rv = { x * S, y * S, z * S, z };
 		return rv;
 	}
 
-	Vector4 Vector4::operator/ (float S)
+	Vector4 Vector4::operator/ (const float S)
 	{
 		Vector4 rv = { x / S, y / S, z / S, z };
 		return rv;

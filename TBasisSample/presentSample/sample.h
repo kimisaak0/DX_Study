@@ -53,5 +53,4 @@ namespace Lypi
 		Sample(LPCTSTR LWndName);
 		virtual ~Sample();
 	};
-
 }

@@ -68,11 +68,22 @@ namespace Lypi
 		V_FRETURN(hr);
 
 		UINT m_nBufferSize = UINT_MAX;
-		CD3D11_BUFFER_DESC bufferDesc(m_nBufferSize, D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT);
+		//CD3D11_BUFFER_DESC bufferDesc(m_nBufferSize, D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT);
+		D3D11_BUFFER_DESC bufferDesc =
+		{
+			m_nBufferSize,
+			D3D11_USAGE_DEFAULT,
+			D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT,
+			0,
+			0
+		};
 
 		//동일한 기하 쉐이더 버퍼2개 생성
-		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo));
-		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pDrawFrom));
+		hr = g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo);
+		V_FRETURN(hr);
+		
+		hr = g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pDrawFrom);
+		V_FRETURN(hr);
 
 		const D3D11_INPUT_ELEMENT_DESC layout[] =
 		{

@@ -1,21 +1,7 @@
 #include "sample.h"
-//
-//namespace Lypi
-//{
-
-//
-
-//
-
-
-//
-//
-//	Sample::~Sample() { }
-//}
 
 namespace Lypi
 {
-
 	Sample::Sample(LPCTSTR LWndName) : zCore(LWndName)
 	{
 		m_pVertexBuffer = nullptr;
@@ -266,3 +252,8 @@ namespace Lypi
 
 
 }
+
+
+
+
+

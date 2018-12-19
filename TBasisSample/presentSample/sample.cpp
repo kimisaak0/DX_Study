@@ -1,17 +1,4 @@
 #include "sample.h"
-//
-//namespace Lypi
-//{
-
-//
-
-//
-
-
-//
-//
-//	Sample::~Sample() { }
-//}
 
 namespace Lypi
 {
@@ -22,9 +9,13 @@ namespace Lypi
 		m_pIndexBuffer = nullptr;
 	
 		m_pVertexLayout = nullptr;
+
+		m_pStreamTo = nullptr;
+		m_pDrawFrom = nullptr;
 	
 		m_pVS = nullptr;
 		m_pGS = nullptr;
+		m_pSO = nullptr;
 		m_pPS = nullptr;
 	
 		m_uPrimType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -44,7 +35,8 @@ namespace Lypi
 		dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 		ID3DBlob* pVSBuf = nullptr;
-		V_FRETURN(D3DX11CompileFromFile(L"../../INPUT/DATA/Shader/sample/VS.hlsl", nullptr, nullptr, "VS", "vs_5_0", dwShaderFlags, NULL, nullptr, &pVSBuf, &pErrors, nullptr));
+		hr = D3DX11CompileFromFile(L"../../INPUT/DATA/Shader/sample/VS.hlsl", nullptr, nullptr, "VS", "vs_5_0", dwShaderFlags, NULL, nullptr, &pVSBuf, &pErrors, nullptr);
+		V_FRETURN(hr);
 		V_FRETURN(g_pD3dDevice->CreateVertexShader((DWORD*)pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(), nullptr, &m_pVS));
 
 		ID3DBlob* pGSBuf = nullptr;
@@ -55,13 +47,40 @@ namespace Lypi
 		V_FRETURN(D3DX11CompileFromFile(L"../../INPUT/DATA/Shader/sample/PS.hlsl", nullptr, nullptr, "PS", "ps_5_0", dwShaderFlags, NULL, nullptr, &pPSBuf, &pErrors, nullptr));
 		V_FRETURN(g_pD3dDevice->CreatePixelShader((DWORD*)pPSBuf->GetBufferPointer(), pPSBuf->GetBufferSize(), nullptr, &m_pPS));
 
-		const D3D11_INPUT_ELEMENT_DESC layout[] =
+		//중요! 출력 슬롯의 정점 버퍼에있는 정점 요소에 대한 설명
+		// ...예를 들어 위치의 y 및 z 구성 요소로만 출력하려면 StartComponent가 1이고 ComponentCount가 2여야합니다. 
+		D3D11_SO_DECLARATION_ENTRY pDecl[] =
 		{
-			//정점쉐이더안의 POSITION시멘틱의 의미를 지정.
-			{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ 0, "SV_POSITION", 0, 0, 3, 0 },
+			{ 0, "COLOR", 0, 0, 4, 0 },
 		};
 
-		V_FRETURN(g_pD3dDevice->CreateInputLayout(layout, 1, pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(), &m_pVertexLayout));
+		UINT elems = ARRAYSIZE(pDecl);
+		// == UINT elems = sizeof(pDecl) / sizeof(pDecl[0]);	 
+		// == UINT elems = sizeof(pDecl) / sizeof(D3D11_SO_DECLARATION_ENTRY);
+
+
+		void* bufferPointer = (void*)pGSBuf->GetBufferPointer();
+		SIZE_T bufferSize = pGSBuf->GetBufferSize();
+		UINT stride = sizeof(PC_VERTEX); // SO에서 반환되는 정점 한개의 크기.
+		//UINT stride = 7 * sizeof(float); // *NOT* sizeof the above array!
+
+		hr = g_pD3dDevice->CreateGeometryShaderWithStreamOutput((void*)pGSBuf->GetBufferPointer(), pGSBuf->GetBufferSize(), pDecl, elems, &stride, 1, 0, NULL, &m_pSO);
+		V_FRETURN(hr);
+
+		UINT m_nBufferSize = UINT_MAX;
+		CD3D11_BUFFER_DESC bufferDesc(m_nBufferSize, D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT);
+
+		//동일한 기하 쉐이더 버퍼2개 생성
+		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo));
+		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pDrawFrom));
+
+		const D3D11_INPUT_ELEMENT_DESC layout[] =
+		{
+			{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		V_FRETURN(g_pD3dDevice->CreateInputLayout(layout, 2, pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(), &m_pVertexLayout));
 
 		SAFE_RELEASE(pVSBuf);
 		SAFE_RELEASE(pGSBuf);
@@ -69,6 +88,10 @@ namespace Lypi
 		SAFE_RELEASE(pErrors);
 
 		RSChange();
+
+		//스트림 출력
+		HandleEffects(m_pVertexBuffer);
+
 		return hr;
 	}
 
@@ -87,24 +110,64 @@ namespace Lypi
 		return hr;
 	}
 
+	HRESULT Sample::HandleEffects(ID3D11Buffer* pBuffer)
+	{
+		static int iCount = 0;
+		
+		HRESULT hr = S_OK;
+
+		g_pD3dContext->VSSetShader(m_pVS, NULL, 0);
+
+		if (pBuffer == m_pVertexBuffer) {
+			g_pD3dContext->GSSetShader(m_pGS, NULL, 0);
+			g_pD3dContext->PSSetShader(m_pPS, NULL, 0);
+		}
+		else {
+			//m_pSO를 세팅하면 픽셀쉐이더로는 내려가지 못함.
+			g_pD3dContext->GSSetShader(m_pSO, NULL, 0);
+		}
+
+		g_pD3dContext->IASetInputLayout(m_pVertexLayout);
+
+		UINT stride = sizeof(PC_VERTEX);
+		UINT Offsets[1] = { 0 };
+		ID3D11Buffer* pVB[1] = { pBuffer };
+
+		g_pD3dContext->SOSetTargets(1, &m_pStreamTo, Offsets);   //삼각형당 쪼개진 데이터가 저장되서 나옴.
+		g_pD3dContext->IASetVertexBuffers(0, 1, pVB, &stride, Offsets);
+		g_pD3dContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		
+		g_pD3dContext->RSSetState(m_pRS);
+		g_pD3dContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_uPrimType);
+
+		(iCount++ == 0) ? (g_pD3dContext->DrawIndexed(6, 0, 0)) : (g_pD3dContext->DrawAuto());
+		
+		//더블버퍼링과 같은 개념
+		ID3D11Buffer* pTemp = m_pStreamTo;
+		m_pStreamTo = m_pDrawFrom;
+		m_pDrawFrom = pTemp;
+
+		pVB[0] = NULL;
+		g_pD3dContext->SOSetTargets(0, pVB, Offsets);
+
+		return hr;
+	}
 
 	HRESULT Sample::CreateVertexBuffer()
 	{
-	
 		HRESULT hr = S_OK;
 	
 		//시계 방향으로 지정할 것.
-		V3 vertices[] =
+		PC_VERTEX vertices[] =
 		{
-			{-1.0f, +1.0f, 0.5f},
-			{+1.0f, +1.0f, 0.5f},
-			{+1.0f, -1.0f, 0.5f},
-			{-1.0f, -1.0f, 0.5f},
+			{ float3 (-0.0f, +0.7f, 0.5f), float4(1.f,1.f,1.f,1.f)},
+			{ float3 (+0.5f, -0.2f, 0.5f), float4(1.f,1.f,1.f,1.f)},
+			{ float3 (-0.5f, -0.2f, 0.5f), float4(1.f,1.f,1.f,1.f)},
 		};
 	
 		UINT numVertices = sizeof(vertices) / sizeof(vertices[0]);
 		//// CD3D11_BUFFER_DESC : 버퍼 크기와 버퍼 용도만 결정하면 나머지는 기본값으로 생성해주는 구조체.
-		CD3D11_BUFFER_DESC cbc(sizeof(V3) * numVertices, D3D11_BIND_VERTEX_BUFFER);
+		CD3D11_BUFFER_DESC cbc(sizeof(PC_VERTEX) * numVertices, D3D11_BIND_VERTEX_BUFFER);
 	
 		D3D11_SUBRESOURCE_DATA InitData;
 		InitData.pSysMem = vertices;
@@ -148,13 +211,13 @@ namespace Lypi
 
 		if (FAILED(CreateIndexBuffer()))
 		{
-			MessageBox(0, _T("CreateTrangle2  실패"), _T("Fatal error"), MB_OK);
+			MessageBox(0, _T("CreateIndexBuffer  실패"), _T("Fatal error"), MB_OK);
 			return false;
 		}
 
 		if (FAILED(LoadShaderAndInputLayout()))
 		{
-			MessageBox(0, _T("CreateTrangle  실패"), _T("Fatal error"), MB_OK);
+			MessageBox(0, _T("LoadShaderAndInputLayout  실패"), _T("Fatal error"), MB_OK);
 			return false;
 		}
 		return true;
@@ -174,6 +237,10 @@ namespace Lypi
 		if (I_Input.IsKeyDownOnce(DIK_F3)) {
 			(m_uFillMode + 1 > 3) ? (m_uFillMode = 2) : (m_uFillMode += 1);
 			RSChange();
+		}
+
+		if (I_Input.IsKeyDownOnce(DIK_D)) {
+			HandleEffects(m_pStreamTo);
 		}
 
 		return true;
@@ -222,13 +289,12 @@ namespace Lypi
 	
 		// Shaders
 		g_pD3dContext->VSSetShader(m_pVS, NULL, 0);
-		g_pD3dContext->GSSetShader(m_pGS, NULL, 0);
 		g_pD3dContext->PSSetShader(m_pPS, NULL, 0);
 	
 		// Set the input layout
 		g_pD3dContext->IASetInputLayout(m_pVertexLayout);
 	
-		UINT stride = sizeof(V3);
+		UINT stride = sizeof(PC_VERTEX);
 		UINT offset = 0;
 	
 		// Set vertex buffer
@@ -237,8 +303,7 @@ namespace Lypi
 		g_pD3dContext->RSSetState(m_pRS);
 		g_pD3dContext->IASetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)m_uPrimType);
 		
-		g_pD3dContext->DrawIndexed(6, 0, 0);
-		//g_pD3dContext->DrawAuto();
+		g_pD3dContext->DrawAuto();
 		return true;
 	}
 
@@ -251,8 +316,12 @@ namespace Lypi
 	
 		SAFE_RELEASE(m_pVS);              // 정점 쉐이더 릴리즈
 		SAFE_RELEASE(m_pGS);              // 기하 쉐이더 릴리즈
+		SAFE_RELEASE(m_pSO);              // SO 릴리즈
 		SAFE_RELEASE(m_pPS);              // 픽쉘 쉐이더 릴리즈
 	
+		SAFE_RELEASE(m_pStreamTo);
+		SAFE_RELEASE(m_pDrawFrom);
+
 		SAFE_RELEASE(m_pRS);
 	
 		return true;

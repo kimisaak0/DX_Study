@@ -1,6 +1,7 @@
 struct VS_OUTPUT
 {
 	float4 p : SV_POSITION;
+	float4 c : COLOR;
 };
 
 float4 PS(VS_OUTPUT p : SV_POSITION) : SV_Target

@@ -27,19 +27,12 @@ namespace Lypi
 		ID3D11PixelShader*      m_pPS;	 //픽셀 쉐이더 인터페이스
 		ID3D11GeometryShader*   m_pGS;   //기하 쉐이더 인터페이스
 		ID3D11GeometryShader*   m_pSO;   //Stream Output Stage용
-	
-		// 이미지 디버그용
-		UINT    m_uPrimType;    //토폴로지 타입
-		UINT    m_uCullMode;    //컬링모드
-		UINT    m_uFillMode;    //와이어 프레임만 렌더링
-
-		ID3D11RasterizerState*      m_pRS;   //래스터라이저 상태
 
 	public:
 		HRESULT		CreateVertexBuffer();        // 정점 버퍼 생성
 		HRESULT     CreateIndexBuffer();         // 인덱스 버퍼 생성
 		HRESULT		LoadShaderAndInputLayout();  // 정점 및 픽쉘 쉐이더 로딩 및 생성
-		HRESULT		RSChange();                  // 래스터라이저 세팅 변경
+
 
 		HRESULT HandleEffects(ID3D11Buffer* pBuffer); // 
 

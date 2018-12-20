@@ -41,7 +41,7 @@ namespace Lypi
 		//디바이스 생성 타입
 		D3D_DRIVER_TYPE dxDriverTypes[] =
 		{
-			D3D_DRIVER_TYPE_UNKNOWN,    //디바이스 객체를 생성할 수 있는 최상의 드라이브 타입이 자동적으로 선택된다는데...?
+			//D3D_DRIVER_TYPE_UNKNOWN,    //디바이스 객체를 생성할 수 있는 최상의 드라이브 타입이 자동적으로 선택된다는데...?
 			D3D_DRIVER_TYPE_HARDWARE,   //최선
 			D3D_DRIVER_TYPE_WARP,       //차선
 			D3D_DRIVER_TYPE_REFERENCE   //최악 (그래픽 카드가 안 받쳐줄때 개발용으로 사용)

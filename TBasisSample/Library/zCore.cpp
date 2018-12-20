@@ -7,6 +7,10 @@ namespace Lypi
 	{
 		m_swTimerRender = true;
 		m_swKeyRender = true;
+
+		m_uPrimType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		m_uCullMode = D3D11_CULL_BACK;
+		m_uFillMode = D3D11_FILL_SOLID;
 	}
 
 	LRESULT	zCore::MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -26,6 +30,21 @@ namespace Lypi
 		}
 
 		return true;
+	}
+
+	HRESULT		zCore::RSChange()
+	{
+		HRESULT hr = S_OK;
+		SAFE_RELEASE(m_pRS);
+
+		D3D11_RASTERIZER_DESC RSDesc;
+		ZeroMemory(&RSDesc, sizeof(D3D11_RASTERIZER_DESC));
+		RSDesc.DepthClipEnable = TRUE;
+		RSDesc.FillMode = (D3D11_FILL_MODE)m_uFillMode;
+		RSDesc.CullMode = (D3D11_CULL_MODE)m_uCullMode;
+		V_FRETURN(g_pD3dDevice->CreateRasterizerState(&RSDesc, &m_pRS));
+
+		return hr;
 	}
 
 	bool zCore::gameInit()
@@ -108,48 +127,15 @@ namespace Lypi
 
 	bool zCore::gamePreRender()
 	{
-		float ClearColor[4] = { 0.1f, 0.2f, 0.3f, 1.0f }; //r,g,b,a
+		float ClearColor[4] = {1.f, 1.f, 1.f, 1.f }; //r,g,b,a
 		g_pD3dContext->ClearRenderTargetView(m_pRenderTagetView, ClearColor);
 		g_pD3dContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		g_pD3dContext->OMSetRenderTargets(1, &m_pRenderTagetView, m_pDepthStencilView);
-
-		//D3D::ApplyDSS(xDxState::g_pDSVStateEnableLessEqual);
-		//D3D::ApplyBS(xDxState::g_pBSAlphaBlend);
-		//D3D::ApplySS(xDxState::g_pSSWrapLinear);
-
-		//if (I_Input.IsKeyDownOnce(DIK_P)) {
-		//	D3D::ApplyRS(xDxState::g_pRSNoneWireFrame);
-		//}
-		//else {
-		//	D3D::ApplyRS(xDxState::g_pRSNoneSolid);
-		//}
 
 		DXGI_SWAP_CHAIN_DESC CurrentSD;
 		g_pSwapChain->GetDesc(&CurrentSD);
 
 		m_Font.DrawTextBegin();
-
-		//m_SkyBox.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-		//m_SkyBox.Render();
-
-		PreRender();
-
-		return true;
-	}
-
-	bool zCore::gameRender()
-	{
-		//m_dirAxis.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-		//m_dirAxis.Render();
-
-		Render();
-
-		return true;
-	}
-
-	bool zCore::gamePostRender()
-	{
-		PostRender();
 
 		TCHAR pBuffer[256];
 		memset(pBuffer, 0, sizeof(TCHAR) * 256);
@@ -168,7 +154,6 @@ namespace Lypi
 
 		if (m_swKeyRender) {
 			m_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-			//m_Font.SetTextPos(Matrix3x2F::Rotation(g_GameTimer*100, Point2F(400, 300)));
 			m_Font.SetTextColor(ColorF(1, 0, 0, 1));
 
 			int iCount = 0;
@@ -214,9 +199,68 @@ namespace Lypi
 			}
 		}
 
-		//IDXGISwapChain 객체를 사용하여 시연(출력)한다.
-		//모든 렌더링 작업들은 present앞에서 이뤄져야 한다.
+		m_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+		m_Font.SetTextColor(ColorF(0.0f, 0.0f, 0.0f, 1.0f));
+
+		TCHAR TopologyBuffer[256];
+		ZeroMemory(TopologyBuffer, sizeof(TCHAR) * 256);
+
+		switch (m_uPrimType) {
+			case 1: { _tcscpy_s(TopologyBuffer, L"POINTLIST"); } break;
+			case 2: { _tcscpy_s(TopologyBuffer, L"LINELIST"); } break;
+			case 3: { _tcscpy_s(TopologyBuffer, L"LINESTRIP"); } break;
+			case 4: { _tcscpy_s(TopologyBuffer, L"TRIANGLELIST"); } break;
+			case 5: { _tcscpy_s(TopologyBuffer, L"TRIANGLESTRIP"); } break;
+		}
+
+		TCHAR CullModeBuffer[256];
+		ZeroMemory(CullModeBuffer, sizeof(TCHAR) * 256);
+
+		switch (m_uCullMode) {
+			case 1: { _tcscpy_s(CullModeBuffer, L"CULL_NONE"); } break;
+			case 2: { _tcscpy_s(CullModeBuffer, L"CULL_FRONT"); } break;
+			case 3: { _tcscpy_s(CullModeBuffer, L"CULL_BACK"); } break;
+		}
+
+		TCHAR FillModeBuffer[256];
+		ZeroMemory(FillModeBuffer, sizeof(TCHAR) * 256);
+
+		switch (m_uFillMode) {
+			case 2: { _tcscpy_s(FillModeBuffer, L"WIREFRAME"); } break;
+			case 3: { _tcscpy_s(FillModeBuffer, L"SOLID"); } break;
+		}
+
+		_stprintf_s(pBuffer, L"%s\n%s\n%s", TopologyBuffer, CullModeBuffer, FillModeBuffer);
+
+		m_Font.SetlayoutRt(0, 0, (FLOAT)g_rtClient.right, (FLOAT)g_rtClient.bottom);
+		m_Font.DrawText(pBuffer);
+
+		////IDXGISwapChain 객체를 사용하여 시연(출력)한다.
+		////모든 렌더링 작업들은 present앞에서 이뤄져야 한다.
 		m_Font.DrawTextEnd();
+
+		PreRender();
+
+		return true;
+	}
+
+	bool zCore::gameRender()
+	{
+		//m_SkyBox.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+		//m_SkyBox.Render();
+
+		//m_dirAxis.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
+		//m_dirAxis.Render();
+
+		Render();
+
+		return true;
+	}
+
+	bool zCore::gamePostRender()
+	{
+		PostRender();
+
 		g_pSwapChain->Present(0, 0);
 		return true;
 	}

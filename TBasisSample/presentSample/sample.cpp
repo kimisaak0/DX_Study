@@ -16,10 +16,7 @@ namespace Lypi
 		m_pGS = nullptr;
 		m_pSO = nullptr;
 		m_pPS = nullptr;
-	
-		m_uPrimType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		m_uCullMode = D3D11_CULL_BACK;
-		m_uFillMode = D3D11_FILL_SOLID;
+
 	}
 
 	HRESULT Sample::LoadShaderAndInputLayout()
@@ -27,7 +24,6 @@ namespace Lypi
 		HRESULT hr = S_OK;
 	
 		ID3DBlob* pErrors = nullptr;
-	
 		DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 	
 #if defined( _DEBUG ) || defined( _DEBUG )
@@ -58,32 +54,19 @@ namespace Lypi
 		// == UINT elems = sizeof(pDecl) / sizeof(pDecl[0]);	 
 		// == UINT elems = sizeof(pDecl) / sizeof(D3D11_SO_DECLARATION_ENTRY);
 
-
-		void* bufferPointer = (void*)pGSBuf->GetBufferPointer();
-		SIZE_T bufferSize = pGSBuf->GetBufferSize();
 		UINT stride = sizeof(PC_VERTEX); // SO에서 반환되는 정점 한개의 크기.
 		//UINT stride = 7 * sizeof(float); // *NOT* sizeof the above array!
 
 		hr = g_pD3dDevice->CreateGeometryShaderWithStreamOutput((void*)pGSBuf->GetBufferPointer(), pGSBuf->GetBufferSize(), pDecl, elems, &stride, 1, 0, NULL, &m_pSO);
 		V_FRETURN(hr);
 
-		UINT m_nBufferSize = UINT_MAX;
-		//CD3D11_BUFFER_DESC bufferDesc(m_nBufferSize, D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT);
-		D3D11_BUFFER_DESC bufferDesc =
-		{
-			m_nBufferSize,
-			D3D11_USAGE_DEFAULT,
-			D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT,
-			0,
-			0
-		};
+		UINT m_nBufferSize = UINT_MAX; // Streamoutput Stage를 돌리면 정점이 기하급수적으로 늘어남으로 최대치로 잡는 것이 좋다.
+		CD3D11_BUFFER_DESC bufferDesc(m_nBufferSize, D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT);
+
 
 		//동일한 기하 쉐이더 버퍼2개 생성
-		hr = g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo);
-		V_FRETURN(hr);
-		
-		hr = g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pDrawFrom);
-		V_FRETURN(hr);
+		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo));
+		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pDrawFrom));
 
 		const D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
@@ -99,49 +82,28 @@ namespace Lypi
 
 		RSChange();
 
-		//스트림 출력
+		 //스트림 출력( 스트림 출력 스테이지 )
 		HandleEffects(m_pVertexBuffer);
-
-		return hr;
-	}
-
-	HRESULT		Sample::RSChange()
-	{
-		HRESULT hr = S_OK;
-		SAFE_RELEASE(m_pRS);
-	
-		D3D11_RASTERIZER_DESC RSDesc;
-		ZeroMemory(&RSDesc, sizeof(D3D11_RASTERIZER_DESC));
-		RSDesc.DepthClipEnable = TRUE;
-		RSDesc.FillMode = (D3D11_FILL_MODE)m_uFillMode;
-		RSDesc.CullMode = (D3D11_CULL_MODE)m_uCullMode;
-		V_FRETURN(g_pD3dDevice->CreateRasterizerState(&RSDesc, &m_pRS));
-	
+		HandleEffects(m_pVertexBuffer);
+		for (int iCnt = 0; iCnt < 1; iCnt++) 	//기하 쉐이더를 몇번 돌릴지 결정.
+		{
+			HandleEffects(m_pDrawFrom);
+		}
 		return hr;
 	}
 
 	HRESULT Sample::HandleEffects(ID3D11Buffer* pBuffer)
 	{
-		static int iCount = 0;
-		
 		HRESULT hr = S_OK;
-
-		g_pD3dContext->VSSetShader(m_pVS, NULL, 0);
-
-		if (pBuffer == m_pVertexBuffer) {
-			g_pD3dContext->GSSetShader(m_pGS, NULL, 0);
-			g_pD3dContext->PSSetShader(m_pPS, NULL, 0);
-		}
-		else {
-			//m_pSO를 세팅하면 픽셀쉐이더로는 내려가지 못함.
-			g_pD3dContext->GSSetShader(m_pSO, NULL, 0);
-		}
-
+		
 		g_pD3dContext->IASetInputLayout(m_pVertexLayout);
 
+		g_pD3dContext->VSSetShader(m_pVS, NULL, 0);
+		g_pD3dContext->GSSetShader(m_pSO, NULL, 0); //SO로 세팅되면 PS로 넘어가지 않음
+
 		UINT stride = sizeof(PC_VERTEX);
-		UINT Offsets[1] = { 0 };
-		ID3D11Buffer* pVB[1] = { pBuffer };
+		UINT Offsets[] = { 0 };
+		ID3D11Buffer* pVB[] = { pBuffer };
 
 		g_pD3dContext->SOSetTargets(1, &m_pStreamTo, Offsets);   //삼각형당 쪼개진 데이터가 저장되서 나옴.
 		g_pD3dContext->IASetVertexBuffers(0, 1, pVB, &stride, Offsets);
@@ -150,8 +112,13 @@ namespace Lypi
 		g_pD3dContext->RSSetState(m_pRS);
 		g_pD3dContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_uPrimType);
 
-		(iCount++ == 0) ? (g_pD3dContext->DrawIndexed(6, 0, 0)) : (g_pD3dContext->DrawAuto());
-		
+		if (pBuffer == m_pVertexBuffer) {
+			(g_pD3dContext->DrawIndexed(3, 0, 0));
+		}
+		else {
+			(g_pD3dContext->DrawAuto());
+		}
+
 		//더블버퍼링과 같은 개념
 		ID3D11Buffer* pTemp = m_pStreamTo;
 		m_pStreamTo = m_pDrawFrom;
@@ -193,7 +160,7 @@ namespace Lypi
 		DWORD indices[] =
 		{
 			0,1,2,
-			0,2,3,
+			//0,2,3,
 		};
 	
 		UINT iNumIndex = sizeof(indices) / sizeof(indices[0]);
@@ -230,6 +197,8 @@ namespace Lypi
 			MessageBox(0, _T("LoadShaderAndInputLayout  실패"), _T("Fatal error"), MB_OK);
 			return false;
 		}
+
+		g_pD3dContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)m_uPrimType);
 		return true;
 	}
 
@@ -249,54 +218,15 @@ namespace Lypi
 			RSChange();
 		}
 
-		if (I_Input.IsKeyDownOnce(DIK_D)) {
-			HandleEffects(m_pStreamTo);
-		}
+		//if (I_Input.IsKeyDownOnce(DIK_D)) {
+		//	HandleEffects(m_pStreamTo);
+		//}
 
 		return true;
 	}
 
 	bool Sample::Render()
 	{
-		m_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-		m_Font.SetTextColor(ColorF(0.0f, 0.0f, 0.0f, 1.0f));
-		m_Font.SetlayoutRt(0, 0, (FLOAT)g_rtClient.right, (FLOAT)g_rtClient.bottom);
-	
-		TCHAR TopologyBuffer[256];
-		ZeroMemory(TopologyBuffer, sizeof(TCHAR) * 256);
-	
-		switch (m_uPrimType) {
-			case 1: { _tcscpy_s(TopologyBuffer, L"POINTLIST"); } break;
-			case 2: { _tcscpy_s(TopologyBuffer, L"LINELIST"); } break;
-			case 3: { _tcscpy_s(TopologyBuffer, L"LINESTRIP"); } break;
-			case 4: { _tcscpy_s(TopologyBuffer, L"TRIANGLELIST"); } break;
-			case 5: { _tcscpy_s(TopologyBuffer, L"TRIANGLESTRIP"); } break;
-		}
-	
-		TCHAR CullModeBuffer[256];
-		ZeroMemory(CullModeBuffer, sizeof(TCHAR) * 256);
-	
-		switch (m_uCullMode) {
-			case 1: { _tcscpy_s(CullModeBuffer, L"CULL_NONE"); } break;
-			case 2: { _tcscpy_s(CullModeBuffer, L"CULL_FRONT"); } break;
-			case 3: { _tcscpy_s(CullModeBuffer, L"CULL_BACK"); } break;
-		}
-	
-		TCHAR FillModeBuffer[256];
-		ZeroMemory(FillModeBuffer, sizeof(TCHAR) * 256);
-	
-		switch (m_uFillMode) {
-			case 2: { _tcscpy_s(FillModeBuffer, L"WIREFRAME"); } break;
-			case 3: { _tcscpy_s(FillModeBuffer, L"SOLID"); } break;
-		}
-	
-		TCHAR pBuffer[256];
-		ZeroMemory(pBuffer, sizeof(TCHAR) * 256);
-	
-		_stprintf_s(pBuffer, L"%s\n%s\n%s", TopologyBuffer, CullModeBuffer, FillModeBuffer);
-	
-		m_Font.DrawText(pBuffer);
-	
 		// Shaders
 		g_pD3dContext->VSSetShader(m_pVS, NULL, 0);
 		g_pD3dContext->PSSetShader(m_pPS, NULL, 0);
@@ -312,7 +242,7 @@ namespace Lypi
 		g_pD3dContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		g_pD3dContext->RSSetState(m_pRS);
 		g_pD3dContext->IASetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)m_uPrimType);
-		
+	
 		g_pD3dContext->DrawAuto();
 		return true;
 	}
@@ -336,8 +266,6 @@ namespace Lypi
 	
 		return true;
 	}
-
-
 
 	Sample::~Sample(void)
 	{

@@ -16,7 +16,6 @@ namespace Lypi
 		m_pGS = nullptr;
 		m_pSO = nullptr;
 		m_pPS = nullptr;
-
 	}
 
 	HRESULT Sample::LoadShaderAndInputLayout()
@@ -54,19 +53,19 @@ namespace Lypi
 		// == UINT elems = sizeof(pDecl) / sizeof(pDecl[0]);	 
 		// == UINT elems = sizeof(pDecl) / sizeof(D3D11_SO_DECLARATION_ENTRY);
 
-		UINT stride = sizeof(PC_VERTEX); // SO에서 반환되는 정점 한개의 크기.
+		UINT stride[] = { sizeof(PC_VERTEX) }; // SO에서 반환되는 정점 한개의 크기.
 		//UINT stride = 7 * sizeof(float); // *NOT* sizeof the above array!
 
-		hr = g_pD3dDevice->CreateGeometryShaderWithStreamOutput((void*)pGSBuf->GetBufferPointer(), pGSBuf->GetBufferSize(), pDecl, elems, &stride, 1, 0, NULL, &m_pSO);
-		V_FRETURN(hr);
+		V_FRETURN(g_pD3dDevice->CreateGeometryShaderWithStreamOutput(pGSBuf->GetBufferPointer(), pGSBuf->GetBufferSize(), pDecl, elems, stride, 1, 0, NULL, &m_pSO));
 
-		UINT m_nBufferSize = UINT_MAX; // Streamoutput Stage를 돌리면 정점이 기하급수적으로 늘어남으로 최대치로 잡는 것이 좋다.
+		UINT m_nBufferSize = 100000; // Streamoutput Stage를 돌리면 정점이 기하급수적으로 늘어남으로 최대치로 잡는 것이 좋다.
+									 //그렇다고 너무 크게 잡으면 디바이스가 멈춤... 어느정도가 최대치인지는 잘 모르겠다.
+		
 		CD3D11_BUFFER_DESC bufferDesc(m_nBufferSize, D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT);
 
-
-		//동일한 기하 쉐이더 버퍼2개 생성
-		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo));
+		//동일한 기하 쉐이더 버퍼2개 생성	
 		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pDrawFrom));
+		V_FRETURN(g_pD3dDevice->CreateBuffer(&bufferDesc, NULL, &m_pStreamTo));
 
 		const D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
@@ -82,20 +81,22 @@ namespace Lypi
 
 		RSChange();
 
-		 //스트림 출력( 스트림 출력 스테이지 )
+		//스트림 출력( 스트림 출력 스테이지 )
+		//처음에 VertexBuffer로 한번은 꼭 돌려야한다.
 		HandleEffects(m_pVertexBuffer);
-		HandleEffects(m_pVertexBuffer);
-		for (int iCnt = 0; iCnt < 1; iCnt++) 	//기하 쉐이더를 몇번 돌릴지 결정.
-		{
-			HandleEffects(m_pDrawFrom);
-		}
+
+		//for (int iCnt = 0; iCnt < 1; iCnt++) 	//기하 쉐이더를 몇번 돌릴지 결정.
+		//{
+		//	HandleEffects(m_pDrawFrom);
+		//}
+
 		return hr;
 	}
 
 	HRESULT Sample::HandleEffects(ID3D11Buffer* pBuffer)
 	{
 		HRESULT hr = S_OK;
-		
+
 		g_pD3dContext->IASetInputLayout(m_pVertexLayout);
 
 		g_pD3dContext->VSSetShader(m_pVS, NULL, 0);
@@ -124,6 +125,7 @@ namespace Lypi
 		m_pStreamTo = m_pDrawFrom;
 		m_pDrawFrom = pTemp;
 
+		//여기에 있어야 함. 중요함.
 		pVB[0] = NULL;
 		g_pD3dContext->SOSetTargets(0, pVB, Offsets);
 
@@ -218,9 +220,10 @@ namespace Lypi
 			RSChange();
 		}
 
-		//if (I_Input.IsKeyDownOnce(DIK_D)) {
-		//	HandleEffects(m_pStreamTo);
-		//}
+		//D키를 누르면 분할한다.
+		if (I_Input.IsKeyDownOnce(DIK_D)) {
+			HandleEffects(m_pDrawFrom);
+		}
 
 		return true;
 	}
@@ -234,15 +237,17 @@ namespace Lypi
 		// Set the input layout
 		g_pD3dContext->IASetInputLayout(m_pVertexLayout);
 	
-		UINT stride = sizeof(PC_VERTEX);
-		UINT offset = 0;
+		UINT stride[] = { sizeof(PC_VERTEX) };
+		UINT offset[] = { 0 };
 	
 		// Set vertex buffer
-		g_pD3dContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+		g_pD3dContext->IASetVertexBuffers(0, 1, &m_pDrawFrom, stride, offset);
 		g_pD3dContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		g_pD3dContext->RSSetState(m_pRS);
 		g_pD3dContext->IASetPrimitiveTopology((D3D_PRIMITIVE_TOPOLOGY)m_uPrimType);
 	
+		//쪼개진 이후이므로 DrawAuto로 출력해야 제대로 분할된게 출력된다.
+		/*g_pD3dContext->DrawIndexed(3, 0, 0);*/
 		g_pD3dContext->DrawAuto();
 		return true;
 	}
@@ -273,8 +278,3 @@ namespace Lypi
 
 
 }
-
-
-
-
-

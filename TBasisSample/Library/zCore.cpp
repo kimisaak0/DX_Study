@@ -67,7 +67,7 @@ namespace Lypi
 		I_Input.InitDirectInput(true, true); //DXInput Device 생성
 		I_Input.Init();	//DXInput 초기화
 
-		//				//상태값 설정
+		//상태값 설정
 		//xDxState::SetState();
 
 		//m_DefaultCamera.SetViewMatrix(); // 뷰행렬 설정

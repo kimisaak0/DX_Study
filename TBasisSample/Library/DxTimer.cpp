@@ -63,6 +63,17 @@ namespace Lypi
 
 	bool	DxTimer::Render()
 	{
+		I_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+		I_Font.SetTextColor(ColorF(0, 0, 1, 1));
+
+		TCHAR pBuffer[256];
+		memset(pBuffer, 0, sizeof(TCHAR) * 256);
+
+		_stprintf_s(pBuffer, _T("FPS:%d, SPF:%10.5f, GameTime:%10.2f"),
+			m_iFPS, m_dSPF, m_dGameTime);
+	
+		I_Font.Drawtxt(pBuffer);
+
 		return true;
 	}
 	bool	DxTimer::Release()

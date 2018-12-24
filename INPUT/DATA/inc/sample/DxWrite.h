@@ -46,15 +46,19 @@ namespace Lypi
 
 		//텍스트 그리기
 		void DrawTextBegin();
-		bool DrawText(TCHAR* pText);
+		bool Drawtxt(TCHAR* pText);
 		void DrawTextEnd();
 
 		//전체 삭제
 		bool Release();
 
 	public:
+		static DxWrite& GetInstance();
+
+	protected:
 		DxWrite();
 		virtual ~DxWrite();
 	};
 
+#define I_Font DxWrite::GetInstance()
 }

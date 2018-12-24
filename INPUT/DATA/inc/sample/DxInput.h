@@ -1,5 +1,6 @@
 #pragma once
 #include "stdHeader_L.h"
+#include "DxWrite.h"
 
 namespace Lypi
 {

@@ -40,6 +40,54 @@ namespace Lypi
 
 	bool DxInput::Render()
 	{
+
+		I_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+		I_Font.SetTextColor(ColorF(1, 0, 0, 1));
+
+		TCHAR pBuffer[256];
+		memset(pBuffer, 0, sizeof(TCHAR) * 256);
+
+		int iCount = 0;
+
+		static LONG MousePosX = I_Input.m_MouseCurState.lX;
+		static LONG MousePosY = I_Input.m_MouseCurState.lY;
+		static LONG MousePosZ = I_Input.m_MouseCurState.lZ;
+
+		MousePosX += I_Input.m_MouseCurState.lX;
+		MousePosY += I_Input.m_MouseCurState.lY;
+		MousePosZ += I_Input.m_MouseCurState.lZ;
+
+		_stprintf_s(pBuffer, _T("Mouse X:%ld, Y:%ld, Z:%ld"), MousePosX, MousePosY, MousePosZ);
+
+		FLOAT iStartX = 0;
+		FLOAT iStartY = (FLOAT)(50 + (20 * iCount));
+		I_Font.SetlayoutRt(iStartX, iStartY, (FLOAT)g_rtClient.right, (FLOAT)g_rtClient.bottom);
+		I_Font.Drawtxt(pBuffer);
+		iCount++;
+
+		for (int iKey = 0; iKey < KeyStateCount; iKey++) {
+			if (I_Input.m_KeyCurState[iKey] & 0x80) {
+				_stprintf_s(pBuffer, _T("Key State : 0x%02x : %d"), iKey, I_Input.m_KeyCurState[iKey]);
+				UINT iStartX = 0;
+				UINT iStartY = 50 + (20 * iCount);
+				I_Font.SetlayoutRt((FLOAT)iStartX, (FLOAT)iStartY, (FLOAT)g_rtClient.right, (FLOAT)g_rtClient.bottom);
+				I_Font.Drawtxt(pBuffer);
+
+				iCount++;
+			}
+		}
+
+		for (int iKey = 0; iKey < 4; iKey++) {
+			if (I_Input.m_MouseCurState.rgbButtons[iKey] & 0x80) {
+				_stprintf_s(pBuffer, _T("Mouse Button State : %02d"), iKey);
+				UINT iStartX = 0;
+				UINT iStartY = 50 + (20 * iCount);
+				I_Font.SetlayoutRt((FLOAT)iStartX, (FLOAT)iStartY, (FLOAT)g_rtClient.right, (FLOAT)g_rtClient.bottom);
+				I_Font.Drawtxt(pBuffer);
+
+				iCount++;
+			}
+		}
 		return true;
 	}
 

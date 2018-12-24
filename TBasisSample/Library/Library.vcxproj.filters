@@ -41,9 +41,6 @@
     <ClInclude Include="stdHeader_L.h">
       <Filter>01_Base\01_stdHeader</Filter>
     </ClInclude>
-    <ClInclude Include="DxState.h">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClInclude>
     <ClInclude Include="zCore.h">
       <Filter>01_Base\02_Main</Filter>
     </ClInclude>
@@ -59,31 +56,19 @@
     <ClInclude Include="DxInput.h">
       <Filter>01_Base\03_Function</Filter>
     </ClInclude>
-    <ClInclude Include="DxTextureMgr.h">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClInclude>
-    <ClInclude Include="DxRTV.h">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClInclude>
-    <ClInclude Include="DxObj.h">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClInclude>
     <ClInclude Include="mathHeader_L.h">
       <Filter>01_Base\01_stdHeader</Filter>
     </ClInclude>
-    <ClInclude Include="objHeader_L.h">
-      <Filter>02_Object\01_objHeader</Filter>
+    <ClInclude Include="simpleShape.h">
+      <Filter>01_Base\04_Dx</Filter>
     </ClInclude>
-    <ClInclude Include="EXPMesh.h">
-      <Filter>02_Object\02_ObjShape</Filter>
+    <ClInclude Include="ShapeHeader.h">
+      <Filter>01_Base\04_Dx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxDevice.cpp">
       <Filter>01_Base\02_Main</Filter>
-    </ClCompile>
-    <ClCompile Include="DxState.cpp">
-      <Filter>01_Base\04_Dx</Filter>
     </ClCompile>
     <ClCompile Include="zCore.cpp">
       <Filter>01_Base\02_Main</Filter>
@@ -100,20 +85,11 @@
     <ClCompile Include="DxInput.cpp">
       <Filter>01_Base\03_Function</Filter>
     </ClCompile>
-    <ClCompile Include="DxTextureMgr.cpp">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClCompile>
-    <ClCompile Include="DxRTV.cpp">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClCompile>
-    <ClCompile Include="DxObj.cpp">
-      <Filter>01_Base\04_Dx</Filter>
-    </ClCompile>
     <ClCompile Include="mathHeader_L.cpp">
       <Filter>01_Base\01_stdHeader</Filter>
     </ClCompile>
-    <ClCompile Include="EXPMesh.cpp">
-      <Filter>02_Object\02_ObjShape</Filter>
+    <ClCompile Include="simpleShape.cpp">
+      <Filter>01_Base\04_Dx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,12 @@
 
 namespace Lypi
 {
+	DxWrite& DxWrite::GetInstance()
+	{
+		static DxWrite inst;
+		return inst;
+	}
+
 	DxWrite::DxWrite()
 	{
 		m_pD2dFactory = nullptr;
@@ -143,7 +149,7 @@ namespace Lypi
 		m_pD2dRT->BeginDraw();
 	}
 
-	bool DxWrite::DrawText(TCHAR* pText)
+	bool DxWrite::Drawtxt(TCHAR* pText)
 	{
 		//D2D Draw는 Begin과 End사이에서 이루어져야한다.
 

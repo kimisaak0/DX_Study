@@ -9,13 +9,12 @@
 
 #include <Windows.h>
 
-#include <wrl.h> //Windows Runtime C++ Template Library //ComPtr사용
-
 #include <tchar.h>
 #include <time.h>
 #include <cassert>
 
 #include <memory> //스마트 포인터 사용
+#include <wrl.h> //Windows Runtime C++ Template Library //ComPtr사용
 
 //stl헤더
 #include <set>
@@ -143,6 +142,10 @@ namespace Lypi
 	extern winL*        g_pWindow;    //현재 생성된 윈도우에 대한 포인터
 
 	extern float        g_dSPF;       //SPF
+
+	extern UINT    g_uPrimType;    //토폴로지 타입
+	extern UINT    g_uCullMode;    //컬링모드
+	extern UINT    g_uFillMode;    //와이어 프레임만 렌더링
 
 #pragma endregion 
 

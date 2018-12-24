@@ -1,5 +1,6 @@
 #pragma once
 #include "stdHeader_L.h"
+#include "DxWrite.h"
 
 namespace Lypi
 {
@@ -20,7 +21,6 @@ namespace Lypi
 							  
 		LARGE_INTEGER m_BefTickTime;
 		LARGE_INTEGER m_curTickTime;
-
 
 	public:
 		bool	Init();

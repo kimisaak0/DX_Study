@@ -130,32 +130,24 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
   <ItemGroup>
     <ClInclude Include="stdHeader_L.h" />
     <ClInclude Include="mathHeader_L.h" />
-    <ClInclude Include="DxState.h" />
     <ClInclude Include="DxDevice.h" />
     <ClInclude Include="WinL.h" />
     <ClInclude Include="zCore.h" />
     <ClInclude Include="DxWrite.h" />
     <ClInclude Include="DxTimer.h" />
     <ClInclude Include="DxInput.h" />
-    <ClInclude Include="DxTextureMgr.h" />
-    <ClInclude Include="DxRTV.h" />
-    <ClInclude Include="DxObj.h" />
-    <ClInclude Include="objHeader_L.h" />
-    <ClInclude Include="EXPMesh.h" />
+    <ClInclude Include="simpleShape.h" />
+    <ClInclude Include="ShapeHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mathHeader_L.cpp" />
-    <ClCompile Include="DxState.cpp" />
     <ClCompile Include="DxDevice.cpp" />
     <ClCompile Include="WinL.cpp" />
     <ClCompile Include="zCore.cpp" />
     <ClCompile Include="DxWrite.cpp" />
     <ClCompile Include="DxTimer.cpp" />
     <ClCompile Include="DxInput.cpp" />
-    <ClCompile Include="DxTextureMgr.cpp" />
-    <ClCompile Include="DxRTV.cpp" />
-    <ClCompile Include="DxObj.cpp" />
-    <ClCompile Include="EXPMesh.cpp" />
+    <ClCompile Include="simpleShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="GS.hlsl">

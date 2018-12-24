@@ -4,29 +4,20 @@
 #include "DxTimer.h"
 #include "DxInput.h"
 
+#include "simpleShape.h"
+
 namespace Lypi
 {
 	class zCore : public winL
 	{
 	protected:
 		DxTimer    m_GameTimer;
-		DxWrite    m_Font;
 
-		bool m_swTimerRender;
-		bool m_swKeyRender;
+		bool       m_swTimerRender;
+		bool       m_swKeyRender;
 
-		ID3D11RasterizerState*      m_pRS;   //래스터라이저 상태
-
-		// 이미지 디버그용
-		UINT    m_uPrimType;    //토폴로지 타입
-		UINT    m_uCullMode;    //컬링모드
-		UINT    m_uFillMode;    //와이어 프레임만 렌더링
 	public:
-		HRESULT		RSChange(); // 래스터라이저 세팅 변경
-
 		bool ResetRT();
-
-
 	//	bool SetMainCamera(int i);
 
 	public:

@@ -13,6 +13,9 @@ namespace Lypi
 		ID3D11Buffer*                 m_pStreamTo;        //SO에서 IA로 되돌릴 버퍼
 		ID3D11Buffer*                 m_pDrawFrom;        //출력용 버퍼
 
+		UINT m_uCull_S;
+		UINT m_uFill_S;
+
 		// 버텍스 및 픽셀 쉐이더
 		ComPtr<ID3D11VertexShader>     m_pVS;    //정점 쉐이더 인터페이스
 		ComPtr<ID3D11PixelShader>      m_pPS;	 //픽셀 쉐이더 인터페이스

@@ -25,6 +25,9 @@ namespace Lypi
 		g_uPrimType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		g_uCullMode = D3D11_CULL_BACK;
 		g_uFillMode = D3D11_FILL_SOLID;
+
+		m_uCull_S = g_uCullMode;
+		m_uFill_S = g_uFillMode;
 	}
 
 	HRESULT simpleShape::CreateVertexBuffer(PC_VERTEX* vertexArray, int aSize)
@@ -217,23 +220,15 @@ namespace Lypi
 
 	bool simpleShape::Frame()
 	{
-		if (I_Input.IsKeyDownOnce(DIK_F1)) {
-			(g_uPrimType + 1 > 5) ? (g_uPrimType = 1) : (g_uPrimType += 1);
-		}
-
-		if (I_Input.IsKeyDownOnce(DIK_F2)) {
-			(g_uCullMode + 1 > 3) ? (g_uCullMode = 1) : (g_uCullMode += 1);
-			RSChange();
-		}
-
-		if (I_Input.IsKeyDownOnce(DIK_F3)) {
-			(g_uFillMode + 1 > 3) ? (g_uFillMode = 2) : (g_uFillMode += 1);
-			RSChange();
-		}
-
 		//D키를 누르면 분할한다.
 		if (I_Input.IsKeyDownOnce(DIK_D)) {
 			HandleEffects(m_pDrawFrom);
+		}
+
+		if (m_uCull_S != g_uCullMode || m_uFill_S != g_uFillMode) {
+			RSChange();
+			m_uCull_S = g_uCullMode;
+			m_uFill_S = g_uFillMode;
 		}
 
 		return true;

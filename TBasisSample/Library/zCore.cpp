@@ -49,27 +49,6 @@ namespace Lypi
 		I_Input.InitDirectInput(true, true); //DXInput Device 생성
 		I_Input.Init();	//DXInput 초기화
 
-		//상태값 설정
-		//xDxState::SetState();
-
-		//m_DefaultCamera.SetViewMatrix(); // 뷰행렬 설정
-		//m_DefaultCamera.SetProjMatrix((float)D3DX_PI * 0.5f, ClinetRatio); // 투영행렬 설정
-
-		//m_ModelCamera.SetViewMatrix(); // 뷰행렬 설정
-		//m_ModelCamera.SetProjMatrix((float)D3DX_PI * 0.5f, ClinetRatio); // 투영행렬 설정
-
-		//m_pMainCamera = &m_DefaultCamera; //메인 카메라를 디폴트 카메라로 설정
-
-		//m_dirAxis.Create(L"../../INPUT/DATA/shader/vs.hlsl",
-		//	L"../../INPUT/DATA/shader/ps.hlsl",
-		//	L"../../INPUT/DATA/shader/gs.hlsl",
-		//	L"NULL"); //기준 선 만들기.
-
-		//m_SkyBox.Create(L"../../INPUT/DATA/shader/vs.hlsl",
-		//	L"../../INPUT/DATA/shader/ps.hlsl",
-		//	L"../../INPUT/DATA/shader/gs.hlsl",
-		//	L"NULL",
-		//	100.0f);
 
 		Init();
 		g_pD3dContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)g_uPrimType);
@@ -94,14 +73,22 @@ namespace Lypi
 		if (I_Input.IsKeyDownOnce(DIK_9)) { m_swTimerRender = !m_swTimerRender; }
 		if (I_Input.IsKeyDownOnce(DIK_0)) { m_swKeyRender = !m_swKeyRender; }
 
-		//m_pMainCamera->Frame();
-		//m_pMainCamera->Update();
+		if (I_Input.IsKeyDownOnce(DIK_F1)) {
+			(g_uPrimType + 1 > 5) ? (g_uPrimType = 1) : (g_uPrimType += 1);
+		}
 
-		//m_SkyBox.Frame();
+		if (I_Input.IsKeyDownOnce(DIK_F2)) {
+			(g_uCullMode + 1 > 3) ? (g_uCullMode = 1) : (g_uCullMode += 1);
+		}
+
+		if (I_Input.IsKeyDownOnce(DIK_F3)) {
+			(g_uFillMode + 1 > 3) ? (g_uFillMode = 2) : (g_uFillMode += 1);
+		}
+
 
 		Frame();
 
-	/*	m_dirAxis.Frame();*/
+
 
 		return true;
 	}
@@ -179,11 +166,6 @@ namespace Lypi
 
 	bool zCore::gameRender()
 	{
-		//m_SkyBox.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-		//m_SkyBox.Render();
-
-		//m_dirAxis.SetMatrix(nullptr, &m_pMainCamera->m_matView, &m_pMainCamera->m_matProj);
-		//m_dirAxis.Render();
 
 		Render();
 
@@ -202,15 +184,10 @@ namespace Lypi
 	{
 		Release();
 
-		//if (!m_ModelCamera.Release()) { return false; }
-		//if (!m_DefaultCamera.Release()) { return false; }
-
-		//if (!m_SkyBox.Release()) { return false; }
 		if (!I_Input.Release()) { return false; }
 		if (!I_Font.Release()) { return false; }
 		if (!m_GameTimer.Release()) { return false; }
-		//if (!m_dirAxis.Release()) { return false; }
-		//if (!xDxState::Release()) { return false; }
+
 		if (!CreanupDevice()) { return false; }
 
 		return true;

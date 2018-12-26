@@ -39,6 +39,7 @@ namespace Lypi
 	bool Sample::Frame()
 	{
 		m_sShape.Frame();
+		m_sShape2.Frame();
 
 		return true;
 	}

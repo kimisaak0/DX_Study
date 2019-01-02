@@ -4,51 +4,130 @@ namespace Lypi
 {
 	Sample::Sample(LPCTSTR LWndName) : zCore(LWndName)
 	{
+		m_pTextureSrc = nullptr;
+		m_pTextureDest = nullptr;
+		m_pBackBuffer = nullptr;
+	}
 
+	ID3D11Texture2D* Sample::GetTexture2DFromFile(LPCWSTR filename, D3DX11_IMAGE_LOAD_INFO* pLoadInfo)
+	{
+		HRESULT hr;
+
+		ID3D11Texture2D* texture = nullptr;
+		ID3D11Resource* pRes = nullptr;
+
+		hr = D3DX11CreateTextureFromFile(g_pD3dDevice, filename, pLoadInfo, nullptr, &pRes, nullptr);
+		if (FAILED(hr)) {
+			DEBUGMSG(L"이미지 불러오기 실패");
+			return nullptr;
+		}
+
+		pRes->QueryInterface(__uuidof(ID3D11Texture2D), (LPVOID*)&texture);
+		pRes->Release();
+
+		return texture;
+	}
+
+	ID3D11Texture2D* Sample::CopyTexture(ID3D11Texture2D* pSrcTexture)
+	{
+		HRESULT hr;
+		
+		D3D11_TEXTURE2D_DESC desc;
+		pSrcTexture->GetDesc(&desc);
+
+		ID3D11Texture2D* NewTexture2D;
+
+		hr = g_pD3dDevice->CreateTexture2D(&desc, 0, &NewTexture2D);
+		if (FAILED(hr)) {
+			MessageBox(0, L"CreateTexture2D FAILED", 0, 0);
+			return nullptr;
+		}
+		g_pD3dContext->CopyResource(NewTexture2D, pSrcTexture);
+		return NewTexture2D;
+	}
+
+	void Sample::WriteDotPixel(ID3D11Texture2D* pTexDest)
+	{
+		HRESULT hr;
+
+		D3D11_TEXTURE2D_DESC desc;
+		pTexDest->GetDesc(&desc);
+
+		D3D11_MAPPED_SUBRESOURCE MappedFaceDest;
+		hr = g_pD3dContext->Map((ID3D11Resource*)pTexDest, 0, D3D11_MAP_READ_WRITE, 0, &MappedFaceDest);
+		if (SUCCEEDED(hr))
+		{
+			BYTE* pDestBytes = (BYTE*)MappedFaceDest.pData;
+
+			for (UINT y = 0; y < desc.Height; y++) {
+				BYTE* pDest = pDestBytes;
+				for (UINT x = 0; x < desc.Width; x++) {
+					if (x % 100 == 0) {
+						//지정된 위치의 픽셀의 색을 바꾼다.
+						*pDest++ = 0;   //R
+						*pDest++ = 0;   //G
+						*pDest++ = 255; //B
+						*pDest++ = 255; //A
+					}
+					else {
+						pDest += 4; // 바이트 이동.
+					}
+				}
+				//바이트 이동
+				pDestBytes += MappedFaceDest.RowPitch;
+			}
+			g_pD3dContext->Unmap(pTexDest, 0);
+		}
 	}
 
 	bool Sample::Init()
 	{
+		//스왑체인에 지정된 버퍼의 크기로 백버퍼를 만든다. 
+		HRESULT hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_pBackBuffer);
+		if (FAILED(hr)) {
+			return false;
+		}
+		//백버퍼 정보를 가져온다.
+		m_pBackBuffer->GetDesc(&m_BackBuffereDesc);
 
-		PC_VERTEX vertices[] =
-		{
-			{ float3(-0.0f, +0.7f, 0.5f), float4(1.f,1.f,1.f,1.f) },
-			{ float3(+0.5f, -0.2f, 0.5f), float4(1.f,1.f,1.f,1.f) },
-			{ float3(-0.5f, -0.2f, 0.5f), float4(1.f,1.f,1.f,1.f) },
-		};
+		//CopyResource()함수를 사용할 경우 반드시 백 버퍼의 크기보다 크거나 같아야 한다.
+		//CopyResourceRegion()함수를 사용할 경우 원하는 크기로 지정할 수 있다.
+		D3DX11_IMAGE_LOAD_INFO loadInfo;
+		loadInfo.Width             = m_BackBuffereDesc.Width;   // 텍스쳐의 너비. 텍스쳐 크기와 다를 경우 자동으로 확대,축소가 이뤄진다.
+		loadInfo.Height            = m_BackBuffereDesc.Height;  // 텍스쳐의 높이. 텍스쳐 크기와 다를 경우 자동으로 확대,축소가 이뤄진다.
+		loadInfo.Depth             = D3DX11_DEFAULT;            // 텍스쳐의 깊이. 볼륨 텍스처에만 적용된다.
+		loadInfo.FirstMipLevel     = 0;                         // 텍스쳐 최고 해상도 밉맵 수준. 
+		loadInfo.MipLevels         = 1;                         // 텍스쳐 밉맵의 최대 수. (최소 1이어야 한다.)
+		loadInfo.Usage             = D3D11_USAGE_STAGING;       // 텍스쳐 리소스의 용도
+		loadInfo.BindFlags         = 0;	                        // 텍스쳐를 바인딩할 파이프라인 단계.
+		loadInfo.CpuAccessFlags    
+			= D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;   // CPU가 텍스쳐에 접근할 수 있는 권한 설정. 읽고 쓰기가 가능하게 설정.
+		loadInfo.MiscFlags         = 0;                         // 리소스에 대한 기타 속성들. 
+		loadInfo.Format            = m_BackBuffereDesc.Format;  // 텍스쳐가 로드된 후의 형식
+		loadInfo.Filter            = D3DX11_FILTER_LINEAR;      // 지정된 필터를 사용하여 텍스쳐 필터링.
+		loadInfo.MipFilter         = D3DX11_FILTER_NONE;        // 지정된 필터를 사용하여 생성된 밉맵을 필터링.
+		loadInfo.pSrcInfo          = 0;                         // 기존 이미지에 대한 정보. 
 
-		PC_VERTEX vertices2[] =
-		{
-			{ float3(-1.0f, -1.0f, 0.5f), float4(1.f,1.f,1.f,1.f) },
-			{ float3(-0.5f, -0.5f, 0.5f), float4(1.f,1.f,1.f,1.f) },
-			{ float3(-0.5f, -1.0f, 0.5f), float4(1.f,1.f,1.f,1.f) },
-		};
+		m_pTextureSrc = GetTexture2DFromFile(TEXT("../../INPUT/DATA/image/Desert.jpg"), &loadInfo);
+		if (m_pTextureSrc == nullptr) {
+			return false;
+		}
 
-		DWORD indices[] =
-		{
-			0,1,2,
-			//0,2,3,
-		};
-
-		m_sShape.Init(vertices, sizeof(vertices)/sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
-		m_sShape2.Init(vertices2, sizeof(vertices2) / sizeof(vertices2[0]), indices, sizeof(indices) / sizeof(indices[0]));
+		m_pTextureDest = CopyTexture(m_pTextureSrc.Get());
+		WriteDotPixel(m_pTextureDest.Get());
 
 		return true;
 	}
 
 	bool Sample::Frame()
 	{
-		m_sShape.Frame();
-		m_sShape2.Frame();
-
 		return true;
 	}
 
 	bool Sample::Render()
 	{
-		m_sShape.Render();
-		m_sShape2.Render();
-	
+		//CopyResourceRegion()함수 : 원본텍스쳐의 전체 및 일부 영역을 백 버퍼의 0,0 위치에 복사함.
+		g_pD3dContext->CopyResource(m_pBackBuffer.Get(), m_pTextureDest.Get());
 		return true;
 	}
 
@@ -61,6 +140,4 @@ namespace Lypi
 	Sample::~Sample(void)
 	{
 	}
-
-
 }

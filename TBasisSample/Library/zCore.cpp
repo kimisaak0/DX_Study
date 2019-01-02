@@ -95,7 +95,7 @@ namespace Lypi
 
 	bool zCore::gamePreRender()
 	{
-		float ClearColor[4] = {1.f, 1.f, 1.f, 1.f }; //r,g,b,a
+		float ClearColor[4] = {0.f, 0.f, 0.f, 1.f }; //r,g,b,a
 		g_pD3dContext->ClearRenderTargetView(m_pRenderTagetView, ClearColor);
 		g_pD3dContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 		g_pD3dContext->OMSetRenderTargets(1, &m_pRenderTagetView, m_pDepthStencilView);

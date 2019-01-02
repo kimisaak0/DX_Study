@@ -16,6 +16,10 @@
 #include <memory> //스마트 포인터 사용
 #include <wrl.h> //Windows Runtime C++ Template Library //ComPtr사용
 
+//timeGetTime()
+#include <mmsystem.h>
+#pragma comment		(lib, "winmm.lib" )
+
 //stl헤더
 #include <set>
 #include <list>

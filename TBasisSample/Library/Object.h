@@ -6,7 +6,6 @@ namespace Lypi
 	class Object : simpleShape
 	{
 	protected:
-
 		ComPtr<ID3D11ShaderResourceView>   m_pTextureSRV;     // ÅØ½ºÃÄ SRV
 		ComPtr<ID3D11BlendState>           m_pAlphaBlend;
 		ComPtr<ID3D11SamplerState>         m_pSamplerState;

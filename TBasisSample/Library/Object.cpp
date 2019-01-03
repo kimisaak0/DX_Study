@@ -202,7 +202,8 @@ namespace Lypi
 	}
 
 	//전체 이미지 오브젝트 생성
-	void Object::CreateFullImgObj(iXYWH _xywh, const TCHAR* pTexFile) {
+	void Object::CreateFullImgObj(iXYWH _xywh, const TCHAR* pTexFile)
+	{
 		SetPosition(_xywh);
 		ImagePartialSelect({ 0,0,1,1 }, { 1,1 });
 		Create(pTexFile);
@@ -284,7 +285,6 @@ namespace Lypi
 	//크기 조절
 	void Object::scale(float size)
 	{//값 넣을 때 주의
-
 		for (int iV = 0; iV < 4; iV++) {
 			m_pVertexList[iV].p.x -= m_v3Center.x;
 			m_pVertexList[iV].p.y -= m_v3Center.y;

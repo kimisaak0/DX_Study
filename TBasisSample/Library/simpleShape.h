@@ -5,8 +5,9 @@ namespace Lypi
 {
 	class simpleShape   
 	{
+	protected:
 		// 버텍스 버퍼 및 레이아웃
-		ComPtr<ID3D11InputLayout>	  m_pVertexLayout;    //정점 레이아웃 인터페이스
+		ComPtr<ID3D11InputLayout>	  m_pInputLayout;    //정점 레이아웃 인터페이스
 									  
 		ComPtr<ID3D11Buffer>          m_pVertexBuffer;    //정점 버퍼 인터페이스
 		ComPtr<ID3D11Buffer>          m_pIndexBuffer;     //인덱스 버퍼 인터페이스

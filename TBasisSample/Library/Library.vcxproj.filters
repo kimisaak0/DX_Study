@@ -68,10 +68,13 @@
     <ClInclude Include="ShapeHeader.h">
       <Filter>02_Object\01_objHeader</Filter>
     </ClInclude>
-    <ClInclude Include="Texture1.h">
+    <ClInclude Include="BGTexture.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
-    <ClInclude Include="BGTexture.h">
+    <ClInclude Include="Texture.h">
+      <Filter>02_Object\03_Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
   </ItemGroup>
@@ -103,7 +106,10 @@
     <ClCompile Include="BGTexture.cpp">
       <Filter>02_Object\03_Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Texture1.cpp">
+    <ClCompile Include="Texture.cpp">
+      <Filter>02_Object\03_Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
       <Filter>02_Object\03_Texture</Filter>
     </ClCompile>
   </ItemGroup>

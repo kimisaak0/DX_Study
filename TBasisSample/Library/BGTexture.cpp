@@ -45,7 +45,7 @@ namespace Lypi
 			return nullptr;
 		}
 
-		pRes->QueryInterface(__uuidof(ID3D11Texture2D), (LPVOID*)&texture);
+		pRes->QueryInterface(__uuidof(ID3D11Texture2D), (LPVOID*)&m_pTexture);
 		pRes->Release();
 
 		return texture;

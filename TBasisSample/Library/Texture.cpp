@@ -1,13 +1,13 @@
-#include "Texture1.h"
+#include "Texture.h"
 
 namespace Lypi
 {
-	Texture1::Texture1()
+	Texture::Texture()
 	{
 		m_pTexture = nullptr;
 	}
 
-	ID3D11Texture2D* Texture1::LoadTexture(LPCWSTR filename)
+	ID3D11Texture2D* Texture::LoadTexture(LPCWSTR filename)
 	{
 		HRESULT hr;
 
@@ -46,20 +46,20 @@ namespace Lypi
 			return nullptr;
 		}
 
-		pRes->QueryInterface(__uuidof(ID3D11Texture2D), (LPVOID*)&texture);
+		pRes->QueryInterface(__uuidof(ID3D11Texture2D), (LPVOID*)&m_pTexture);
 		pRes->Release();
 
 		return texture;
 	}
 
-	bool Texture1::Init()
+	bool Texture::Init()
 	{
 		m_pTexture->GetDesc(&m_TextureDesc);
 
 		return true;
 	}
 
-	bool Texture1::Frame()
+	bool Texture::Frame()
 	{
 		int iCenterX = m_BackBuffereDesc.Width / 2 - m_TextureDesc.Width / 2;
 		int iCenterY = m_BackBuffereDesc.Height / 2 - m_TextureDesc.Height / 2;
@@ -68,7 +68,7 @@ namespace Lypi
 		return true;
 	}
 
-	bool Texture1::Render()
+	bool Texture::Render()
 	{
 		//2차원 텍스쳐지만 위치는 3차원으로 표시한다.
 		//원본 텍스쳐의 전체 선택 및 일부 영역 선택.
@@ -86,12 +86,12 @@ namespace Lypi
 	}
 
 
-	bool Texture1::Release()
+	bool Texture::Release()
 	{
 		return true;
 	}
 
-	Texture1::~Texture1(void)
+	Texture::~Texture(void)
 	{
 	}
 }

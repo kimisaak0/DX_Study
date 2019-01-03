@@ -4,7 +4,8 @@
 #include "zCore.h"
 
 #include "BGTexture.h"
-#include "Texture1.h"
+#include "Texture.h"
+#include "Object.h"
 
 namespace Lypi
 {
@@ -12,7 +13,9 @@ namespace Lypi
 	{
 		
 		BGTexture bg;
-		Texture1 T1;
+		Texture T1;
+
+		Object  m_Hero;
 
 	public:
 		bool Init();

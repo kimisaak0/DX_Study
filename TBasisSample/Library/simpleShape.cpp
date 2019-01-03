@@ -12,7 +12,7 @@ namespace Lypi
 		m_pVertexBuffer = nullptr;
 		m_pIndexBuffer = nullptr;
 
-		m_pVertexLayout = nullptr;
+		m_pInputLayout = nullptr;
 
 		m_pStreamTo = nullptr;
 		m_pDrawFrom = nullptr;
@@ -120,7 +120,7 @@ namespace Lypi
 			{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		V_FRETURN(g_pD3dDevice->CreateInputLayout(layout, 2, pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(), &m_pVertexLayout));
+		V_FRETURN(g_pD3dDevice->CreateInputLayout(layout, 2, pVSBuf->GetBufferPointer(), pVSBuf->GetBufferSize(), &m_pInputLayout));
 
 		SAFE_RELEASE(pVSBuf);
 		SAFE_RELEASE(pGSBuf);
@@ -160,7 +160,7 @@ namespace Lypi
 	{
 		HRESULT hr = S_OK;
 
-		g_pD3dContext->IASetInputLayout(m_pVertexLayout.Get());
+		g_pD3dContext->IASetInputLayout(m_pInputLayout.Get());
 
 		g_pD3dContext->VSSetShader(m_pVS.Get(), NULL, 0);
 		g_pD3dContext->GSSetShader(m_pSO.Get(), NULL, 0); //SO로 세팅되면 PS로 넘어가지 않음
@@ -241,7 +241,7 @@ namespace Lypi
 		g_pD3dContext->PSSetShader(m_pPS.Get(), NULL, 0);
 
 		// Set the input layout
-		g_pD3dContext->IASetInputLayout(m_pVertexLayout.Get());
+		g_pD3dContext->IASetInputLayout(m_pInputLayout.Get());
 
 		UINT stride[] = { sizeof(PC_VERTEX) };
 		UINT offset[] = { 0 };

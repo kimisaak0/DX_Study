@@ -1,18 +1,23 @@
-float4 PS(in float4 p : SV_POSITION) : SV_Target
-{
-	return float4(1.0f, 0.0f, 1.0f, 1.0f);    // Yellow, with Alpha = 1
-}
+Texture2D  g_txTextureA : register(t0);
+SamplerState  sample0 : register(s0);
 
-//struct VS_OUTPUT
-//{
-//	float4 p : SV_POSITION;
-//	float4 c : COLOR;
-//};
-//
-//VS_OUTPUT PS(VS_OUTPUT p : SV_POSITION) : SV_Target
-//{
-//	VS_OUTPUT output = (VS_OUTPUT)0;
-//	output.p = float4(p, 1.0f);
-//	output.c = float4(1.0f, 0.0f, 1.0f, 1.0f);
-//	return output;
-//}
+struct VS_OUTPUT
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+};
+struct PS_OUTPUT
+{
+	float4 c : SV_TARGET;
+};
+
+PS_OUTPUT PS(VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	vOut.c = g_txTextureA.Sample(sample0, vIn.t) * vIn.c;
+	if (vOut.c.a == 0) {
+		discard;
+	}
+	return vOut;
+}

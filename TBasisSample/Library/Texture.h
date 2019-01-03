@@ -1,9 +1,9 @@
 #pragma once
-#include "mathHeader_L.h"
+#include "stdHeader_L.h"
 
 namespace Lypi
 {
-	class Texture1
+	class Texture
 	{
 		//실제 텍스쳐를 표시할 때 사용할 리소스
 		ComPtr<ID3D11Texture2D> m_pTexture;
@@ -26,7 +26,7 @@ namespace Lypi
 		bool Release();
 
 	public:
-		Texture1();
-		virtual ~Texture1();
+		Texture();
+		virtual ~Texture();
 	};
 }

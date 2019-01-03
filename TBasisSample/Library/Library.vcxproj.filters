@@ -33,6 +33,9 @@
     <Filter Include="02_Object\02_ObjShape">
       <UniqueIdentifier>{dbb0b436-608a-4957-b9df-3570458d1af5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02_Object\03_Texture">
+      <UniqueIdentifier>{dfac7037-15fe-4765-b69c-6c2646288b02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DxDevice.h">
@@ -60,10 +63,16 @@
       <Filter>01_Base\01_stdHeader</Filter>
     </ClInclude>
     <ClInclude Include="simpleShape.h">
-      <Filter>01_Base\04_Dx</Filter>
+      <Filter>02_Object\02_ObjShape</Filter>
     </ClInclude>
     <ClInclude Include="ShapeHeader.h">
-      <Filter>01_Base\04_Dx</Filter>
+      <Filter>02_Object\01_objHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture1.h">
+      <Filter>02_Object\03_Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="BGTexture.h">
+      <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +98,13 @@
       <Filter>01_Base\01_stdHeader</Filter>
     </ClCompile>
     <ClCompile Include="simpleShape.cpp">
-      <Filter>01_Base\04_Dx</Filter>
+      <Filter>02_Object\02_ObjShape</Filter>
+    </ClCompile>
+    <ClCompile Include="BGTexture.cpp">
+      <Filter>02_Object\03_Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture1.cpp">
+      <Filter>02_Object\03_Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -138,6 +138,8 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClInclude Include="DxInput.h" />
     <ClInclude Include="simpleShape.h" />
     <ClInclude Include="ShapeHeader.h" />
+    <ClInclude Include="BGTexture.h" />
+    <ClInclude Include="Texture1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mathHeader_L.cpp" />
@@ -148,6 +150,8 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClCompile Include="DxTimer.cpp" />
     <ClCompile Include="DxInput.cpp" />
     <ClCompile Include="simpleShape.cpp" />
+    <ClCompile Include="BGTexture.cpp" />
+    <ClCompile Include="Texture1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="GS.hlsl">

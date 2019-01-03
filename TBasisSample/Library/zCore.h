@@ -4,8 +4,6 @@
 #include "DxTimer.h"
 #include "DxInput.h"
 
-#include "simpleShape.h"
-
 namespace Lypi
 {
 	class zCore : public winL
@@ -18,7 +16,6 @@ namespace Lypi
 
 	public:
 		bool ResetRT();
-	//	bool SetMainCamera(int i);
 
 	public:
 		//게임 전체적인 처리 순서에 대한 함수들. 게임에 관한 부분과 윈도우 생성에 관한 부분을 분리

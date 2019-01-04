@@ -9,8 +9,8 @@ namespace Lypi
 
 	bool Sample::Init()
 	{
-		bg.LoadTexture(L"../../INPUT/DATA/image/desert.jpg");
-		bg.Init();
+		//bg.LoadTexture(L"../../INPUT/DATA/image/desert.jpg");
+		//bg.Init();
 		//T1.LoadTexture(L"../../INPUT/DATA/image/Koala.jpg");
 		//T1.Init();
 
@@ -29,7 +29,7 @@ namespace Lypi
 	bool Sample::Render()
 	{
 		m_Hero.Render();
-		bg.Render();
+		//bg.Render();
 		//T1.Render();
 		return true;
 	}

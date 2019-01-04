@@ -31,5 +31,6 @@ public:
 
 public:
 	wndC_DX(LPCTSTR LWndName);
+	wndC_DX();
 	virtual ~wndC_DX();
 };

@@ -52,6 +52,7 @@ public:
 
 public:
 	coreC_DX(LPCTSTR LWndName);
+	coreC_DX();
 	virtual ~coreC_DX();
 };
 

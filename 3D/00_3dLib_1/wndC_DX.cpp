@@ -61,6 +61,11 @@ wndC_DX::wndC_DX(LPCTSTR LWndName)
 	registWnd(LWndName);
 }
 
+wndC_DX::wndC_DX()
+{
+
+}
+
 //윈도우를 중앙으로 옮기는 함수.
 void wndC_DX::CenterWindow()
 {

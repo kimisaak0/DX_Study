@@ -10,6 +10,11 @@ coreC_DX::coreC_DX(LPCTSTR LWndName) : wndC_DX(LWndName)
 
 }
 
+coreC_DX::coreC_DX() : wndC_DX()
+{
+}
+
+
 LRESULT	coreC_DX::MsgProcA(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	return m_ModelCamera.MsgProcA(hWnd, msg, wParam, lParam);

@@ -1,7 +1,6 @@
 #pragma once
 #include "stdHeader_L.h"
 #include "mathHeader_L.h"
-#include "DxInput.h"
 
 namespace Lypi
 {
@@ -14,6 +13,12 @@ namespace Lypi
 	{
 		float3 position;
 		float4 color;
+	};
+
+	struct PT_VERTEX
+	{
+		float3 position;
+		float2 texel;
 	};
 
 	struct PCT_VERTEX

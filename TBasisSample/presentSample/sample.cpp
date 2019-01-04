@@ -14,8 +14,7 @@ namespace Lypi
 		//T1.LoadTexture(L"../../INPUT/DATA/image/Koala.jpg");
 		//T1.Init();
 
-		m_Hero.CreateFullImgObj({ 0,0,100,100 }, L"../../INPUT/DATA/image/Koala.jpg");
-		m_Hero.Init();
+		m_Hero.Init(L"../../INPUT/DATA/image/Koala.jpg", { 0,0,0 }, { 100,100 });
 		return true;
 	}
 
@@ -37,6 +36,7 @@ namespace Lypi
 
 	bool Sample::Release()
 	{
+		m_Hero.Release();
 		return true;
 	}
 

@@ -4,6 +4,7 @@ struct VS_INPUT
 	float4 c : COLOR;
 	float2 t : TEXCOORD;
 };
+
 struct VS_OUTPUT
 {
 	float4 p : SV_POSITION;	 // Ω√∏‡∆Ω(¿«πÃ±∏¡∂)

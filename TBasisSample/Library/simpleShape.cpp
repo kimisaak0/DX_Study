@@ -1,4 +1,5 @@
 #include "simpleShape.h"
+#include "DxInput.h"
 
 namespace Lypi
 {

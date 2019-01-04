@@ -4,21 +4,42 @@
 
 namespace Lypi
 {
+	struct uint3
+	{
+		UINT x, y, z;
+	};
+
+	struct fLTRB
+	{
+		float left;
+		float top;
+		float right;
+		float bottom;
+	};
+
+	struct uLTRB
+	{
+		UINT left;
+		UINT top;
+		UINT right;
+		UINT bottom;
+	};
+
 	struct P_VERTEX
 	{
-		float3 position;
+		D3DXVECTOR3 position;
 	};
 
 	struct PC_VERTEX
 	{
-		float3 position;
-		float4 color;
+		D3DXVECTOR3 position;
+		D3DXVECTOR4 color;
 	};
 
 	struct PT_VERTEX
 	{
-		float3 position;
-		float2 texel;
+		D3DXVECTOR3 position;
+		D3DXVECTOR2 texel;
 	};
 
 	struct PCT_VERTEX
@@ -50,7 +71,7 @@ namespace Lypi
 	struct uWH
 	{
 		UINT width;
-		UINT Height;
+		UINT height;
 	};
 
 	struct uPOINT
@@ -66,36 +87,5 @@ namespace Lypi
 		}
 	};
 
-	struct fLTRB
-	{
-		float left;
-		float top;
-		float right;
-		float bottom;
-	};
 
-	struct iXYWH
-	{
-		LONG ltx;
-		LONG lty;
-		UINT width;
-		UINT height;
-	};
-
-	struct iLTRB
-	{
-		LONG left;
-		LONG top;
-		LONG right;
-		LONG bottom;
-
-		iLTRB& operator= (const iXYWH& _xywh) {
-			left = _xywh.ltx;
-			top = _xywh.lty;
-			right = _xywh.ltx + _xywh.width;
-			bottom = _xywh.lty + _xywh.height;
-
-			return *this;
-		}
-	};
 }

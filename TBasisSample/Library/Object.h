@@ -11,11 +11,25 @@ namespace Lypi
 		ID3D11PixelShader*          m_pPS;              //«»ºø Ω¶¿Ã¥ı
 		ID3D11ShaderResourceView*   m_pTextureSRV;      //≈ÿΩ∫√ƒ SRV
 
+		ID3D11BlendState*           m_pAlphaBlend;
+		ID3D11SamplerState*         m_pSamplerState;
+
 	protected:
-		PT_VERTEX m_pVertexList[4];
+		uint3 m_center;
+		int m_HarpWidth, m_HarpHeight;
+
+		uLTRB m_uSRegion;
+		fLTRB m_fPRegion;
+
+		PCT_VERTEX m_pVertexList[4];
+		
 
 	public:
-		virtual bool Init(const TCHAR* pTexFile);
+		void    VertexSetting(uint3 center, uWH size);
+		HRESULT Create(const TCHAR* pTexFile, uint3 center, uWH size);
+
+	public:
+		virtual bool Init(const TCHAR* pTexFile, uint3 center, uWH size);
 		virtual bool Frame();
 		virtual bool Render();
 		virtual bool Release();

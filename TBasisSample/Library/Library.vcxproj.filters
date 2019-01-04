@@ -68,13 +68,13 @@
     <ClInclude Include="ShapeHeader.h">
       <Filter>02_Object\01_objHeader</Filter>
     </ClInclude>
-    <ClInclude Include="BGTexture.h">
-      <Filter>02_Object\03_Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
+      <Filter>02_Object\03_Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="BGTexture.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
   </ItemGroup>

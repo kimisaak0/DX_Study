@@ -11,8 +11,9 @@ namespace Lypi
 		ID3D11PixelShader*          m_pPS;              //«»ºø Ω¶¿Ã¥ı
 		ID3D11ShaderResourceView*   m_pTextureSRV;      //≈ÿΩ∫√ƒ SRV
 
-		ID3D11BlendState*           m_pAlphaBlend;
-		ID3D11SamplerState*         m_pSamplerState;
+		ID3D11RasterizerState*      m_pRaster;
+		ID3D11BlendState*           m_pBlend;
+		ID3D11SamplerState*         m_pSampler;
 
 	protected:
 		uint3 m_center;

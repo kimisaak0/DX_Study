@@ -14,7 +14,7 @@ namespace Lypi
 		//T1.LoadTexture(L"../../INPUT/DATA/image/Koala.jpg");
 		//T1.Init();
 
-		m_Hero.Init(L"../../INPUT/DATA/image/Koala.jpg", { 0,0,0 }, { 100,100 });
+		m_Hero.Init(L"../../INPUT/DATA/image/Koala.jpg", { 750,300,0 }, { 100,100 });
 		return true;
 	}
 

@@ -18,10 +18,11 @@ namespace Lypi
 		m_uSRegion.right   = center.x + m_HarpWidth;
 		m_uSRegion.bottom  = center.y + m_HarpHeight;
 
-		m_fPRegion.left    =  1.0f * ( (m_uSRegion.left   / (float)g_rtClient.right)  * 2 - 1.0f);
-		m_fPRegion.top     = -1.0f * ( (m_uSRegion.top    / (float)g_rtClient.bottom) * 2 - 1.0f);
-		m_fPRegion.right   =  1.0f * ( (m_uSRegion.right  / (float)g_rtClient.right)  * 2 - 1.0f);
-		m_fPRegion.bottom  = -1.0f * ( (m_uSRegion.bottom / (float)g_rtClient.bottom) * 2 - 1.0f );
+		//계산상 이게 맞음.
+		m_fPRegion.left    = ( (m_uSRegion.left   / (float)g_rtClient.right)  *  +2.0f - 1.0f);
+		m_fPRegion.top     = ( (m_uSRegion.top    / (float)g_rtClient.bottom) *  -2.0f + 1.0f); 
+		m_fPRegion.right   = ( (m_uSRegion.right  / (float)g_rtClient.right)  *  +2.0f - 1.0f);
+		m_fPRegion.bottom  = ( (m_uSRegion.bottom / (float)g_rtClient.bottom) *  -2.0f + 1.0f); 
 
 		m_pVertexList[0].p = D3DXVECTOR3( m_fPRegion.left,  m_fPRegion.top,     0.0f );
 		m_pVertexList[1].p = D3DXVECTOR3( m_fPRegion.left,  m_fPRegion.bottom,  0.0f );
@@ -102,30 +103,49 @@ namespace Lypi
 		SAFE_RELEASE(pPSBlop);
 		SAFE_RELEASE(pVSBlob);
 
-		//블렌드 스테이트 생성
-		D3D11_BLEND_DESC BlendState;
-		ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
+		//블렌드 생성
+		D3D11_BLEND_DESC BlendDesc;
+		ZeroMemory(&BlendDesc, sizeof(D3D11_BLEND_DESC));
 
-		BlendState.AlphaToCoverageEnable = FALSE;
-		BlendState.IndependentBlendEnable = FALSE;
+		BlendDesc.AlphaToCoverageEnable = FALSE;
+		BlendDesc.IndependentBlendEnable = FALSE;
 
-		BlendState.RenderTarget[0].BlendEnable = TRUE;
+		BlendDesc.RenderTarget[0].BlendEnable = TRUE;
 
-		BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 
-		BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		BlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 
-		BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 
-		BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-		if (FAILED(hr = g_pD3dDevice->CreateBlendState(&BlendState, &m_pAlphaBlend)))
+		if (FAILED(hr = g_pD3dDevice->CreateBlendState(&BlendDesc, &m_pBlend)))
 		{
 			return hr;
 		}
+
+		//샘플러 생성
+		D3D11_SAMPLER_DESC SamplerDesc;
+		ZeroMemory(&SamplerDesc, sizeof(D3D11_SAMPLER_DESC));
+
+		SamplerDesc.Filter;
+		D3D11_TEXTURE_ADDRESS_MODE AddressU;
+		D3D11_TEXTURE_ADDRESS_MODE AddressV;
+		D3D11_TEXTURE_ADDRESS_MODE AddressW;
+		FLOAT MipLODBias;
+		UINT MaxAnisotropy;
+		D3D11_COMPARISON_FUNC ComparisonFunc;
+		FLOAT BorderColor[4];
+		FLOAT MinLOD;
+		FLOAT MaxLOD;
+		
+		//RS도 생성해보자.
+
+		//아무래도 컬링모드의 문제인것 같다.
 
 		//텍스쳐 로드
 		hr = D3DX11CreateShaderResourceViewFromFile(g_pD3dDevice, pTexFile, NULL, NULL, &m_pTextureSRV, NULL);
@@ -160,7 +180,7 @@ namespace Lypi
 		g_pD3dContext->VSSetShader(m_pVS, NULL, NULL);
 		g_pD3dContext->PSSetShader(m_pPS, NULL, NULL);
 		g_pD3dContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
-		g_pD3dContext->OMSetBlendState(m_pAlphaBlend, 0, -1);
+		g_pD3dContext->OMSetBlendState(m_pBlend, 0, -1);
 
 		g_pD3dContext->Draw(4, 0);
 

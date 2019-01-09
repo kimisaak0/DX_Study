@@ -19,9 +19,9 @@ namespace Lypi
 		m_uSRegion.bottom  = center.y + m_HarpHeight;
 
 		//계산상 이게 맞음.
-		m_fPRegion.left    = ( (m_uSRegion.left   / (float)g_rtClient.right)  *  +2.0f - 1.0f);
+		m_fPRegion.left    = ( (m_uSRegion.left   / (float)g_rtClient.right)  *  -2.0f + 1.0f);
 		m_fPRegion.top     = ( (m_uSRegion.top    / (float)g_rtClient.bottom) *  -2.0f + 1.0f); 
-		m_fPRegion.right   = ( (m_uSRegion.right  / (float)g_rtClient.right)  *  +2.0f - 1.0f);
+		m_fPRegion.right   = ( (m_uSRegion.right  / (float)g_rtClient.right)  *  -2.0f + 1.0f);
 		m_fPRegion.bottom  = ( (m_uSRegion.bottom / (float)g_rtClient.bottom) *  -2.0f + 1.0f); 
 
 		m_pVertexList[0].p = D3DXVECTOR3( m_fPRegion.left,  m_fPRegion.top,     0.0f );

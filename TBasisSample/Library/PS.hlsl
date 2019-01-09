@@ -16,9 +16,7 @@ struct PS_OUTPUT
 PS_OUTPUT PS(VS_OUTPUT vIn)
 {
 	PS_OUTPUT vOut;
-	vOut.c = g_txTextureA.Sample(sample0, vIn.t) * vIn.c;
-	if (vOut.c.a == 0) {
-		discard;
-	}
+	vOut.c = g_txTextureA.Sample(sample0, vIn.t);
+
 	return vOut;
 }

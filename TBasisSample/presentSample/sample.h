@@ -15,7 +15,7 @@ namespace Lypi
 		BGTexture bg;
 		Texture T1;
 
-		Object  m_Hero;
+		Object_DX  m_Hero;
 
 	public:
 		bool Init();

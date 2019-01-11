@@ -9,6 +9,13 @@
 
 namespace Lypi
 {
+
+	struct SimpleVertex
+	{
+		float x, y, z;
+		float u, v;
+	};
+
 	class Sample : public zCore
 	{
 		

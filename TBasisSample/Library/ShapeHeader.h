@@ -16,14 +16,31 @@ namespace Lypi
 		float right;
 		float bottom;
 	};
-
-	struct uLTRB
+	struct iXYWH
 	{
-		UINT left;
-		UINT top;
-		UINT right;
-		UINT bottom;
+		LONG ltx;
+		LONG lty;
+		UINT width;
+		UINT height;
 	};
+
+	struct iLTRB
+	{
+		LONG left;
+		LONG top;
+		LONG right;
+		LONG bottom;
+
+		iLTRB& operator= (const iXYWH& _xywh) {
+			left = _xywh.ltx;
+			top = _xywh.lty;
+			right = _xywh.ltx + _xywh.width;
+			bottom = _xywh.lty + _xywh.height;
+
+			return *this;
+		}
+	};
+
 
 	struct P_VERTEX
 	{

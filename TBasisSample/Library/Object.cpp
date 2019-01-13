@@ -150,14 +150,191 @@ namespace Lypi
 		return pGeometryShader;
 	}
 
-	ID3D11InputLayout*      CreateInputlayout(ID3D11Device*  pd3dDevice, DWORD dwSize, LPCVOID lpData, D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);
+	ID3D11InputLayout*      CreateInputlayout(ID3D11Device*  pd3dDevice, DWORD dwSize, LPCVOID lpData, D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements)
+	{
+		HRESULT hr = S_OK;
+		ID3D11InputLayout* pInputLayout = nullptr;
 
-	ID3D11Buffer*           CreateVertexBuffer(ID3D11Device*  pd3dDevice, void *vertices, UINT iNumVertex, UINT iVertexSize, bool bDynamic = false);
-	ID3D11Buffer*           CreateIndexBuffer(ID3D11Device*  pd3dDevice, void *indices, UINT iNumIndex, UINT iSize, bool bDynamic = false);
-	ID3D11Buffer*           CreateConstantBuffer(ID3D11Device*  pd3dDevice, void *data, UINT iNumIndex, UINT iSize, bool bDynamic = false);
+		hr = pd3dDevice->CreateInputLayout(layout, numElements, lpData, dwSize, &pInputLayout);
 
-	ID3D11ShaderResourceView*	CreateShaderResourceView(ID3D11Device* pDevice, const TCHAR* strFilePath);
-	ID3D11DepthStencilView*     CreateDepthStencilView(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight);
+		if (FAILED(hr)) {
+			H(hr);
+			return nullptr;
+		}
+
+		return pInputLayout;
+	}
+
+	ID3D11Buffer*           CreateVertexBuffer(ID3D11Device*  pd3dDevice, void* vertices, UINT iNumVertex, UINT iVertexSize, bool bDynamic)
+	{
+		HRESULT hr = S_OK;
+		ID3D11Buffer* pBuffer = nullptr;
+		D3D11_BUFFER_DESC bd;
+
+		if (bDynamic) {
+			bd.Usage = D3D11_USAGE_DYNAMIC;
+			bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		}
+		else {
+			bd.Usage = D3D11_USAGE_DEFAULT;
+			bd.CPUAccessFlags = 0;
+		}
+		bd.ByteWidth = iVertexSize * iNumVertex;
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA InitData;
+		ZeroMemory(&InitData, sizeof(InitData));
+		InitData.pSysMem = vertices;
+
+		if (vertices != nullptr) {
+			hr = pd3dDevice->CreateBuffer(&bd, &InitData, &pBuffer);
+			if (FAILED(hr)) {
+				H(hr);
+				return nullptr;
+			}
+		}
+		else {
+			hr = pd3dDevice->CreateBuffer(&bd, nullptr, &pBuffer);
+			if (FAILED(hr)) {
+				H(hr);
+				return nullptr;
+			}
+		}
+		return pBuffer;
+	}
+
+	ID3D11Buffer*           CreateIndexBuffer(ID3D11Device*  pd3dDevice, void *indices, UINT iNumIndex, UINT iSize, bool bDynamic)
+	{
+		HRESULT hr = S_OK;
+		ID3D11Buffer* pBuffer = nullptr;
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
+
+		if (bDynamic) {
+			bd.Usage = D3D11_USAGE_DYNAMIC;
+			bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		}
+		else {
+			bd.Usage = D3D11_USAGE_DEFAULT;
+			bd.CPUAccessFlags = 0;
+		}
+		bd.ByteWidth = iSize * iNumIndex;
+		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA InitData;
+		ZeroMemory(&InitData, sizeof(InitData));
+		InitData.pSysMem = indices;
+
+		if (indices != nullptr) {
+			hr = pd3dDevice->CreateBuffer(&bd, &InitData, &pBuffer);
+			if (FAILED(hr)) {
+				H(hr);
+				return nullptr;
+			}
+		}
+		else {
+			hr = pd3dDevice->CreateBuffer(&bd, nullptr, &pBuffer);
+			if (FAILED(hr)) {
+				H(hr);
+				return nullptr;
+			}
+		}
+		return pBuffer;
+
+	}
+
+	ID3D11Buffer*           CreateConstantBuffer(ID3D11Device*  pd3dDevice, void *data, UINT iNumIndex, UINT iSize, bool bDynamic)
+	{
+		HRESULT hr = S_OK;
+		ID3D11Buffer* pBuffer = nullptr;
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
+
+	
+		if (bDynamic) {
+			bd.Usage = D3D11_USAGE_DYNAMIC;
+			bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		}
+		else {
+			bd.Usage = D3D11_USAGE_DEFAULT;
+			bd.CPUAccessFlags = 0;
+		}
+		bd.ByteWidth = iSize * iNumIndex;
+		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA InitData;
+		ZeroMemory(&InitData, sizeof(InitData));
+		InitData.pSysMem = data;
+
+		if (data != nullptr) {
+			hr = pd3dDevice->CreateBuffer(&bd, &InitData, &pBuffer);
+			if (FAILED(hr)) {
+				H(hr);
+				return nullptr;
+			}
+		}
+		else {
+			hr = pd3dDevice->CreateBuffer(&bd, nullptr, &pBuffer);
+			if (FAILED(hr)) {
+				H(hr);
+				return nullptr;
+			}
+		}
+		return pBuffer;
+	}
+
+	ID3D11ShaderResourceView*	CreateShaderResourceView(ID3D11Device* pDevice, const TCHAR* strFilePath)
+	{
+		HRESULT hr = S_OK;
+		if (strFilePath == nullptr) {
+			return nullptr;
+		}
+
+		ID3D11ShaderResourceView* pSRV = nullptr;
+		D3DX11CreateShaderResourceViewFromFile(pDevice, strFilePath, nullptr, nullptr, &pSRV, nullptr);
+		if (FAILED(hr)) {
+			H(hr);
+			return nullptr;
+		}
+		return pSRV;
+	}
+
+	ID3D11DepthStencilView*     CreateDepthStencilView(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight)
+	{
+		HRESULT hr;
+		ID3D11DepthStencilView* pDSV = nullptr;
+		ComPtr<ID3D11Texture2D> pDSTexture = nullptr;
+		D3D11_TEXTURE2D_DESC DescDepth;
+		DescDepth.Width = dwWidth;
+		DescDepth.Height = dwHeight;
+		DescDepth.MipLevels = 1;
+		DescDepth.ArraySize = 1;
+		DescDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		DescDepth.SampleDesc.Count = 1;
+		DescDepth.SampleDesc.Quality = 0;
+		DescDepth.Usage = D3D11_USAGE_DEFAULT;
+		DescDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		DescDepth.CPUAccessFlags = 0;
+		DescDepth.MiscFlags = 0;
+
+
+		hr = pDevice->CreateTexture2D(&DescDepth, nullptr, &pDSTexture);
+		if (FAILED(hr)) {
+			return nullptr;
+		}
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
+		ZeroMemory(&dsvd, sizeof(dsvd));
+		dsvd.Format = DescDepth.Format;
+		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvd.Texture2D.MipSlice = 0;
+
+		hr = pDevice->CreateDepthStencilView(pDSTexture.Get(), &dsvd, &pDSV);
+		if (FAILED(hr)) {
+			return nullptr;
+		}
+		return pDSV;
+	}
 
 
 	Object::Object()

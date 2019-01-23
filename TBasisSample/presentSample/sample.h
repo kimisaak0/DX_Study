@@ -9,7 +9,6 @@
 
 namespace Lypi
 {
-
 	struct SimpleVertex
 	{
 		float x, y, z;
@@ -18,11 +17,7 @@ namespace Lypi
 
 	class Sample : public zCore
 	{
-		
-		BGTexture bg;
-		Texture T1;
-
-		Object_DX  m_Hero;
+		Object  m_dxobj;
 
 	public:
 		bool Init();

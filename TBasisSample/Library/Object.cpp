@@ -339,13 +339,75 @@ namespace Lypi
 
 	Object::Object()
 	{
+		g_pVertexBuffer = nullptr;
+		g_pIndexBuffer = nullptr;
+		g_pConstantBuffer = nullptr;
+
+		g_pVertexShader = nullptr;
+		g_pPixelShader = nullptr;
+		g_pGeometryShader = nullptr;
+
+		g_pVSBlob = nullptr;
+		g_pGSBlob = nullptr;
+		g_pPSBlob = nullptr;
+
+		g_pInputlayout = nullptr;
+		g_pTextureSRV = nullptr;
+
+		m_iPrimitiveType =D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST; 
+		
+		m_iIndexSize = sizeof(DWORD);
+		
+		m_iCullMode = 1;
+		m_iSamplerMode = 0;
+		m_iNumVertex = 0;
+		m_iNumIndex = 0;
+		m_iVertexSize = 0;
+
+		m_iBeginVB = 0;
+		m_iBeginIB = 0;
 
 	}
 
-	
+	void Object::PreRender(UINT iVertexSize)
+	{
+		g_pD3dContext->IASetInputLayout(g_pInputlayout.Get());
+		UINT stride = iVertexSize;
+		UINT offset = 0;
 
+		if (iVertexSize == 0) {
+			stride = m_iVertexSize;			
+		}
 
+		g_pD3dContext->IASetVertexBuffers(0, 1, g_pVertexBuffer.GetAddressOf(), &stride, &offset);
+		g_pD3dContext->IASetIndexBuffer(g_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		g_pD3dContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
+		g_pD3dContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
+		g_pD3dContext->GSSetShader(g_pGeometryShader.Get(), NULL, 0);
+		g_pD3dContext->PSSetShaderResources(0, 1, g_pTextureSRV.GetAddressOf());
+	}
 
+	void Object::PostRender(UINT iCount)
+	{
+		if (iCount == 0) {
+			iCount = m_iNumIndex; 
+		}
+
+		if (iCount != 0) {
+			g_pD3dContext->DrawIndexed(iCount, 0, 0);
+		}
+		else {
+			g_pD3dContext->Draw(m_iNumVertex, 0);
+		}
+
+	}
+	bool Object::Render(UINT iVertexSize, UINT iCount)
+	{
+		PreRender(iVertexSize);
+		PostRender(iCount);
+
+		return true;
+	}
 
 	Object::~Object()
 	{

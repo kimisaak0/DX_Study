@@ -3,112 +3,58 @@
 
 namespace Lypi
 {
-	//class Object
-	//{
-	//	ID3D11InputLayout*          m_pInputLayout;     //ÀÎÇ² ·¹ÀÌ¾Æ¿ô
-	//	ID3D11Buffer*               m_pVertexBuffer;    //Á¤Á¡ ¹öÆÛ
-	//	ID3D11VertexShader*         m_pVS;              //Á¤Á¡ ½¦ÀÌ´õ
-	//	ID3D11PixelShader*          m_pPS;              //ÇÈ¼¿ ½¦ÀÌ´õ
-	//	ID3D11ShaderResourceView*   m_pTextureSRV;      //ÅØ½ºÃÄ SRV
+	HRESULT                 CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlopOut);
+	
+	ID3D11VertexShader*     LoadVertexShaderFile( ID3D11Device* pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFunctionName = 0, bool bBinary = false);
+	ID3D11PixelShader*      LoadPixelShaderFile(  ID3D11Device* pd3dDevice, const void* pLoadShaderFile, char *pFunctionName = 0, bool bBinary = false);
+	ID3D11GeometryShader*   LoadGeometryShaderFile(ID3D11Device*  pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFuntionName = 0, bool bBinary = false);
 
-	//	ID3D11RasterizerState*      m_pRaster;
-	//	ID3D11BlendState*           m_pBlend;
-	//	ID3D11SamplerState*         m_pSampler;
+	ID3D11InputLayout*      CreateInputlayout(ID3D11Device*  pd3dDevice, DWORD dwSize, LPCVOID lpData, D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);
+	
+	ID3D11Buffer*           CreateVertexBuffer(ID3D11Device*  pd3dDevice, void *vertices, UINT iNumVertex, UINT iVertexSize, bool bDynamic = false);
+	ID3D11Buffer*           CreateIndexBuffer(ID3D11Device*  pd3dDevice, void *indices, UINT iNumIndex, UINT iSize, bool bDynamic = false);
+	ID3D11Buffer*           CreateConstantBuffer(ID3D11Device*  pd3dDevice, void *data, UINT iNumIndex, UINT iSize, bool bDynamic = false);
 
-	//protected:
-	//	uint3 m_center;
-	//	int m_HarpWidth, m_HarpHeight;
+	ID3D11ShaderResourceView*	CreateShaderResourceView(ID3D11Device* pDevice, const TCHAR* strFilePath);
+	ID3D11DepthStencilView*     CreateDepthStencilView(ID3D11Device* pDevice, DWORD dwWidth, DWORD dwHeight);
 
-	//	iLTRB m_iSRegion;
-	//	fLTRB m_fPRegion;
-
-	//	PCT_VERTEX m_pVertexList[4];
-	//	
-
-	//public:
-	//	void    VertexSetting(uint3 center, uWH size);
-	//	HRESULT Create(const TCHAR* pTexFile, uint3 center, uWH size);
-
-	//public:
-	//	virtual bool Init(const TCHAR* pTexFile, uint3 center, uWH size);
-	//	virtual bool Frame();
-	//	virtual bool Render();
-	//	virtual bool Release();
-
-	//public:
-	//	Object();
-	//	virtual ~Object();
-
-	//};
-
-	class Object_DX
+	class Object
 	{
-	protected:
-		ID3D11Buffer * m_pVertexBuffer;   // Á¤Á¡ ¹öÆÛ
-		ID3D11VertexShader*         m_pVS;             // Á¤Á¡ ½¦ÀÌ´õ
-		ID3D11PixelShader*          m_pPS;             // ÇÈ¼¿ ½¦ÀÌ´õ
-		ID3D11InputLayout*          m_pInputLayout;    // ÀÎÇ² ·¹ÀÌ¾Æ¿ô
-		ID3D11ShaderResourceView*   m_pTextureSRV;     // ÅØ½ºÃÄ SRV
-		ID3D11BlendState*           m_pAlphaBlend;
-		ID3D11SamplerState*         m_pSamplerState;
+	public:
+		ComPtr<ID3D11Buffer>			g_pVertexBuffer;
+		ComPtr<ID3D11Buffer>			g_pIndexBuffer;
+		ComPtr<ID3D11Buffer>			g_pConstantBuffer;
 
-	protected:
-		PCT_VERTEX m_pVertexList[4];
+		ComPtr<ID3D11VertexShader>		g_pVertexShader;
+		ComPtr<ID3D11PixelShader>		g_pPixelShader;
+		ComPtr<ID3D11GeometryShader>	g_pGeometryShader;
 
-		uWH   m_uImageSize;
-		iLTRB m_uImagePart;
+		ComPtr<ID3DBlob>				g_pVSBlob;
+		ComPtr<ID3DBlob>				g_pGSBlob;
+		ComPtr<ID3DBlob>				g_pPSBlob;
 
-		fLTRB m_fPRegion;
+		ComPtr<ID3D11InputLayout>			g_pInputlayout;
+		ComPtr<ID3D11ShaderResourceView>	g_pTextureSRV;
 
-		POINT m_ptCenter;
-		D3DXVECTOR3 m_v3Center;
+		UINT					m_iPrimitiveType;
+		UINT					m_iCullMode;
+		UINT					m_iSamplerMode;
+		UINT					m_iNumVertex;
+		UINT					m_iNumIndex;
+		UINT					m_iVertexSize;
+		UINT					m_iIndexSize;
 
+		UINT					m_iBeginVB;
+		UINT					m_iBeginIB;
 
 	public:
-		iLTRB m_uSRegion;
-
-		bool m_bExist;
-
-	private:
-		void transStoP(); //È­¸é -> Åõ¿µ
-		void transPtoS(); //Åõ¿µ -> È­¸é
-		void UpdateCP(); //ÁßÁ¡ °»½Å
-		void UpdateVertexList(); //Á¤Á¡ ¸®½ºÆ® °»½Å
-
-		void ImagePartialSelect(iXYWH imgXYWH, uWH imgSize);
-		HRESULT Create(const TCHAR* pTexFile);
+		void PreRender(UINT iVertexSize = 0);
+		void PostRender(UINT iCount = 0);
+		bool Render(UINT iVertexSize = 0, UINT iCount = 0);
 
 	public:
-
-		void SetPosition(iXYWH _xywh);
-
-		void CreateFullImgObj(iXYWH _xywh, const TCHAR* pTexFile);
-		void CreatePartImgObj(iXYWH _xywh, iXYWH imgXYWH, uWH imgSize, const TCHAR* pTexFile);
-
-		void ImagePartialChange(iXYWH);
-
-		void ImageFileChange(const TCHAR* pTexFile);
-
-		void MoveX(float fDis);
-		void MoveY(float fDis);
-
-		iLTRB getPos();
-
-		void spin(float fAngle);
-		void spin(float dx, float dy);
-		void scale(float size);
-
-		void ColorChange(float r, float g, float b, float a);
-
-	public:
-		virtual bool Init();
-		virtual bool Frame();
-		virtual bool Render();
-		virtual bool Release();
-
-	public:
-		Object_DX();
-		virtual ~Object_DX();
+		Object();
+		virtual ~Object();
 
 	};
 }

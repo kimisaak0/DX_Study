@@ -5,8 +5,8 @@ namespace Lypi
 {
 	HRESULT                 CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlopOut);
 	
-	ID3D11VertexShader*     LoadVertexShaderFile( ID3D11Device* pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFuntionName = 0, bool bBinary = false);
-	ID3D11PixelShader*      LoadPixelShaderFile(  ID3D11Device* pd3dDevice, const void* pLoadShaderFile, char *pFuntionName = 0, bool bBinary = false, ID3DBlob** pRetBlob = nullptr);
+	ID3D11VertexShader*     LoadVertexShaderFile( ID3D11Device* pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFunctionName = 0, bool bBinary = false);
+	ID3D11PixelShader*      LoadPixelShaderFile(  ID3D11Device* pd3dDevice, const void* pLoadShaderFile, char *pFunctionName = 0, bool bBinary = false);
 	ID3D11GeometryShader*   LoadGeometryShaderFile(ID3D11Device*  pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFuntionName = 0, bool bBinary = false);
 
 	ID3D11InputLayout*      CreateInputlayout(ID3D11Device*  pd3dDevice, DWORD dwSize, LPCVOID lpData, D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);
@@ -48,9 +48,9 @@ namespace Lypi
 		UINT					m_iBeginIB;
 
 	public:
-		void PreRender(ID3D11DeviceContext*    pContext, UINT iVertexSize = 0);
-		void PostRender(ID3D11DeviceContext*    pContext, UINT iCount = 0);
-		bool Render(ID3D11DeviceContext*    pContext, UINT iVertexSize = 0, UINT iCount = 0);
+		void PreRender(UINT iVertexSize = 0);
+		void PostRender(UINT iCount = 0);
+		bool Render(UINT iVertexSize = 0, UINT iCount = 0);
 
 	public:
 		Object();

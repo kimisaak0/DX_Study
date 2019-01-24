@@ -77,6 +77,9 @@
     <ClInclude Include="BGTexture.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>02_Object\01_objHeader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxDevice.cpp">
@@ -111,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>02_Object\03_Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>02_Object\01_objHeader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

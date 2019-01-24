@@ -1,12 +1,13 @@
 #pragma once
 #include "ShapeHeader.h"
 
+
 namespace Lypi
 {
 	HRESULT                 CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlopOut);
 	
 	ID3D11VertexShader*     LoadVertexShaderFile( ID3D11Device* pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFunctionName = 0, bool bBinary = false);
-	ID3D11PixelShader*      LoadPixelShaderFile(  ID3D11Device* pd3dDevice, const void* pLoadShaderFile, char *pFunctionName = 0, bool bBinary = false);
+	ID3D11PixelShader*      LoadPixelShaderFile(  ID3D11Device* pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFunctionName = 0, bool bBinary = false);
 	ID3D11GeometryShader*   LoadGeometryShaderFile(ID3D11Device*  pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut = nullptr, char *pFuntionName = 0, bool bBinary = false);
 
 	ID3D11InputLayout*      CreateInputlayout(ID3D11Device*  pd3dDevice, DWORD dwSize, LPCVOID lpData, D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);

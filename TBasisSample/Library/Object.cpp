@@ -75,7 +75,7 @@ namespace Lypi
 		return pVertexShader;
 	}
 
-	ID3D11PixelShader*      LoadPixelShaderFile(ID3D11Device* pd3dDevice, const void* pLoadShaderFile, char *pFunctionName, bool bBinary)
+	ID3D11PixelShader*      LoadPixelShaderFile(ID3D11Device* pd3dDevice, const void* pLoadShaderFile, ID3DBlob** ppBlobOut, char *pFunctionName, bool bBinary)
 	{
 		HRESULT hr = S_OK;
 
@@ -94,6 +94,12 @@ namespace Lypi
 				}
 			}
 		}
+		else {
+			pBlob = *ppBlobOut; // 받은 정보를 pBlob에 저장한다.
+			if (pBlob == nullptr) {
+				return nullptr;
+			}
+		}
 
 		ID3D11PixelShader* pPixelShader;
 		//  CreatePixelShader  (*pShaderBytecode, BytecodeLength, ID3D11ClassLinkage *pClassLinkage, ID3D11VertexShader **ppVertexShader)
@@ -101,6 +107,13 @@ namespace Lypi
 		if (FAILED(hr)) {
 			pBlob->Release();
 			return nullptr;
+		}
+
+		if (ppBlobOut == nullptr) {
+			pBlob->Release();
+		}
+		else {
+			*ppBlobOut = pBlob;
 		}
 
 		return pPixelShader;
@@ -170,6 +183,7 @@ namespace Lypi
 		HRESULT hr = S_OK;
 		ID3D11Buffer* pBuffer = nullptr;
 		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
 
 		if (bDynamic) {
 			bd.Usage = D3D11_USAGE_DYNAMIC;

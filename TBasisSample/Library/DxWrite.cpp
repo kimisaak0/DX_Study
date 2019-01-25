@@ -116,6 +116,17 @@ namespace Lypi
 		return true;
 	}
 
+	bool DxWrite::Set(HWND hWnd, int iWidth, int iHeight, IDXGISurface1* pSurface)
+	{
+		if (!Init()) {
+			return false;
+		}
+
+		CreateDeviceIR();
+		CreateDeviceR(pSurface);
+		SetText(Point2F(iWidth, iHeight), L"TBasisSmaple", Colorf(1, 1, 1, 1));
+	}
+
 	//포맷 변경
 	void DxWrite::SetAlignment(DWRITE_TEXT_ALIGNMENT textAlignment, DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment)
 	{
@@ -142,6 +153,16 @@ namespace Lypi
 
 		return oldColor;
 	}
+
+	//HRESULT DxWrite::SetText(D2D1_POINT_2F size, wchar_t* text, ColorF Color)
+	//{
+	//	HRESULT hr = S_OK;
+	//	m_cTextLength = (UINT32)wcslen(text);
+	//	m_wszText.clear();
+	//	m_wszText = text;
+
+	//	SAFE_RELEASE(m_pTextLayout);
+	//}
 
 	//DrawText
 	void DxWrite::DrawTextBegin()

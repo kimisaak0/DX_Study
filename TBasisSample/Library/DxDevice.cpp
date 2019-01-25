@@ -1,5 +1,7 @@
 #include "DxDevice.h"
 
+
+
 namespace Lypi
 {
 	ID3D11Device*              g_pD3dDevice;           // 디바이스 객체
@@ -220,27 +222,13 @@ namespace Lypi
 	//뷰포트 세팅
 	HRESULT	DxDevice::SetViewPort()
 	{
-		//스왑체인 정보를 가져옴.
-		DXGI_SWAP_CHAIN_DESC Desc;
-		m_pSwapChain->GetDesc(&Desc);
-
-		//뷰포트의 시작 좌표
-		m_d3dViewPort.TopLeftX = 0;
-		m_d3dViewPort.TopLeftY = 0;
-
-		//스왑체인값에서 뷰포트 크기를 가져옴
-		m_d3dViewPort.Width = (FLOAT)Desc.BufferDesc.Width;
-		m_d3dViewPort.Height = (FLOAT)Desc.BufferDesc.Height;
-
-		//뷰포트의 깊이값은 0에서 1사이로 제한됨
-		m_d3dViewPort.MinDepth = 0.0f;
-		m_d3dViewPort.MaxDepth = 1.0f;
-
-		//렌더타켓뷰 세팅
-		m_pD3dContext->RSSetViewports(1, &m_d3dViewPort);
-
-		g_d3dViewPort = m_d3dViewPort;
-
+		HRESULT hr = S_OK;
+		m_DefaultRT.m_VP.Width =
+		m_DefaultRT.m_VP.Height = 
+		m_DefaultRT.m_VP.MinDepth = 0.0f;
+		m_DefaultRT.m_VP.MaxDepth = 1.0f;
+		m_DefaultRT.m_VP.TopLeftX = 0;
+		m_DefaultRT.m_VP.TopLeftY = 0;
 		return S_OK;
 	}
 

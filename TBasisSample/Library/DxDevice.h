@@ -1,14 +1,18 @@
 #pragma once
 #include "stdHeader_L.h"
+#include "RenderTarget.h"
 
 namespace Lypi
 {
 	class DxDevice
 	{
 	protected:
+		RenderTarget               m_DefaultRT;
+
 		ID3D11Device*              m_pD3dDevice;           // 디바이스 객체
 		ID3D11DeviceContext*       m_pD3dContext;          // 디바이스 컨텍스트 객체
 		IDXGISwapChain*            m_pSwapChain;           // 스왑체인 객체
+		DXGI_SWAP_CHAIN_DESC       m_pSwapChainDesc;
 
 		D3D_DRIVER_TYPE            m_d3dDriverType;        // 디바이스 타입 (디폴트 : 하드웨어 가속)
 		D3D_FEATURE_LEVEL          m_d3dFeatureLevel;	   // DX의 기능 수준
@@ -31,8 +35,13 @@ namespace Lypi
 		HRESULT	SetRenderTargetView();	// 타겟 뷰 설정
 		HRESULT	SetViewPort();     		// 뷰 포트 설정
 
-	protected:
+	public:
 		bool CreanupDevice();      // 생성한 것을 역순으로 삭제한다.
+
+		ID3D11RenderTargetView*	    GetRenderTargetView() { return m_DefaultRT.m_pRTV.Get(); }
+		ID3D11RenderTargetView**	GetRenderTargetViewAddress() { return  m_DefaultRT.m_pRTV.GetAddressOf(); }
+		ID3D11DepthStencilView*		GetDepthStencilView() { return m_DefaultRT.m_pDSV.Get(); }
+		ID3D11DepthStencilView**	GetDepthStencilViewAddress() { return  m_DefaultRT.m_pDSV.GetAddressOf(); }
 
 	public:
 		DxDevice();

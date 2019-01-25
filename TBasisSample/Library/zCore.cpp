@@ -29,6 +29,17 @@ namespace Lypi
 		return true;
 	}
 
+	HRESULT zCore::CreateDxResource()
+	{
+		IDXGISurface1* pBackBuffer = nullptr;
+		HRESULT hr = g_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), (LPVOID*)&pBackBuffer);
+
+		int iWinWidth = m_rtWindow.right - m_rtWindow.left;
+		int iWinHeight = m_rtWindow.bottom - m_rtWindow.top;
+
+		
+	}
+
 	bool zCore::gameInit()
 	{
 		//디바이스 생성 작업 실행.

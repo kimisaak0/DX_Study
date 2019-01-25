@@ -24,6 +24,9 @@ namespace Lypi
 		D2D1_RECT_F m_D2rtLayoutRect;
 		D2D1_COLOR_F m_D2dTextColor;
 
+		//UINT32   m_cTextLength;
+		//wstring  m_wszText;
+
 		//IDWriteTextLayout* m_pTextLayout; 
 		//텍스트 레이아웃 관련된건 다음에 더 파보는 걸로...
 
@@ -31,6 +34,7 @@ namespace Lypi
 		//초기화
 		bool Init();
 		bool Set(IDXGISurface1* m_pSurface);
+		bool Set(HWND hWnd, int iWidth, int iHeight, IDXGISurface1* pSurface);
 
 		//객체 생성 및 소멸
 		HRESULT CreateDeviceIR();
@@ -43,6 +47,7 @@ namespace Lypi
 		void SetlayoutRt(FLOAT left, FLOAT top, FLOAT right, FLOAT bottom);
 		void SetTextPos(const D2D1_MATRIX_3X2_F& transform = Matrix3x2F::Identity());
 		ColorF SetTextColor(ColorF color);
+		HRESULT SetText(D2D1_POINT_2F size, wchar_t* text, ColorF Color);
 
 		//텍스트 그리기
 		void DrawTextBegin();

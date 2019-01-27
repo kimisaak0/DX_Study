@@ -397,6 +397,7 @@ namespace Lypi
 		g_pD3dContext->IASetIndexBuffer(g_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		g_pD3dContext->VSSetConstantBuffers(0, 1, g_pConstantBuffer.GetAddressOf());
 		g_pD3dContext->VSSetShader(g_pVertexShader.Get(), NULL, 0);
+		g_pD3dContext->PSSetShader(g_pPixelShader.Get(), NULL, 0);
 		g_pD3dContext->GSSetShader(g_pGeometryShader.Get(), NULL, 0);
 		g_pD3dContext->PSSetShaderResources(0, 1, g_pTextureSRV.GetAddressOf());
 	}

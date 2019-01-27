@@ -1,5 +1,6 @@
 #pragma once
 #include "ShapeHeader.h"
+#include "RenderTarget.h"
 
 
 namespace Lypi

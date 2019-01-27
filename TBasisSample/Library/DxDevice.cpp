@@ -37,9 +37,9 @@ namespace Lypi
 		//d2d를 쓰려면 이 플래그를 써야함.
 		UINT uCreateDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;  //디바이스 생성 플래그
 
-		#if defined(DEBUG) || defined(_DEBUG)
+#if defined(DEBUG) || defined(_DEBUG)
 		uCreateDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-		#endif
+#endif
 		//디바이스 생성 타입
 		D3D_DRIVER_TYPE dxDriverTypes[] =
 		{
@@ -76,7 +76,7 @@ namespace Lypi
 				&m_d3dFeatureLevel,    //선택된 피처레벨을 반환받을 주소.
 				&m_pD3dContext);       //생성된 DC를 반환받을 주소.
 
-		    //디바이스를 생성하는데 성공하였지만 버전이 11이 아닐 경우 다시 생성하게 한다.
+			//디바이스를 생성하는데 성공하였지만 버전이 11이 아닐 경우 다시 생성하게 한다.
 			if (SUCCEEDED(hr)) {
 				if (FAILED(hr) || m_d3dFeatureLevel < D3D_FEATURE_LEVEL_11_0) {
 					if (m_pD3dContext) { m_pD3dContext->Release(); }
@@ -223,12 +223,22 @@ namespace Lypi
 	HRESULT	DxDevice::SetViewPort()
 	{
 		HRESULT hr = S_OK;
-		m_DefaultRT.m_VP.Width =
-		m_DefaultRT.m_VP.Height = 
+		m_DefaultRT.m_VP.Width = m_pSwapChainDesc.BufferDesc.Width;
+		m_DefaultRT.m_VP.Height = m_pSwapChainDesc.BufferDesc.Height;
 		m_DefaultRT.m_VP.MinDepth = 0.0f;
 		m_DefaultRT.m_VP.MaxDepth = 1.0f;
 		m_DefaultRT.m_VP.TopLeftX = 0;
 		m_DefaultRT.m_VP.TopLeftY = 0;
+		return S_OK;
+	}
+
+	HRESULT DxDevice::CreateDxResource()
+	{
+		return S_OK;
+	}
+
+	HRESULT DxDevice::DeleteDxResource()
+	{
 		return S_OK;
 	}
 
@@ -243,6 +253,7 @@ namespace Lypi
 		if (FAILED(hr = CreateDpethStencilView())) { return hr; }
 		if (FAILED(hr = SetRenderTargetView())) { return hr; }
 		if (FAILED(hr = SetViewPort())) { return hr; }
+		if (FAILED(hr = CreateDxResource() )) { return hr; }
 
 		//ALT+ENTER와 메시지큐 모니터링을 막는다.
 		m_pGIFactory->MakeWindowAssociation(g_hWnd, DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES);

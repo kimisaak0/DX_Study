@@ -17,13 +17,13 @@ namespace Lypi
 		m_pDWriteFactory = nullptr;
 		m_pTextFormat = nullptr;
 
-		m_dDpiScaleX = 0;
-		m_dDpiScaleY = 0;
+		m_fDpiScaleX = 0;
+		m_fDpiScaleY = 0;
 		m_FDpiX = 0;
 		m_FDpiY = 0;
 
 		//흰색을 기본값으로 함.
-		m_D2dTextColor = ColorF(1, 1, 1, 1);
+		m_D2dTextColor = ColorF(1.0, 1.0, 1.0, 1.0);
 	}
 
 	//객체 생성
@@ -35,8 +35,8 @@ namespace Lypi
 
 		//사실 어차피 96이고 나누면 1이다(..)
 		m_pD2dFactory->GetDesktopDpi(&m_FDpiX, &m_FDpiY);
-		m_dDpiScaleX = m_FDpiX / 96.0;
-		m_dDpiScaleY = m_FDpiY / 96.0;
+		m_fDpiScaleX = m_FDpiX / (FLOAT)96.0;
+		m_fDpiScaleY = m_FDpiY / (FLOAT)96.0;
 
 		//DW 팩토리 생성
 		if (SUCCEEDED(hr)) {
@@ -90,6 +90,7 @@ namespace Lypi
 		SAFE_RELEASE(m_pD2dFactory);
 		SAFE_RELEASE(m_pDWriteFactory);
 		SAFE_RELEASE(m_pTextFormat);
+		SAFE_RELEASE(m_pTextLayout);
 	}
 
 	void DxWrite::DiscardDeviceR()
@@ -124,7 +125,11 @@ namespace Lypi
 
 		CreateDeviceIR();
 		CreateDeviceR(pSurface);
-		SetText(Point2F(iWidth, iHeight), L"TBasisSmaple", Colorf(1, 1, 1, 1));
+
+		wchar_t wst[] = L"TbasisSample";
+		SetText(wst, ColorF(1.0, 1.0, 1.0, 1.0));
+
+		return true;
 	}
 
 	//포맷 변경
@@ -154,37 +159,189 @@ namespace Lypi
 		return oldColor;
 	}
 
-	//HRESULT DxWrite::SetText(D2D1_POINT_2F size, wchar_t* text, ColorF Color)
-	//{
-	//	HRESULT hr = S_OK;
-	//	m_cTextLength = (UINT32)wcslen(text);
-	//	m_wszText.clear();
-	//	m_wszText = text;
-
-	//	SAFE_RELEASE(m_pTextLayout);
-	//}
-
-	//DrawText
-	void DxWrite::DrawTextBegin()
+	HRESULT DxWrite::SetText(wchar_t* text, ColorF Color)
 	{
-		m_pD2dRT->BeginDraw();
+		HRESULT hr = S_OK;
+
+		// Store the text for later.
+		m_cTextLength = (UINT32)wcslen(text);
+		m_wszText.clear();
+		m_wszText = text;
+
+		// Release any existing layout object.
+		SAFE_RELEASE(m_pTextLayout);
+
+		// Create a text layout using the text format.
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pDWriteFactory->CreateTextLayout(
+				m_wszText.c_str(),           // The string to be laid out and formatted.
+				m_cTextLength,               // The length of the string.
+				m_pTextFormat,               // The text format to apply to the string (contains font information, etc).
+				m_D2rtLayoutRect.left,       // The width of the layout box.
+				m_D2rtLayoutRect.top,        // The height of the layout box.
+				&m_pTextLayout               // The IDWriteTextLayout interface pointer.
+			);
+		}
+
+		// Declare a typography pointer.
+		IDWriteTypography* pTypography = NULL;
+		// Create a typography interface object.
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pDWriteFactory->CreateTypography(&pTypography);
+		}
+
+		// Set the stylistic set.
+		DWRITE_FONT_FEATURE fontFeature = { DWRITE_FONT_FEATURE_TAG_STYLISTIC_SET_7,1 };
+		if (SUCCEEDED(hr))
+		{
+			hr = pTypography->AddFontFeature(fontFeature);
+		}
+
+		// Set the typography for the entire string.
+		DWRITE_TEXT_RANGE textRange = { 0, m_cTextLength };
+
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pTextLayout->SetTypography(pTypography, textRange);
+		}
+
+		// Set the underline for the entire string.
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pTextLayout->SetUnderline(m_fontUnderline, textRange);
+		}
+		SAFE_RELEASE(pTypography);
+		return hr;
 	}
 
-	bool DxWrite::Drawtxt(TCHAR* pText)
+	HRESULT DxWrite::SetFont(wchar_t* fontFamily)
 	{
-		//D2D Draw는 Begin과 End사이에서 이루어져야한다.
+		HRESULT hr;
 
-		if (m_pD2dRT && m_pD2dSCB) {
-			//텍스트 출력
-			m_pD2dRT->DrawTextW(pText, (UINT)_tcslen(pText), m_pTextFormat, m_D2rtLayoutRect, m_pD2dSCB);
+		DWRITE_TEXT_RANGE textRange = { 0, m_cTextLength };
+
+		hr = m_pTextLayout->SetFontFamilyName(fontFamily, textRange);
+
+		if (SUCCEEDED(hr))
+		{
+			m_wszFontFamily.clear();
+			m_wszFontFamily = fontFamily;
+		}
+		return hr;
+	}
+
+	HRESULT DxWrite::SetFontSize(float size)
+	{
+		HRESULT hr;
+		DWRITE_TEXT_RANGE textRange = { 0, m_cTextLength };
+
+		hr = m_pTextLayout->SetFontSize(size, textRange);
+
+		if (SUCCEEDED(hr))
+		{
+			// Store the font size for later.
+			m_fontSize = size;
+		}
+		return hr;
+	}
+
+	HRESULT DxWrite::SetBold(bool bold)
+	{
+		HRESULT hr;
+		DWRITE_TEXT_RANGE textRange = { 0, m_cTextLength };
+
+		if (bold)
+		{
+			m_fontWeight = DWRITE_FONT_WEIGHT_BOLD;
+		}
+		else
+		{
+			m_fontWeight = DWRITE_FONT_WEIGHT_NORMAL;
+		}
+
+		// Set the font weight.
+		hr = m_pTextLayout->SetFontWeight(m_fontWeight, textRange);
+		return hr;
+	}
+
+	HRESULT DxWrite::SetItalic(bool italic)
+	{
+		HRESULT hr;
+		DWRITE_TEXT_RANGE textRange = { 0, m_cTextLength };
+
+		if (italic)
+		{
+			m_fontStyle = DWRITE_FONT_STYLE_ITALIC;
+		}
+		else
+		{
+			m_fontStyle = DWRITE_FONT_STYLE_NORMAL;
+		}
+
+		// Set the font style.
+		hr = m_pTextLayout->SetFontStyle(m_fontStyle, textRange);
+		return hr;
+	}
+
+	HRESULT DxWrite::SetUnderline(bool underline)
+	{
+		HRESULT hr;
+		DWRITE_TEXT_RANGE textRange = { 0, m_cTextLength };
+
+		m_fontUnderline = underline;
+
+		// Set the underline.
+		hr = m_pTextLayout->SetUnderline(m_fontUnderline, textRange);
+		return hr;
+	}
+
+	//DrawText
+	bool DxWrite::Begin()
+	{
+		//D2D Draw는 BeginDraw과 EndDraw사이에서 이루어져야한다.
+
+		if (m_pD2dRT) {
+			m_pD2dRT->BeginDraw();
+			m_pD2dRT->SetTransform(IdentityMatrix());
 		}
 
 		return true;
 	}
 
-	void DxWrite::DrawTextEnd()
+	HRESULT DxWrite::Drawtxt(RECT rc, TCHAR* pText, ColorF color)
 	{
-		m_pD2dRT->EndDraw();
+		if (m_pD2dRT && m_pD2dSCB) {
+			D2D1_RECT_F layoutRect = RectF(
+				static_cast<FLOAT> (rc.left)    / m_fDpiScaleX,
+				static_cast<FLOAT> (rc.top)     / m_fDpiScaleY,
+				static_cast<FLOAT> (rc.right)   / m_fDpiScaleX,
+				static_cast<FLOAT> (rc.bottom)  / m_fDpiScaleY);
+
+			m_D2rtLayoutRect = layoutRect;
+
+			m_pD2dSCB->SetColor(color);
+			m_pD2dRT->DrawTextW(pText, (UINT)wcslen(pText), m_pTextFormat, m_D2rtLayoutRect, m_pD2dSCB);
+		}
+
+		return S_OK;
+	}
+
+	HRESULT DxWrite::Drawtxt(TCHAR* pText)
+	{
+		m_pD2dRT->DrawTextW(pText, (UINT)wcslen(pText), m_pTextFormat, m_D2rtLayoutRect, m_pD2dSCB);
+
+		return S_OK;
+	}
+
+	bool DxWrite::End()
+	{
+		if (m_pD2dRT && FAILED(m_pD2dRT->EndDraw())) {
+			return false;
+		}
+
+		return true;
 	}
 
 	//전체 삭제
@@ -195,6 +352,8 @@ namespace Lypi
 
 		return true;
 	}
+
+
 
 	DxWrite::~DxWrite()
 	{

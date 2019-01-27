@@ -33,12 +33,37 @@ namespace Lypi
 	{
 		IDXGISurface1* pBackBuffer = nullptr;
 		HRESULT hr = g_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), (LPVOID*)&pBackBuffer);
+		I_Font.Set(g_hWnd, m_rtWindow.right, m_rtWindow.bottom, pBackBuffer);
 
-		int iWinWidth = m_rtWindow.right - m_rtWindow.left;
-		int iWinHeight = m_rtWindow.bottom - m_rtWindow.top;
+		if (pBackBuffer) { pBackBuffer->Release(); }
 
-		
+		hr = g_pSwapChain->GetDesc(&m_pSwapChainDesc);
+		V_FRETURN(hr);
+
+		hr = m_DefaultRT.UpdateDepthStencilView(m_pSwapChainDesc.BufferDesc.Width, m_pSwapChainDesc.BufferDesc.Height);
+		V_FRETURN(hr);
+
+		return CreateResource();
 	}
+
+	HRESULT zCore::DeleteDxResource()
+	{
+		
+		return DeleteResource();
+	}
+
+
+	HRESULT zCore::DeleteResource()
+	{
+		return S_OK;
+	}
+
+	HRESULT zCore::CreateResource()
+	{
+		return S_OK;
+	}
+
+
 
 	bool zCore::gameInit()
 	{
@@ -96,10 +121,7 @@ namespace Lypi
 			(g_uFillMode + 1 > 3) ? (g_uFillMode = 2) : (g_uFillMode += 1);
 		}
 
-
 		Frame();
-
-
 
 		return true;
 	}
@@ -114,7 +136,7 @@ namespace Lypi
 		DXGI_SWAP_CHAIN_DESC CurrentSD;
 		g_pSwapChain->GetDesc(&CurrentSD);
 
-		I_Font.DrawTextBegin();
+		I_Font.Begin();
 
 		TCHAR pBuffer[256];
 		memset(pBuffer, 0, sizeof(TCHAR) * 256);
@@ -163,12 +185,11 @@ namespace Lypi
 
 		_stprintf_s(pBuffer, L"%s\n%s\n%s", TopologyBuffer, CullModeBuffer, FillModeBuffer);
 
-		I_Font.SetlayoutRt(0, 0, (FLOAT)g_rtClient.right, (FLOAT)g_rtClient.bottom);
 		I_Font.Drawtxt(pBuffer);
 
 		////IDXGISwapChain 객체를 사용하여 시연(출력)한다.
 		////모든 렌더링 작업들은 present앞에서 이뤄져야 한다.
-		I_Font.DrawTextEnd();
+		I_Font.End();
 
 		PreRender();
 

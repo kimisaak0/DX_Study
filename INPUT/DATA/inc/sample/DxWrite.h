@@ -6,10 +6,10 @@ namespace Lypi
 	class DxWrite
 	{
 	protected:
-		double m_dDpiScaleX;  //화면 스케일 (출력 영역의 크기를 지정할 때 사용된다.) 
-		double m_dDpiScaleY;  //화면 스케일 (출력 영역의 크기를 지정할 때 사용된다.)
-		FLOAT m_FDpiX;        //화면의 인치당 도트수 (요즘 모니터는 대부분 96.0F이다.)
-		FLOAT m_FDpiY;        //화면의 인치당 도트수 (요즘 모니터는 대부분 96.0F이다.)
+		FLOAT m_fDpiScaleX;                 //화면 스케일 (출력 영역의 크기를 지정할 때 사용된다.) 
+		FLOAT m_fDpiScaleY;                 //화면 스케일 (출력 영역의 크기를 지정할 때 사용된다.)
+		FLOAT m_FDpiX;                      //화면의 인치당 도트수 (요즘 모니터는 대부분 96.0F이다.)
+		FLOAT m_FDpiY;                      //화면의 인치당 도트수 (요즘 모니터는 대부분 96.0F이다.)
 
 		//DXGI에 독립적인 객체
 		ID2D1Factory* m_pD2dFactory;       //d2d 팩토리
@@ -24,13 +24,24 @@ namespace Lypi
 		D2D1_RECT_F m_D2rtLayoutRect;
 		D2D1_COLOR_F m_D2dTextColor;
 
-		//IDWriteTextLayout* m_pTextLayout; 
-		//텍스트 레이아웃 관련된건 다음에 더 파보는 걸로...
+		IDWriteTextLayout* m_pTextLayout; 
+
+	public:
+		DWRITE_FONT_WEIGHT m_fontWeight;
+		DWRITE_FONT_STYLE  m_fontStyle;
+		BOOL               m_fontUnderline;
+		wstring            m_wszFontFamily;
+
+		float              m_fontSize;
+		wstring            m_wszText;
+		UINT32             m_cTextLength;
+
 
 	public:
 		//초기화
 		bool Init();
 		bool Set(IDXGISurface1* m_pSurface);
+		bool Set(HWND hWnd, int iWidth, int iHeight, IDXGISurface1* pSurface);
 
 		//객체 생성 및 소멸
 		HRESULT CreateDeviceIR();
@@ -44,10 +55,18 @@ namespace Lypi
 		void SetTextPos(const D2D1_MATRIX_3X2_F& transform = Matrix3x2F::Identity());
 		ColorF SetTextColor(ColorF color);
 
+		HRESULT SetText(wchar_t* text, ColorF Color);
+		HRESULT SetFont(wchar_t* fontFamily);
+		HRESULT SetFontSize(float size);
+		HRESULT SetBold(bool bold);
+		HRESULT SetItalic(bool italic);
+		HRESULT SetUnderline(bool underline);
+
 		//텍스트 그리기
-		void DrawTextBegin();
-		bool Drawtxt(TCHAR* pText);
-		void DrawTextEnd();
+		bool Begin();
+		HRESULT Drawtxt(RECT rc, TCHAR* pText, ColorF color = ColorF(1, 0, 0, 1));
+		HRESULT Drawtxt(TCHAR* pText);
+		bool End();
 
 		//전체 삭제
 		bool Release();

@@ -83,6 +83,9 @@
     <ClInclude Include="RenderTarget.h">
       <Filter>01_Base\01_stdHeader</Filter>
     </ClInclude>
+    <ClInclude Include="ExpMesh.h">
+      <Filter>02_Object\01_objHeader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxDevice.cpp">
@@ -123,6 +126,9 @@
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>01_Base\01_stdHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpMesh.cpp">
+      <Filter>02_Object\01_objHeader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

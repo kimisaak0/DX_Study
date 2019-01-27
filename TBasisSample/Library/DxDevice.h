@@ -35,6 +35,9 @@ namespace Lypi
 		HRESULT	SetRenderTargetView();	// 타겟 뷰 설정
 		HRESULT	SetViewPort();     		// 뷰 포트 설정
 
+		virtual HRESULT CreateDxResource();
+		virtual HRESULT DeleteDxResource();
+
 	public:
 		bool CreanupDevice();      // 생성한 것을 역순으로 삭제한다.
 

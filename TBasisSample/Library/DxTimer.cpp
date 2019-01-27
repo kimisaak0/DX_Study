@@ -63,6 +63,8 @@ namespace Lypi
 
 	bool	DxTimer::Render()
 	{
+		I_Font.Begin();
+
 		I_Font.SetAlignment(DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 		I_Font.SetTextColor(ColorF(0, 0, 1, 1));
 
@@ -72,7 +74,10 @@ namespace Lypi
 		_stprintf_s(pBuffer, _T("FPS:%d, SPF:%10.5f, GameTime:%10.2f"),
 			m_iFPS, m_dSPF, m_dGameTime);
 	
+		I_Font.SetTextPos({ 50, 50 });
 		I_Font.Drawtxt(pBuffer);
+
+		I_Font.End();
 
 		return true;
 	}

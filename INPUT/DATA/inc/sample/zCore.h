@@ -17,6 +17,11 @@ namespace Lypi
 	public:
 		bool ResetRT();
 
+		HRESULT CreateDxResource() override;
+		HRESULT CreateResource();
+		HRESULT DeleteDxResource() override;
+		HRESULT DeleteResource();
+
 	public:
 		//게임 전체적인 처리 순서에 대한 함수들. 게임에 관한 부분과 윈도우 생성에 관한 부분을 분리
 		bool gameInit() override;

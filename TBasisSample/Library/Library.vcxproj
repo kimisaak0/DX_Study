@@ -143,6 +143,7 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ExpMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mathHeader_L.cpp" />
@@ -158,6 +159,7 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="ExpMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="GS.hlsl">

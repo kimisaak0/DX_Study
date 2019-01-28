@@ -438,4 +438,64 @@ namespace Lypi
 		double totalLength;
 	};
 
+
+	struct uWH
+	{
+		UINT width;
+		UINT Height;
+	};
+
+	struct uPOINT
+	{
+		UINT x;
+		UINT y;
+
+		uPOINT& operator= (const POINT& pt) {
+			x = pt.x;
+			y = pt.y;
+
+			return *this;
+		}
+	};
+
+	struct fLTRB
+	{
+		float left;
+		float top;
+		float right;
+		float bottom;
+	};
+
+	struct iXYWH
+	{
+		LONG ltx;
+		LONG lty;
+		UINT width;
+		UINT height;
+	};
+
+	struct iLTRB
+	{
+		LONG left;
+		LONG top;
+		LONG right;
+		LONG bottom;
+
+		iLTRB& operator= (const iXYWH& _xywh) {
+			left = _xywh.ltx;
+			top = _xywh.lty;
+			right = _xywh.ltx + _xywh.width;
+			bottom = _xywh.lty + _xywh.height;
+
+			return *this;
+		}
+	};
+
+	struct circle
+	{
+		POINT pCenter;
+		double dRadius;
+	};
+
+
 }

@@ -5,38 +5,54 @@ namespace Lypi
 
 	void NormalizeBoneWeights(BYTE* pWeights)
 	{
-		DWORD dwSum = static_cast<DWORD>(pWeights[0]) + static_cast<DWORD>(pWeights[1]) + static_cast<DWORD>(pWeights[2]) + static_cast<DWORD>(pWeights[3]);
-		if (dwSum == 255)
+		DWORD dwSum;
+
+		dwSum =
+			static_cast<DWORD>(pWeights[0]) +
+			static_cast<DWORD>(pWeights[1]) +
+			static_cast<DWORD>(pWeights[2]) +
+			static_cast<DWORD>(pWeights[3]);
+
+		if (dwSum == 255) {
 			return;
+		}
 
 		INT iDifference = 255 - static_cast<INT>(dwSum);
+
 		for (DWORD i = 0; i < 4; ++i)
 		{
-			if (pWeights[i] == 0)
+
+			if (pWeights[i] == 0) {
 				continue;
+			}
+
 			INT iValue = static_cast<INT>(pWeights[i]);
-			if (iValue + iDifference > 255)
-			{
+
+			if (iValue + iDifference > 255) {
 				iDifference -= (255 - iValue);
 				iValue = 255;
 			}
-			else
-			{
+			else {
 				iValue += iDifference;
 				iDifference = 0;
 			}
+
 			pWeights[i] = static_cast<BYTE>(iValue);
 		}
 
-		dwSum = static_cast<DWORD>(pWeights[0]) + static_cast<DWORD>(pWeights[1]) + static_cast<DWORD>(pWeights[2]) + static_cast<DWORD>(pWeights[3]);
+		dwSum =
+			static_cast<DWORD>(pWeights[0]) +
+			static_cast<DWORD>(pWeights[1]) +
+			static_cast<DWORD>(pWeights[2]) +
+			static_cast<DWORD>(pWeights[3]);
+
 		assert(dwSum == 255);
 	}
 
 
 	INT GetElementSizeFromDeclType(DWORD Type)
 	{
-		switch (Type)
-		{
+		switch (Type) {
 			case D3DDECLTYPE_FLOAT1:
 			case D3DDECLTYPE_D3DCOLOR:
 			case D3DDECLTYPE_UBYTE4:
@@ -59,8 +75,8 @@ namespace Lypi
 			return 0;
 
 			default:
-				assert(false);
-				return 0;
+			assert(false);
+			return 0;
 		}
 	}
 
@@ -85,36 +101,41 @@ namespace Lypi
 
 	bool Export_Mesh_Vertex::Equals(const Export_Mesh_Vertex* pOtherVertex) const
 	{
-		if (!pOtherVertex)
+		if (!pOtherVertex) {
 			return false;
+		}
 
-		if (pOtherVertex == this)
+		if (pOtherVertex == this) {
 			return true;
+		}
 
 		D3DXVECTOR3 v0 = Position;
 		D3DXVECTOR3 v1 = pOtherVertex->Position;
-		if (v0 != v1)
+		if (v0 != v1) {
 			return false;
+		}
 
 		v0 = Normal;
 		v1 = pOtherVertex->Normal;
-		if (v0 != v1)
+		if (v0 != v1) {
 			return false;
+		}
 
 		D3DXVECTOR4 v2, v3;
 
-		for (size_t i = 0; i < 8; i++)
-		{
+		for (size_t i = 0; i < 8; i++) {
 			v2 = TexCoords[i];
 			v3 = pOtherVertex->TexCoords[i];
-			if (v2 != v3)
+			if (v2 != v3) {
 				return false;
+			}
 		}
 
 		v2 = Color;
 		v3 = pOtherVertex->Color;
-		if (v2 != v1)
+		if (v2 != v1) {
 			return false;
+		}
 
 		return true;
 	}
@@ -126,23 +147,23 @@ namespace Lypi
 	{
 	}
 
-	void Export_VB::SetVertexSize(DWORD uByteCount) 
-	{ 
-		m_uVertexSizeBytes = uByteCount; 
+	void Export_VB::SetVertexSize(DWORD uByteCount)
+	{
+		m_uVertexSizeBytes = uByteCount;
 	}
 
-	DWORD Export_VB::GetVertexSize() const 
+	DWORD Export_VB::GetVertexSize() const
 	{
-		return m_uVertexSizeBytes; 
+		return m_uVertexSizeBytes;
 	}
 
 	void Export_VB::SetVertexCount(size_t uVertexCount) {
-		m_uVertexCount = uVertexCount; 
+		m_uVertexCount = uVertexCount;
 	}
 
-	size_t Export_VB::GetVertexCount() const 
+	size_t Export_VB::GetVertexCount() const
 	{
-		return m_uVertexCount; 
+		return m_uVertexCount;
 	}
 
 	void Export_VB::Allocate()
@@ -154,108 +175,94 @@ namespace Lypi
 
 	uint8_t* Export_VB::GetVertex(size_t uIndex)
 	{
-		if (!m_pVertexData)
+		if (!m_pVertexData) {
 			return nullptr;
-		if (uIndex >= m_uVertexCount)
+		}
+
+		if (uIndex >= m_uVertexCount) {
 			return nullptr;
+		}
+
 		return m_pVertexData.get() + (uIndex * m_uVertexSizeBytes);
 	}
 
 	const uint8_t* Export_VB::GetVertex(size_t uIndex) const
 	{
-		if (!m_pVertexData)
+		if (!m_pVertexData) {
 			return nullptr;
-		if (uIndex >= m_uVertexCount)
+		}
+
+		if (uIndex >= m_uVertexCount) {
 			return nullptr;
+		}
+
 		return m_pVertexData.get() + (uIndex * m_uVertexSizeBytes);
 	}
 
-	uint8_t* Export_VB::GetVertexData() 
-	{ 
-		return m_pVertexData.get(); 
+	uint8_t* Export_VB::GetVertexData()
+	{
+		return m_pVertexData.get();
 	}
 
-	const uint8_t* Export_VB::GetVertexData() const 
-	{ 
-		return m_pVertexData.get(); 
+	const uint8_t* Export_VB::GetVertexData() const
+	{
+		return m_pVertexData.get();
 	}
 
 	size_t Export_VB::GetVertexDataSize() const
-	{ 
-		return m_uVertexSizeBytes * m_uVertexCount; 
+	{
+		return m_uVertexSizeBytes * m_uVertexCount;
 	}
 
 	void Export_VB::ByteSwap(const D3D_VERTEX_ELEMENT9* pVertexElements, const size_t dwVertexElementCount)
 	{
-		for (size_t dwVertexIndex = 0; dwVertexIndex < m_uVertexCount; dwVertexIndex++)
-		{
-			//auto CPP11부터 추가된 타입 자동 추론 기능
-			auto pVB = GetVertex(dwVertexIndex);
-			for (size_t i = 0; i < dwVertexElementCount; i++)
-			{
-				auto pElement = reinterpret_cast<DWORD*>(pVB + pVertexElements[i].Offset);
+		WORD* pWord;
+		DWORD* pElement;
+		uint8_t* pVB;
 
-				switch (pVertexElements[i].Type)
-				{
+		for (size_t dwVertexIndex = 0; dwVertexIndex < m_uVertexCount; dwVertexIndex++) {
+			pVB = GetVertex(dwVertexIndex);
+
+			for (size_t i = 0; i < dwVertexElementCount; i++) {
+				pElement = reinterpret_cast<DWORD*>(pVB + pVertexElements[i].Offset);
+
+				switch (pVertexElements[i].Type) {
 					{
 					case D3DDECLTYPE_FLOAT4:
-						*pElement = _byteswap_ulong(*pElement);
-						pElement++;
+					*pElement = _byteswap_ulong(*pElement);
+					pElement++;
 					case D3DDECLTYPE_FLOAT3:
-						*pElement = _byteswap_ulong(*pElement);
-						pElement++;
+					*pElement = _byteswap_ulong(*pElement);
+					pElement++;
 					case D3DDECLTYPE_FLOAT2:
-						*pElement = _byteswap_ulong(*pElement);
-						pElement++;
+					*pElement = _byteswap_ulong(*pElement);
+					pElement++;
 					case D3DDECLTYPE_FLOAT1:
 					case D3DDECLTYPE_D3DCOLOR:
 					case D3DDECLTYPE_UBYTE4:
 					case D3DDECLTYPE_UBYTE4N:
-						*pElement = _byteswap_ulong(*pElement);
+					*pElement = _byteswap_ulong(*pElement);
 					} break;
 
 					{
 					case D3DDECLTYPE_SHORT4N:
 					case D3DDECLTYPE_FLOAT16_4:
-						auto pWord = reinterpret_cast<WORD*>(pElement);
-						*pWord = _byteswap_ushort(*pWord);
-						pWord++;
-						*pWord = _byteswap_ushort(*pWord);
-						pElement++;
+					pWord = reinterpret_cast<WORD*>(pElement);
+					*pWord = _byteswap_ushort(*pWord);
+					pWord++;
+					*pWord = _byteswap_ushort(*pWord);
+					pElement++;
+
 					case D3DDECLTYPE_FLOAT16_2:
-						auto pWord = reinterpret_cast<WORD*>(pElement);
-						*pWord = _byteswap_ushort(*pWord);
-						pWord++;
-						*pWord = _byteswap_ushort(*pWord);
-						pElement++;
+					pWord = reinterpret_cast<WORD*>(pElement);
+					*pWord = _byteswap_ushort(*pWord);
+					pWord++;
+					*pWord = _byteswap_ushort(*pWord);
+					pElement++;
 					} break;
 				}
 			}
 		}
-	}
-
-	void Export_VB::Allocate()
-	{
-		size_t uSize = GetVertexDataSize();
-		m_pVertexData.reset(new uint8_t[uSize]);
-		ZeroMemory(m_pVertexData.get(), uSize);
-	}
-	uint8_t* Export_VB::GetVertex(size_t uIndex)
-	{
-		if (!m_pVertexData)
-			return nullptr;
-		if (uIndex >= m_uVertexCount)
-			return nullptr;
-		return m_pVertexData.get() + (uIndex * m_uVertexSizeBytes);
-	}
-
-	const uint8_t* Export_VB::GetVertex(size_t uIndex) const
-	{
-		if (!m_pVertexData)
-			return nullptr;
-		if (uIndex >= m_uVertexCount)
-			return nullptr;
-		return m_pVertexData.get() + (uIndex * m_uVertexSizeBytes);
 	}
 
 	Export_VB::~Export_VB()
@@ -266,36 +273,34 @@ namespace Lypi
 	{
 	}
 
-	void Export_IB::SetIndexSize(DWORD dwIndexSize) 
+	void Export_IB::SetIndexSize(DWORD dwIndexSize)
 	{
-		assert(dwIndexSize == 2 || dwIndexSize == 4); 
-		m_dwIndexSize = dwIndexSize; 
+		assert(dwIndexSize == 2 || dwIndexSize == 4);
+		m_dwIndexSize = dwIndexSize;
 	}
 
-	DWORD Export_IB::GetIndexSize() const 
+	DWORD Export_IB::GetIndexSize() const
 	{
-		return m_dwIndexSize; 
+		return m_dwIndexSize;
 	}
 
 	void Export_IB::SetIndexCount(size_t uIndexCount)
-	{ 
-		m_uIndexCount = uIndexCount; 
+	{
+		m_uIndexCount = uIndexCount;
 	}
 
-	size_t Export_IB::GetIndexCount() const 
-	{ 
-		return m_uIndexCount; 
+	size_t Export_IB::GetIndexCount() const
+	{
+		return m_uIndexCount;
 	}
 
 	void Export_IB::Allocate()
 	{
-		if (m_dwIndexSize == 2)
-		{
+		if (m_dwIndexSize == 2) {
 			m_pIndexData.reset(reinterpret_cast<uint8_t*>(new WORD[m_uIndexCount]));
 			ZeroMemory(m_pIndexData.get(), m_uIndexCount * sizeof(WORD));
 		}
-		else
-		{
+		else {
 			m_pIndexData.reset(reinterpret_cast<uint8_t*>(new DWORD[m_uIndexCount]));
 			ZeroMemory(m_pIndexData.get(), m_uIndexCount * sizeof(DWORD));
 		}
@@ -303,61 +308,55 @@ namespace Lypi
 
 	DWORD Export_IB::GetIndex(size_t uIndex) const
 	{
-		if (m_dwIndexSize == 2)
-		{
+		if (m_dwIndexSize == 2) {
 			auto pIndexData16 = reinterpret_cast<const WORD*>(m_pIndexData.get());
 			return pIndexData16[uIndex];
 		}
-		else
-		{
+		else {
 			auto pIndexData32 = reinterpret_cast<const DWORD*>(m_pIndexData.get());
 			return pIndexData32[uIndex];
 		}
 	}
+
 	void Export_IB::SetIndex(size_t uIndex, DWORD dwData)
 	{
-		if (m_dwIndexSize == 2)
-		{
+		if (m_dwIndexSize == 2) {
 			auto pIndexData16 = reinterpret_cast<WORD*>(m_pIndexData.get());
 			pIndexData16[uIndex] = static_cast<WORD>(dwData);
 		}
-		else
-		{
+		else {
 			auto pIndexData32 = reinterpret_cast<DWORD*>(m_pIndexData.get());
 			pIndexData32[uIndex] = dwData;
 		}
 	}
+
 	uint8_t* Export_IB::GetIndexData()
 	{
-		return m_pIndexData.get(); 
+		return m_pIndexData.get();
 	}
 
 	const uint8_t* Export_IB::GetIndexData() const
 	{
-		return m_pIndexData.get(); 
+		return m_pIndexData.get();
 	}
 
 	size_t Export_IB::GetIndexDataSize() const
 	{
-		return m_uIndexCount * m_dwIndexSize; 
+		return m_uIndexCount * m_dwIndexSize;
 	}
 
 	void Export_IB::ByteSwap()
 	{
-		if (m_dwIndexSize == 2)
-		{
+		if (m_dwIndexSize == 2) {
 			auto pIndexData16 = reinterpret_cast<WORD*>(m_pIndexData.get());
-			for (size_t i = 0; i < m_uIndexCount; i++)
-			{
+			for (size_t i = 0; i < m_uIndexCount; i++) {
 				WORD wIndex = _byteswap_ushort(pIndexData16[i]);
 				pIndexData16[i] = wIndex;
 			}
 		}
-		else
-		{
+		else {
 			auto pIndexData32 = reinterpret_cast<DWORD*>(m_pIndexData.get());
-			for (size_t i = 0; i < m_uIndexCount; i++)
-			{
+			for (size_t i = 0; i < m_uIndexCount; i++) {
 				DWORD dwIndex = _byteswap_ulong(pIndexData32[i]);
 				pIndexData32[i] = dwIndex;
 			}
@@ -377,24 +376,24 @@ namespace Lypi
 		m_InfluenceNames.push_back(InfluenceName);
 		m_VertexFormat.m_bSkinData = true;
 	}
-	void Exp_Mesh::SetVertexUVCount(UINT uCount) 
+	void Exp_Mesh::SetVertexUVCount(UINT uCount)
 	{
-		m_VertexFormat.m_uUVSetCount = uCount; 
+		m_VertexFormat.m_uUVSetCount = uCount;
 	}
 
-	void Exp_Mesh::SetVertexUVDimension(UINT uDimension) 
+	void Exp_Mesh::SetVertexUVDimension(UINT uDimension)
 	{
-		m_VertexFormat.m_uUVSetSize = uDimension; 
+		m_VertexFormat.m_uUVSetSize = uDimension;
 	}
 
-	void Exp_Mesh::SetVertexColorCount(UINT uCount) 
-	{ 
-		m_VertexFormat.m_bVertexColor = (uCount > 0); 
+	void Exp_Mesh::SetVertexColorCount(UINT uCount)
+	{
+		m_VertexFormat.m_bVertexColor = (uCount > 0);
 	}
 
 	size_t Exp_Mesh::GetVertexDeclElementCount()
-	{ 
-		return m_VertexElements.size(); 
+	{
+		return m_VertexElements.size();
 	}
 
 	const D3D_VERTEX_ELEMENT9& Exp_Mesh::GetVertexDeclElement(size_t uIndex) const
@@ -427,24 +426,24 @@ namespace Lypi
 		DXGI_FORMAT dwColorTypeDXGI = DXGI_FORMAT_B8G8R8A8_UNORM;
 
 		switch (dwColorType) {
-			case D3DDECLTYPE_FLOAT4:                    
-				dwColorTypeDXGI = DXGI_FORMAT_R32G32B32A32_FLOAT;   
-				break;
+			case D3DDECLTYPE_FLOAT4:
+			dwColorTypeDXGI = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			break;
 
-			case D3DDECLTYPE_D3DCOLOR: 
-				break;
+			case D3DDECLTYPE_D3DCOLOR:
+			break;
 
-			case D3DDECLTYPE_UBYTE4N:  
-				dwColorTypeDXGI = DXGI_FORMAT_R8G8B8A8_UNORM;     
-				break;
+			case D3DDECLTYPE_UBYTE4N:
+			dwColorTypeDXGI = DXGI_FORMAT_R8G8B8A8_UNORM;
+			break;
 
-			case D3DDECLTYPE_FLOAT16_4:       
-				dwColorTypeDXGI = DXGI_FORMAT_R16G16B16A16_FLOAT;
-				break;
+			case D3DDECLTYPE_FLOAT16_4:
+			dwColorTypeDXGI = DXGI_FORMAT_R16G16B16A16_FLOAT;
+			break;
 
-			default:                           
-				assert(false);                         
-				break;
+			default:
+			assert(false);
+			break;
 		}
 
 		DWORD dwNormalType = D3DDECLTYPE_FLOAT3;
@@ -454,24 +453,23 @@ namespace Lypi
 		if (bCompressVertexData) {
 			dwNormalType = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-			switch (dwNormalType)
-			{
-				case D3DDECLTYPE_UBYTE4N:                   
-					dwNormalTypeDXGI = DXGI_FORMAT_R8G8B8A8_UNORM;
-					m_x2Bias = true;  
-					break;
+			switch (dwNormalType) {
+				case D3DDECLTYPE_UBYTE4N:
+				dwNormalTypeDXGI = DXGI_FORMAT_R8G8B8A8_UNORM;
+				m_x2Bias = true;
+				break;
 
-				case D3DDECLTYPE_SHORT4N:           
-					dwNormalTypeDXGI = DXGI_FORMAT_R16G16B16A16_SNORM; 
-					break;
+				case D3DDECLTYPE_SHORT4N:
+				dwNormalTypeDXGI = DXGI_FORMAT_R16G16B16A16_SNORM;
+				break;
 
-				case D3DDECLTYPE_FLOAT16_4:    
-					dwNormalTypeDXGI = DXGI_FORMAT_R16G16B16A16_FLOAT; 
-					break;
+				case D3DDECLTYPE_FLOAT16_4:
+				dwNormalTypeDXGI = DXGI_FORMAT_R16G16B16A16_FLOAT;
+				break;
 
-				default:      
-					assert(false);       
-					break;
+				default:
+				assert(false);
+				break;
 			}
 		}
 
@@ -479,7 +477,7 @@ namespace Lypi
 		m_InputLayout.clear();
 
 		// check each vertex format option, and create a corresponding decl element
-		if (m_VertexFormat.m_bPosition)	{
+		if (m_VertexFormat.m_bPosition) {
 			iPositionOffset = iCurrentVertexOffset;
 
 			VertexElement.Offset = static_cast<WORD>(iCurrentVertexOffset);
@@ -495,7 +493,7 @@ namespace Lypi
 			iCurrentVertexOffset += GetElementSizeFromDeclType(VertexElement.Type);
 		}
 
-		if (m_VertexFormat.m_bSkinData)	{
+		if (m_VertexFormat.m_bSkinData) {
 			iSkinDataOffset = iCurrentVertexOffset;
 
 			VertexElement.Offset = static_cast<WORD>(iCurrentVertexOffset);
@@ -568,47 +566,42 @@ namespace Lypi
 				switch (m_VertexFormat.m_uUVSetSize)
 				{
 					case 1:
-						VertexElement.Type = D3DDECLTYPE_FLOAT1;
-						InputElement.Format = DXGI_FORMAT_R32_FLOAT;
-						break;
+					VertexElement.Type = D3DDECLTYPE_FLOAT1;
+					InputElement.Format = DXGI_FORMAT_R32_FLOAT;
+					break;
 
 					case 2:
-						if (bCompressVertexData) {
-							VertexElement.Type = D3DDECLTYPE_FLOAT16_2;
-							InputElement.Format = DXGI_FORMAT_R16G16_FLOAT;
-						} else {
-							VertexElement.Type = D3DDECLTYPE_FLOAT2;
-							InputElement.Format = DXGI_FORMAT_R32G32_FLOAT;
-						}	break;
+					if (bCompressVertexData) {
+						VertexElement.Type = D3DDECLTYPE_FLOAT16_2;
+						InputElement.Format = DXGI_FORMAT_R16G16_FLOAT;
+					}
+					else {
+						VertexElement.Type = D3DDECLTYPE_FLOAT2;
+						InputElement.Format = DXGI_FORMAT_R32G32_FLOAT;
+					}	break;
 
 					case 3:
-						if (bCompressVertexData)
-						{
-							VertexElement.Type = D3DDECLTYPE_FLOAT16_4;
-							InputElement.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-						}
-						else
-						{
-							VertexElement.Type = D3DDECLTYPE_FLOAT3;
-							InputElement.Format = DXGI_FORMAT_R32G32B32_FLOAT;
-						}
-						break;
+					if (bCompressVertexData) {
+						VertexElement.Type = D3DDECLTYPE_FLOAT16_4;
+						InputElement.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+					}
+					else {
+						VertexElement.Type = D3DDECLTYPE_FLOAT3;
+						InputElement.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+					} break;
 
 					case 4:
-						if (bCompressVertexData)
-						{
-							VertexElement.Type = D3DDECLTYPE_FLOAT16_4;
-							InputElement.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-						}
-						else
-						{
-							VertexElement.Type = D3DDECLTYPE_FLOAT4;
-							InputElement.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-						}
-						break;
+					if (bCompressVertexData) {
+						VertexElement.Type = D3DDECLTYPE_FLOAT16_4;
+						InputElement.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+					}
+					else {
+						VertexElement.Type = D3DDECLTYPE_FLOAT4;
+						InputElement.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+					} break;
 
 					default:
-						continue;
+					continue;
 				}
 
 				VertexElement.UsageIndex = static_cast<BYTE>(t);
@@ -639,7 +632,7 @@ namespace Lypi
 			iCurrentVertexOffset += GetElementSizeFromDeclType(VertexElement.Type);
 		}
 
-		if (m_VertexFormat.m_bBinormal)	{
+		if (m_VertexFormat.m_bBinormal) {
 			iBinormalOffset = iCurrentVertexOffset;
 
 			VertexElement.Offset = static_cast<WORD>(iCurrentVertexOffset);
@@ -659,8 +652,9 @@ namespace Lypi
 
 		// save vertex size
 		uVertexSize = iCurrentVertexOffset;
-		if (uVertexSize == 0)
+		if (uVertexSize == 0) {
 			return;
+		}
 
 		// create vertex buffer and allocate storage
 		size_t nVerts = VertexArray.size();
@@ -703,45 +697,47 @@ namespace Lypi
 			}
 
 			if (iNormalOffset != -1) {
-				TransformAndWriteVector(pDestVertex + iNormalOffset, &m_pVBNormals[i], pSrcVertex->Normal, dwNormalType);
+				TransformAndWriteVector((BYTE*)pDestVertex + iNormalOffset, &m_pVBNormals[i], pSrcVertex->Normal, dwNormalType);
 			}
 
-			if (iSkinDataOffset != -1)	{
-				BYTE* pDest = pDestVertex + iSkinDataOffset;
+			if (iSkinDataOffset != -1) {
+				BYTE* pDest = (BYTE*)pDestVertex + iSkinDataOffset;
 				BYTE* pBoneWeights = pDest;
+
 				*pDest++ = static_cast<BYTE>(pSrcVertex->BoneWeights.x * 255.0f);
 				*pDest++ = static_cast<BYTE>(pSrcVertex->BoneWeights.y * 255.0f);
 				*pDest++ = static_cast<BYTE>(pSrcVertex->BoneWeights.z * 255.0f);
 				*pDest++ = static_cast<BYTE>(pSrcVertex->BoneWeights.w * 255.0f);
+
 				NormalizeBoneWeights(pBoneWeights);
+
 				*pDest++ = pSrcVertex->BoneIndices.x;
 				*pDest++ = pSrcVertex->BoneIndices.y;
 				*pDest++ = pSrcVertex->BoneIndices.z;
 				*pDest++ = pSrcVertex->BoneIndices.w;
 			}
-			if (iTangentOffset != -1)
-			{
-				TransformAndWriteVector(pDestVertex + iTangentOffset, nullptr, pSrcVertex->Tangent, dwNormalType);
+
+			if (iTangentOffset != -1) {
+				TransformAndWriteVector((BYTE*)pDestVertex + iTangentOffset, nullptr, pSrcVertex->Tangent, dwNormalType);
 			}
-			if (iBinormalOffset != -1)
-			{
-				TransformAndWriteVector(pDestVertex + iBinormalOffset, nullptr, pSrcVertex->Binormal, dwNormalType);
+
+			if (iBinormalOffset != -1) {
+				TransformAndWriteVector((BYTE*)pDestVertex + iBinormalOffset, nullptr, pSrcVertex->Binormal, dwNormalType);
 			}
-			if (iUVOffset != -1)
-			{
+
+			if (iUVOffset != -1) {
 				UINT iTangentSpaceIndex = 0;
-				if (m_VertexFormat.m_uUVSetCount > iTangentSpaceIndex)
-				{
-					if (m_VertexFormat.m_uUVSetSize > 1)
-					{
+
+				if (m_VertexFormat.m_uUVSetCount > iTangentSpaceIndex) {
+					if (m_VertexFormat.m_uUVSetSize > 1) {
 						memcpy(&m_pVBTexCoords[i], &pSrcVertex->TexCoords[iTangentSpaceIndex], sizeof(D3DXVECTOR2));
 					}
 				}
 
 				size_t uStride = m_VertexFormat.m_uUVSetSize * sizeof(float);
-				BYTE* pDest = pDestVertex + iUVOffset;
-				for (UINT t = 0; t < m_VertexFormat.m_uUVSetCount; t++)
-				{
+				BYTE* pDest = (BYTE*)pDestVertex + iUVOffset;
+
+				for (UINT t = 0; t < m_VertexFormat.m_uUVSetCount; t++) {
 					memcpy(pDest, &pSrcVertex->TexCoords[t], uStride);
 					pDest += uStride;
 				}
@@ -752,20 +748,17 @@ namespace Lypi
 	void Exp_Mesh::TransformPosition(D3DXVECTOR3* pDestPosition, const D3DXVECTOR3* pSrcPosition) const
 	{
 		D3DXVECTOR3 SrcVector;
-		if (pSrcPosition == pDestPosition)
-		{
+		if (pSrcPosition == pDestPosition) {
 			SrcVector = *pSrcPosition;
 			pSrcPosition = &SrcVector;
 		}
 
-		if (m_bMaxConversion)
-		{
+		if (m_bMaxConversion) {
 			pDestPosition->x = pSrcPosition->x * m_fUnitScale;
 			pDestPosition->y = pSrcPosition->z * m_fUnitScale;
 			pDestPosition->z = pSrcPosition->y * m_fUnitScale;
 		}
-		else
-		{
+		else {
 			const float flipZ = m_bFlipZ ? -1.0f : 1.0f;
 
 			pDestPosition->x = pSrcPosition->x * m_fUnitScale;
@@ -779,41 +772,36 @@ namespace Lypi
 		D3DXVECTOR3 SrcTransformed;
 		TransformDirection(&SrcTransformed, &Src);
 
-		if (normal)
-		{
+		if (normal) {
 			memcpy(normal, &SrcTransformed, sizeof(D3DXVECTOR3));
 		}
 
-		switch (dwDestFormat)
-		{
+		switch (dwDestFormat) {
 			case D3DDECLTYPE_FLOAT3:
-			{
-				*reinterpret_cast<D3DXVECTOR3*>(pDest) = SrcTransformed;
-				break;
-			}
+			*reinterpret_cast<D3DXVECTOR3*>(pDest) = SrcTransformed;
+			break;
+
 			default:
-				assert(false);
-				break;
+			assert(false);
+			break;
 		}
 	}
 
 	void Exp_Mesh::TransformDirection(D3DXVECTOR3* pDestDirection, const D3DXVECTOR3* pSrcDirection) const
 	{
 		D3DXVECTOR3 SrcVector;
-		if (pSrcDirection == pDestDirection)
-		{
+
+		if (pSrcDirection == pDestDirection) {
 			SrcVector = *pSrcDirection;
 			pSrcDirection = &SrcVector;
 		}
 
-		if (m_bMaxConversion)
-		{
+		if (m_bMaxConversion) {
 			pDestDirection->x = pSrcDirection->x;
 			pDestDirection->y = pSrcDirection->z;
 			pDestDirection->z = pSrcDirection->y;
 		}
-		else
-		{
+		else {
 			const float flipZ = m_bFlipZ ? -1.0f : 1.0f;
 
 			pDestDirection->x = pSrcDirection->x;
@@ -825,15 +813,13 @@ namespace Lypi
 	void Exp_Mesh::TransformMatrix(D3DXMATRIX* pDestMatrix, const D3DXMATRIX* pSrcMatrix) const
 	{
 		D3DXMATRIX SrcMatrix;
-		if (pSrcMatrix == pDestMatrix)
-		{
+		if (pSrcMatrix == pDestMatrix) {
 			memcpy(&SrcMatrix, pSrcMatrix, sizeof(D3DXMATRIX));
 			pSrcMatrix = &SrcMatrix;
 		}
 		memcpy(pDestMatrix, pSrcMatrix, sizeof(D3DXMATRIX));
 
-		if (m_bFlipZ)
-		{
+		if (m_bFlipZ) {
 			pDestMatrix->_13 = -pSrcMatrix->_13;
 			pDestMatrix->_23 = -pSrcMatrix->_23;
 			pDestMatrix->_43 = -pSrcMatrix->_43;
@@ -867,3 +853,4 @@ namespace Lypi
 	Exp_Mesh::~Exp_Mesh()
 	{
 	}
+}

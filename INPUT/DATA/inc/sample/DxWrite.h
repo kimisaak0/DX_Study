@@ -74,7 +74,7 @@ namespace Lypi
 	public:
 		static DxWrite& GetInstance();
 
-	protected:
+	public:
 		DxWrite();
 		virtual ~DxWrite();
 	};

@@ -71,9 +71,6 @@
     <ClInclude Include="Texture.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>02_Object\03_Texture</Filter>
-    </ClInclude>
     <ClInclude Include="BGTexture.h">
       <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
@@ -85,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="ExpMesh.h">
       <Filter>02_Object\01_objHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="pOBJ.h">
+      <Filter>02_Object\03_Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,9 +118,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>02_Object\03_Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>02_Object\03_Texture</Filter>
-    </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>02_Object\01_objHeader</Filter>
     </ClCompile>
@@ -129,6 +126,9 @@
     </ClCompile>
     <ClCompile Include="ExpMesh.cpp">
       <Filter>02_Object\01_objHeader</Filter>
+    </ClCompile>
+    <ClCompile Include="pOBJ.cpp">
+      <Filter>02_Object\03_Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -138,43 +138,20 @@ namespace Lypi
 		std::unique_ptr<uint8_t[]>  m_pIndexData;
 
 	public:
-		void SetIndexSize(DWORD dwIndexSize) { assert(dwIndexSize == 2 || dwIndexSize == 4); m_dwIndexSize = dwIndexSize; }
-		DWORD GetIndexSize() const { return m_dwIndexSize; }
+		void SetIndexSize(DWORD dwIndexSize);
+		DWORD GetIndexSize() const;
 
-		void SetIndexCount(size_t uIndexCount) { m_uIndexCount = uIndexCount; }
-		size_t GetIndexCount() const { return m_uIndexCount; }
+		void SetIndexCount(size_t uIndexCount);
+		size_t GetIndexCount() const;
 
 		void Allocate();
 
-		DWORD GetIndex(size_t uIndex) const
-		{
-			if (m_dwIndexSize == 2)
-			{
-				auto pIndexData16 = reinterpret_cast<const WORD*>(m_pIndexData.get());
-				return pIndexData16[uIndex];
-			}
-			else
-			{
-				auto pIndexData32 = reinterpret_cast<const DWORD*>(m_pIndexData.get());
-				return pIndexData32[uIndex];
-			}
-		}
-		void SetIndex(size_t uIndex, DWORD dwData)
-		{
-			if (m_dwIndexSize == 2)
-			{
-				auto pIndexData16 = reinterpret_cast<WORD*>(m_pIndexData.get());
-				pIndexData16[uIndex] = static_cast<WORD>(dwData);
-			}
-			else
-			{
-				auto pIndexData32 = reinterpret_cast<DWORD*>(m_pIndexData.get());
-				pIndexData32[uIndex] = dwData;
-			}
-		}
-		uint8_t* GetIndexData() { return m_pIndexData.get(); }
-		const uint8_t* GetIndexData() const { return m_pIndexData.get(); }
-		size_t GetIndexDataSize() const { return m_uIndexCount * m_dwIndexSize; }
+		DWORD GetIndex(size_t uIndex) const;
+
+		void SetIndex(size_t uIndex, DWORD dwData);
+		uint8_t* GetIndexData();
+		const uint8_t* GetIndexData() const;
+		size_t GetIndexDataSize() const;
 
 		void ByteSwap();
 
@@ -216,11 +193,7 @@ namespace Lypi
 		VertexFormat                            m_VertexFormat;
 		
 	public:
-		void AddInfluence(T_STR InfluenceName)
-		{
-			m_InfluenceNames.push_back(InfluenceName);
-			m_VertexFormat.m_bSkinData = true;
-		}
+		void AddInfluence(T_STR InfluenceName);
 		void SetVertexUVCount(UINT uCount);
 		void SetVertexUVDimension(UINT uDimension);
 		void SetVertexColorCount(UINT uCount);
@@ -237,15 +210,8 @@ namespace Lypi
 		float TransformLength(float fInputLength) const;
 
 		// Sets unit scale for exporting all geometry - works with characters too.
-		void SetUnitScale(const float fScale)
-		{
-			m_fUnitScale = fScale;
-		}
-
-		void SetZFlip(const bool bFlip)
-		{
-			m_bFlipZ = bFlip;
-		}
+		void SetUnitScale(const float fScale);
+		void SetZFlip(const bool bFlip);
 
 
 	public:

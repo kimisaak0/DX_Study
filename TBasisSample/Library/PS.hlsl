@@ -1,18 +1,23 @@
+Texture2D  g_txTextureA : register(t0);
+SamplerState  sample0 : register(s0);
 
-Texture2D g_txDiffuse  : register (t0);
-SamplerState sample0 : register (s0);
-
-struct PS_INPUT
+struct VS_OUTPUT
 {
 	float4 p : SV_POSITION;
+	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 };
-
-//--------------------------------------------------------------------------------------
-// Pixel Shader
-//--------------------------------------------------------------------------------------
-float4 PS(PS_INPUT input) : SV_Target
+struct PS_OUTPUT
 {
-	return  g_txDiffuse.Sample(sample0, input.t);
-}
+	float4 c : SV_TARGET;
+};
 
+PS_OUTPUT PS(VS_OUTPUT vIn)
+{
+	PS_OUTPUT vOut;
+	vOut.c = g_txTextureA.Sample(sample0, vIn.t) * vIn.c;
+	if (vOut.c.a == 0) {
+		discard;
+	}
+	return vOut;
+}

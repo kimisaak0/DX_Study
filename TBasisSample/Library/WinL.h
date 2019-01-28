@@ -32,8 +32,6 @@ namespace Lypi
 		virtual bool gamePostRender() = 0;      //게임의 매 프레임 렌더링 후 필요한 절차를 담당.
 		virtual bool gameRelease() = 0;         //게임 전체의 메모리 소멸 및 객체 해제를 담당.
 
-		virtual bool ResetRT() = 0;
-
 	public:
 		winL(LPCTSTR LWndName);
 		virtual ~winL();

@@ -1,19 +1,21 @@
 struct VS_INPUT
 {
-	float4 p : POSITION;
+	float3 p : POSITION;
+	float4 c : COLOR;
 	float2 t : TEXCOORD;
 };
-struct PS_INPUT
+struct VS_OUTPUT
 {
-	float4 p : SV_POSITION;
+	float4 p : SV_POSITION;	 // Ω√∏‡∆Ω(¿«πÃ±∏¡∂)
+	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
 };
-typedef PS_INPUT VS_OUTPUT;
 
-VS_OUTPUT VS(VS_INPUT Input)
+VS_OUTPUT VS(VS_INPUT vIn)
 {
-	VS_OUTPUT output = (VS_OUTPUT)0;
-	output.p = Input.p;
-	output.t = Input.t;
-	return output;
+	VS_OUTPUT vOut = (VS_OUTPUT)0;
+	vOut.p = float4(vIn.p.x, vIn.p.y, vIn.p.z, 1.0f);
+	vOut.t = vIn.t;
+	vOut.c = vIn.c;
+	return vOut;
 }

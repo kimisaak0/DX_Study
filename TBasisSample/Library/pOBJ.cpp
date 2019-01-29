@@ -108,7 +108,7 @@ namespace Lypi
 		ZeroMemory(&sDesc, sizeof(D3D11_BUFFER_DESC));
 		sDesc.Usage = D3D11_USAGE_DEFAULT;
 		sDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		sDesc.ByteWidth = sizeof(PCT_VERTEX) * 4;
+		sDesc.ByteWidth = sizeof(PNCT_VERTEX) * 4;
 		 
 		D3D11_SUBRESOURCE_DATA sInitData;
 		ZeroMemory(&sInitData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -137,9 +137,10 @@ namespace Lypi
 		if (pVSBlob == NULL) { return E_FAIL; }
 
 		D3D11_INPUT_ELEMENT_DESC ied[] = {
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		int iNumElement = sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC);
@@ -148,6 +149,7 @@ namespace Lypi
 		if (FAILED(hr)) {
 			return hr;
 		}
+
 
 		//픽셀 쉐이더 생성
 		ID3DBlob*  pPSBlop;
@@ -167,7 +169,6 @@ namespace Lypi
 		SAFE_RELEASE(pPSBlop);
 		SAFE_RELEASE(pVSBlob);
 
-		//정점 버퍼 생성
 
 		//블렌드 스테이트 생성
 		D3D11_BLEND_DESC BlendState;
@@ -191,6 +192,26 @@ namespace Lypi
 
 		if (FAILED(hr = g_pD3dDevice->CreateBlendState(&BlendState, &m_pAlphaBlend)))
 		{
+			return hr;
+		}
+
+		D3D11_SAMPLER_DESC samplerDesc;
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 16;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_EQUAL;
+		samplerDesc.BorderColor[0] = 0.0f;
+		samplerDesc.BorderColor[1] = 0.0f;
+		samplerDesc.BorderColor[2] = 0.0f;
+		samplerDesc.BorderColor[3] = 0.0f;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = 0;
+
+		hr = g_pD3dDevice->CreateSamplerState(&samplerDesc, &m_pSamplerState);
+		if (FAILED(hr)) {
 			return hr;
 		}
 
@@ -325,8 +346,11 @@ namespace Lypi
 
 	bool Object_DX::Render()
 	{
-		UINT pStrides = sizeof(PCT_VERTEX);
+		UINT pStrides = sizeof(PNCT_VERTEX);
 		UINT pOffsets = 0;
+
+		ID3D11SamplerState* SS[1];
+		SS[0] = m_pSamplerState;
 
 		g_pD3dContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &pStrides, &pOffsets);
 		g_pD3dContext->IASetInputLayout(m_pInputLayout);
@@ -334,6 +358,7 @@ namespace Lypi
 		g_pD3dContext->VSSetShader(m_pVS, NULL, NULL);
 		g_pD3dContext->PSSetShader(m_pPS, NULL, NULL);
 		g_pD3dContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+		g_pD3dContext->PSSetSamplers(0, 1, SS);
 		g_pD3dContext->OMSetBlendState(m_pAlphaBlend, 0, -1);
 
 		g_pD3dContext->Draw(4, 0);

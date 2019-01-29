@@ -16,7 +16,7 @@ namespace Lypi
 		ID3D11SamplerState*         m_pSamplerState;
 
 	protected:
-		PCT_VERTEX m_pVertexList[4];
+		PNCT_VERTEX m_pVertexList[4];
 
 		uWH   m_uImageSize;
 		iLTRB m_uImagePart;
@@ -57,7 +57,6 @@ namespace Lypi
 		iLTRB getPos();
 
 		void spin(float fAngle);
-		void spin(float dx, float dy);
 		void scale(float size);
 
 		void ColorChange(float r, float g, float b, float a);

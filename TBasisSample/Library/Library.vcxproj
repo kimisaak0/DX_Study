@@ -131,7 +131,9 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClInclude Include="pOBJ.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdHeader_L.h" />
-    <ClInclude Include="mathHeader_L.h" />
+    <ClInclude Include="mathHeader_L.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="DxDevice.h" />
     <ClInclude Include="WinL.h" />
     <ClInclude Include="zCore.h" />
@@ -142,13 +144,17 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClInclude Include="ShapeHeader.h" />
     <ClInclude Include="BGTexture.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="RenderTarget.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="ExpMesh.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mathHeader_L.cpp" />
+    <ClCompile Include="mathHeader_L.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="DxDevice.cpp" />
     <ClCompile Include="pOBJ.cpp" />
     <ClCompile Include="State.cpp" />
@@ -160,7 +166,9 @@ copy "*.hlsl" "../../INPUT/DATA/shader/sample/"</Command>
     <ClCompile Include="simpleShape.cpp" />
     <ClCompile Include="BGTexture.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="RenderTarget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ExpMesh.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>

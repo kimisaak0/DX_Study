@@ -30,34 +30,39 @@
 #include <unordered_map>
 #include <iterator>
 
-//dx (순서 주의)
-#include "d3dx11.h"  
-#include "D3D11.h" 
-#include "dxgi.h"
-#include "D3Dcompiler.h"
+
+//DX11을 쓰려면 필요함
+#pragma comment (lib, "D3D11.lib")
+#include "D3D11.h"
+
+
+//DXGIFactory를 만드는데 사용됨.
+#pragma comment (lib, "DXGI.lib")
+#include "DXGI.h"
+
+//다이렉트 2D사용
+#pragma comment (lib, "d2d1.lib")
 #include "D2D1.h"
 #include "D2D1Helper.h"
+
+//다이렉트 라이트 사용
+#pragma comment (lib, "dwrite.lib")
 #include "DWrite.h"
+
+//다이렉트 인풋 사용.
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "dinput8.lib")
 #include "dinput.h"
 
+//쉐이더를 사용가
+#pragma comment(lib, "d3dx11.lib")
+#include "D3DX11.h"
 
-//라이브러리 포함
-#pragma comment (lib, "D3D11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#include "D3Dcompiler.h"
 
-#if defined(DEBUG) || defined(_DEBUG)
-#pragma comment( lib, "d3dx10d.lib" )	
-#pragma comment( lib, "d3dx11d.lib" )	
-#else
-#pragma comment( lib, "d3dx10.lib" )
-#pragma comment( lib, "d3dx11.lib" )
-#endif
-
-#pragma comment (lib, "dxgi.lib")
-#pragma comment (lib, "D3Dcompiler.lib")
-#pragma comment (lib, "D2D1.lib")
-#pragma comment (lib, "DWrite.lib")
-#pragma comment (lib, "dxguid.lib")
-#pragma comment (lib, "dinput8.lib")
+//DX벡터 사용
+#include "D3DX10math.h"
 
 #pragma endregion
 

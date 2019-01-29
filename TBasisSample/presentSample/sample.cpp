@@ -9,7 +9,7 @@ namespace Lypi
 
 	bool Sample::Init()
 	{
-		m_dxobj.CreateFullImgObj({ 0,0,1500,750 }, L"../../INPUT/DATA/image/skybox_front.JPG");
+		m_dxobj.CreateFullImgObj({ 0,0,1500,750 }, L"Desert.jpg");
 
 		return true;
 	}
